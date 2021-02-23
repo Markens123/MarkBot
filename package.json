@@ -1,0 +1,38 @@
+{
+  "name": "slashcommands",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "8ball.js": "^1.1.2",
+    "app-store-scraper": "^0.16.3",
+    "browserless": "^8.7.4",
+    "cleverbot-free": "^1.0.5",
+    "discord-build-info-js": "^1.0.4",
+    "discord.js": "^12.5.1",
+    "easy-get-request-with-headers": "^1.0.1",
+    "format-json-files": "^1.0.6",
+    "fs": "0.0.1-security",
+    "google-play-scraper": "^8.0.2",
+    "got": "^11.8.1",
+    "html-get": "^2.8.16",
+    "imgbb-uploader": "^1.2.0",
+    "imgur": "^0.3.1",
+    "memejs": "^1.2.3",
+    "puppeteer": "^7.0.0",
+    "replace-in-file": "^6.1.0",
+    "string-calculator": "^1.0.1",
+    "trim-image": "^1.0.3",
+    "vamtiger-get-html-title": "0.0.8",
+    "vue": "^2.6.12",
+    "vue-discord-message": "^5.0.2",
+    "wait": "^0.4.2",
+    "ytdl-core": "^4.2.1"
+  }
+}
