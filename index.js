@@ -29,7 +29,12 @@ const { SSL_OP_TLS_ROLLBACK_BUG } = require('constants');
 
 setInterval(tfStuff, 60000); 
 
-client.on('message', message => {
+client.on('message', async message => {
+    if (!message.content.startsWith('!') || message.author.bot) return; 
+    const args = message.content.slice('!'.length).trim().replace(/  +/g, ' ').split(' ');
+    const command = args.shift().toLowerCase()
+
+
     if((message.channel.id == "792919194936147985") && (message.author.id !== "762369554864537620") && (message.type == "DEFAULT")) {
         //chat_clever(message.content).then(t => {message.channel.send(t)})
         //client.api.channels("744947742857756812").messages.post({data:{content: message.content, tts: false}})
@@ -48,12 +53,26 @@ client.on('message', message => {
         }
 
 
-        getFromDataURL('https://pastebin.com/raw/PzgesDhD',(a)=>c=a);
+        getFromDataURL('https://pastebin.com/raw/PzgesDhD',(a)=>c=a); 816693257199157308
     }*/
-    if(message.content.startsWith("!echo") && (message.author.id !== "762369554864537620")) {
-          message.channel.send(message.content.replace("!echo ", ""))
+    if((command == "echo") && (message.author.id !== "762369554864537620")) {
+          message.channel.send(args)
 
     }
+    /*if((command == "minfo") && (message.author.id !== "762369554864537620")) {
+        //const m = await message.channel.messages.fetch(args[0])
+        var a = getChannelIDs(message.guild.id)
+
+        var ttest = a.forEach(async e => { 
+            var c = client.channels.cache.get(e)
+
+            await c.messages.fetch(args[0]).catch(err => console.log(err))
+        });
+
+        console.log(ttest)
+          
+
+  }*/
 
 
   });
@@ -87,7 +106,14 @@ client.on('ready', () => {
             name: "discordver",
             description: "Check all the current discord versions."
         }
-    });    
+    });   
+    
+    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
+        data: {
+            name: "noresp",
+            description: "This won't send a response."
+        }
+    });      
 
 
     client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
@@ -1171,6 +1197,26 @@ async function tfStuff() {
       console.log("Done TF Stuff")
 
 
+}
+
+function getChannelIDs(fetch) {
+
+var array = [] 
+{
+try{
+let channels = client.channels.cache.array();
+for (const channel of channels) 
+{
+    array.push(channel.id);
+    console.log(channel.id);
+}}catch(err){
+    console.log('array error')
+    message.channel.send('An error occoured while getting the channels.')
+    console.log(err)
+}
+
+return array;
+}
 }
 
 function clean(text) {
