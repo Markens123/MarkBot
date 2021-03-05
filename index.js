@@ -56,7 +56,7 @@ client.on('message', async message => {
         getFromDataURL('https://pastebin.com/raw/PzgesDhD',(a)=>c=a); 816693257199157308
     }*/
     if((command == "echo") && (message.author.id !== "762369554864537620")) {
-          message.channel.send(args)
+          message.channel.send(message.content.slice(command.length + '!'.length))
 
     }
     /*if((command == "minfo") && (message.author.id !== "762369554864537620")) {
@@ -76,6 +76,19 @@ client.on('message', async message => {
 
 
   });
+
+  client.on('guildMemberAdd', async member => {
+    //console.log(member.guild)
+    if(member.guild.id !== "816098833054302208") return
+    c = member.guild.channels.cache.get("817152710439993385");
+    
+    const messages = await c.messages.fetch()
+    var lm = messages.last()
+    if(lm.content == "on") {
+        member.kick("Testing is in place")
+    }
+})
+
   
 client.on('ready', () => {
     console.log('ready');
@@ -108,7 +121,7 @@ client.on('ready', () => {
         }
     });   
     
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
+    client.api.applications(client.user.id).commands.post({
         data: {
             name: "noresp",
             description: "This won't send a response."
@@ -421,7 +434,7 @@ client.on('ready', () => {
         
 
         if(command == 'hello') {
-
+            console.log(await client.api.applications(client.user.id).guilds('274765646217216003').commands.get())
             await client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
                     type: 4,
