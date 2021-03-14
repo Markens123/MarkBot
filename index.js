@@ -547,7 +547,7 @@ client.on('ready', () => {
                     data: {
                         type: 4,
                         data: {
-                            content: `${bot}'s status is ${processDescription[0].status}`
+                            content: `${bot}'s status is ${processDescription[0].pm2_env.status}`
                         }
                     }
                 });                       
