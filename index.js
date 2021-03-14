@@ -419,7 +419,11 @@ client.on('ready', () => {
                         {
                             "name": "restart",
                             "value": "restart"
-                        }                      
+                        },
+                        {
+                            "name": "status",
+                            "value": "status"
+                        }                        
                     ]                  
                 }
             ]
@@ -518,15 +522,18 @@ client.on('ready', () => {
                 pm2.stop(bot, (err, proc) => {
                 })
                 }
-            if(action == "pull") {
-                pm2.pull(bot, (err, proc) => {
-                })                
-            }                                      
+                               
                 
             const res = await (async () => {
                 if(action == "stop") return `${bot} has been stopped!`
                 if(action == "start") return `${bot} has been started!`
                 if(action == "restart") return `${bot} has been restarted!`
+                if(action == "status") {
+                    pm2.describe(bot, (err, processDescription) => {
+                        return `${bot}'s status is ${processDescription.status}` 
+                    })
+                }
+
             })();
 
             client.api.interactions(interaction.id, interaction.token).callback.post({
