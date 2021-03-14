@@ -519,8 +519,11 @@ client.on('ready', () => {
 
             if(bot == "list") {
                 pm2.list((err, list) => {
-                    resp = list
-                    console.log(list)
+                    for (i = 0; i < list.length; i++) { 
+                        var resp = resp + list[i].name
+                    }
+                    console.log(resp)
+                    
                   })
             }
 
