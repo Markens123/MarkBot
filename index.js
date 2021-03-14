@@ -509,25 +509,30 @@ client.on('ready', () => {
         if(command == 'bots') {
             const bot = args.find(arg => arg.name.toLowerCase() == "bot").value;
             const action = args.find(arg => arg.name.toLowerCase() == "action").value;
-            var resp
 
             if(action == "start") {
                 pm2.start(bot, (err, proc) => {
-                    resp = `${bot} has been started!`
                 })
             }
             if(action == "restart") {
                 pm2.restart(bot, (err, proc) => {
-                    resp = `${bot} has been restarted!`
                 })
             }    
             if(action == "stop") {
                 pm2.stop(bot, (err, proc) => {
-                    resp = `${bot} has been stopped!`
                 })
-            }                      
-
-            const res = resp
+                }
+            if(action == "pull") {
+                pm2.pull(bot, (err, proc) => {
+                })                
+            }                                      
+                
+            const res = await (async () => {
+                if(action == "stop") return `${bot} has been stopped!`
+                if(action == "start") return `${bot} has been started!`
+                if(action == "restart") return `${bot} has been restarted!`
+                if(action == "pull") return `${bot} has been updated to the latest commit!`
+            })();
 
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
