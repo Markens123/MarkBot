@@ -512,7 +512,9 @@ client.on('ready', () => {
 
         if(command == 'bots') {
             const bot = args.find(arg => arg.name.toLowerCase() == "bot").value;
-            const action = args.find(arg => arg.name.toLowerCase() == "action").value;
+            var action = "";
+            if(args.find(arg => arg.name.toLowerCase() == "action") !== undefined) {var action = args.find(arg => arg.name.toLowerCase() == "action")}
+             
             var resp = "";
 
             if(bot == "list") {
