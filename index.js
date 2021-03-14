@@ -522,7 +522,7 @@ client.on('ready', () => {
                 pm2.stop(bot, (err, proc) => {
                 })
                 }
-                               
+
                 
             const res = await (async () => {
                 if(action == "stop") return `${bot} has been stopped!`
@@ -531,10 +531,18 @@ client.on('ready', () => {
                 if(action == "status") {
                     var t; 
                     pm2.describe(bot, (err, processDescription) => {
-                        t = `${bot}'s status is ${processDescription.status}`
+                        var t = `${bot}'s status is ${processDescription.status}`
+                        client.api.interactions(interaction.id, interaction.token).callback.post({
+                            data: {
+                                type: 4,
+                                data: {
+                                    content: t
+                                }
+                            }
+                        });
+                        return                        
                     })
-                    console.log(t)
-                    return t
+
                     
                 }
 
