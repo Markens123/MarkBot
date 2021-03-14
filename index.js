@@ -513,10 +513,19 @@ client.on('ready', () => {
 
             if(action == "start") {
                 pm2.start(bot, (err, proc) => {
-                    console.log(err)
-                    console.log(proc)
+                    resp = `${bot} has been started!`
                 })
             }
+            if(action == "restart") {
+                pm2.restart(bot, (err, proc) => {
+                    resp = `${bot} has been restarted!`
+                })
+            }    
+            if(action == "stop") {
+                pm2.stop(bot, (err, proc) => {
+                    resp = `${bot} has been stopped!`
+                })
+            }                      
 
             const res = resp
 
