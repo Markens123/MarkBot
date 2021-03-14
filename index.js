@@ -528,35 +528,32 @@ client.on('ready', () => {
                 if(action == "stop") return `${bot} has been stopped!`
                 if(action == "start") return `${bot} has been started!`
                 if(action == "restart") return `${bot} has been restarted!`
-                if(action == "status") {
-                    var t; 
-                    pm2.describe(bot, (err, processDescription) => {
-                        var t = `${bot}'s status is ${processDescription.status}`
-                        client.api.interactions(interaction.id, interaction.token).callback.post({
-                            data: {
-                                type: 4,
-                                data: {
-                                    content: t
-                                }
-                            }
-                        });                       
-                    })
-                    return
-
-                    
-                }
 
             })();
 
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
+            if(action !== "status") {
+                
+                client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
-                        content: res
+                        type: 4,
+                        data: {
+                            content: res
+                        }
                     }
-                }
-            });
+                });
+        } else {
+            pm2.describe(bot, (err, processDescription) => {
+                client.api.interactions(interaction.id, interaction.token).callback.post({
+                    data: {
+                        type: 4,
+                        data: {
+                            content: `${bot}'s status is ${processDescription.status}`
+                        }
+                    }
+                });                       
+            })            
         }
+    }
 
         if(command == 'shrug') {
 
