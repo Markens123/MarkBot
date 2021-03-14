@@ -419,11 +419,7 @@ client.on('ready', () => {
                         {
                             "name": "restart",
                             "value": "restart"
-                        },
-                        {
-                            "name": "pull",
-                            "value": "pull"
-                        }                        
+                        }                      
                     ]                  
                 }
             ]
@@ -531,7 +527,6 @@ client.on('ready', () => {
                 if(action == "stop") return `${bot} has been stopped!`
                 if(action == "start") return `${bot} has been started!`
                 if(action == "restart") return `${bot} has been restarted!`
-                if(action == "pull") return `${bot} has been updated to the latest commit!`
             })();
 
             client.api.interactions(interaction.id, interaction.token).callback.post({
