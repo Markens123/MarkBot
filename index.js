@@ -539,9 +539,9 @@ client.on('ready', () => {
                                     content: t
                                 }
                             }
-                        });
-                        return                        
+                        });                       
                     })
+                    return
 
                     
                 }
