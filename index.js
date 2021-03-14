@@ -532,7 +532,9 @@ client.on('ready', () => {
                     const t = pm2.describe(bot, (err, processDescription) => {
                         return `${bot}'s status is ${processDescription.status}`
                     })
+                    console.log(t)
                     return t
+                    
                 }
 
             })();
