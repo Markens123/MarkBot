@@ -520,6 +520,7 @@ client.on('ready', () => {
             if(bot == "list") {
                 pm2.list((err, list) => {
                     resp = list
+                    console.log(list)
                   })
             }
 
