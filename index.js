@@ -399,18 +399,14 @@ client.on('ready', () => {
                         {
                             "name": "MarkBot",
                             "value": "MarkBot"
-                        },
-                        {
-                            "name": "list",
-                            "value": "list"
-                        }                        
+                        }                      
                     ]                  
                 },                
                 {
                     name: "action",
                     description: "The action to take on the bot",
                     type: 3,
-                    required: false,
+                    required: true,
                     choices: [
                         {
                             "name": "start",
@@ -512,27 +508,23 @@ client.on('ready', () => {
 
         if(command == 'bots') {
             const bot = args.find(arg => arg.name.toLowerCase() == "bot").value;
-            var action = "";
-            if(args.find(arg => arg.name.toLowerCase() == "action") !== undefined) {var action = args.find(arg => arg.name.toLowerCase() == "action")}
-             
-            var resp = "";
+            const action = args.find(arg => arg.name.toLowerCase() == "action").value;
+            var resp
 
-            if(bot == "list") {
-                pm2.list((err, list) => {
-                    for (i = 0; i < list.length; i++) { 
-                        var resp = resp + list[i].name
-                    }
-                    console.log(resp)
-                    
-                  })
+            if(action == "start") {
+                pm2.start(bot, (err, proc) => {
+                    console.log(err)
+                    console.log(proc)
+                })
             }
 
+            const res = resp
 
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
                     type: 4,
                     data: {
-                        content: resp
+                        content: res
                     }
                 }
             });
