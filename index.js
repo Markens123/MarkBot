@@ -543,6 +543,7 @@ client.on('ready', () => {
                 });
         } else {
             pm2.describe(bot, (err, processDescription) => {
+                console.log(processDescription)
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 4,
