@@ -529,8 +529,9 @@ client.on('ready', () => {
                 if(action == "start") return `${bot} has been started!`
                 if(action == "restart") return `${bot} has been restarted!`
                 if(action == "status") {
-                    const t = pm2.describe(bot, (err, processDescription) => {
-                        return `${bot}'s status is ${processDescription.status}`
+                    var t; 
+                    pm2.describe(bot, (err, processDescription) => {
+                        t = `${bot}'s status is ${processDescription.status}`
                     })
                     console.log(t)
                     return t
