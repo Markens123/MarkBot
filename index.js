@@ -25,6 +25,15 @@ var gplay = require('google-play-scraper');
 var store = require('app-store-scraper');
 const { basename } = require('path');
 const { SSL_OP_TLS_ROLLBACK_BUG } = require('constants');
+var pm2 = require('pm2');
+
+
+pm2.connect(function(err) {
+    if (err) {
+      console.error(err);
+      process.exit(2);
+    }  
+});
 
 
 setInterval(tfStuff, 60000); 
@@ -368,7 +377,62 @@ client.on('ready', () => {
         }
     });
 
-
+    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
+        data: {
+            name: "bots",
+            description: "Manages my bots (and the api)",
+            options: [
+                {
+                    name: "bot",
+                    description: "The bot that you will be taking the action on",
+                    type: 3,
+                    required: true,
+                    choices: [
+                        {
+                            "name": "EternaBot",
+                            "value": "EternaBot"
+                        },
+                        {
+                            "name": "EternaAPI",
+                            "value": "EternaAPI"
+                        },
+                        {
+                            "name": "MarkBot",
+                            "value": "MarkBot"
+                        },
+                        {
+                            "name": "list",
+                            "value": "list"
+                        }                        
+                    ]                  
+                },                
+                {
+                    name: "action",
+                    description: "The action to take on the bot",
+                    type: 3,
+                    required: false,
+                    choices: [
+                        {
+                            "name": "start",
+                            "value": "start"
+                        },
+                        {
+                            "name": "stop",
+                            "value": "stop"
+                        },
+                        {
+                            "name": "restart",
+                            "value": "restart"
+                        },
+                        {
+                            "name": "pull",
+                            "value": "pull"
+                        }                        
+                    ]                  
+                }
+            ]
+        }
+    });
 
 
     client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
@@ -432,6 +496,7 @@ client.on('ready', () => {
         const args = interaction.data.options;
         const server = client.guilds.cache.get(interaction.guild_id);
         
+        
 
         if(command == 'hello') {
             console.log(await client.api.applications(client.user.id).guilds('274765646217216003').commands.get())
@@ -440,6 +505,28 @@ client.on('ready', () => {
                     type: 4,
                     data: {
                         content: "Hello World!"
+                    }
+                }
+            });
+        }
+
+        if(command == 'bots') {
+            const bot = args.find(arg => arg.name.toLowerCase() == "bot").value;
+            const action = args.find(arg => arg.name.toLowerCase() == "action").value;
+            var resp = "";
+
+            if(bot == "list") {
+                pm2.list((err, list) => {
+                    resp = list
+                  })
+            }
+
+
+            client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 4,
+                    data: {
+                        content: resp
                     }
                 }
             });

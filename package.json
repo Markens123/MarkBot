@@ -25,6 +25,7 @@
     "imgbb-uploader": "^1.2.0",
     "imgur": "^0.3.1",
     "memejs": "^1.2.3",
+    "pm2": "^4.5.5",
     "puppeteer": "^7.0.0",
     "replace-in-file": "^6.1.0",
     "string-calculator": "^1.0.1",
