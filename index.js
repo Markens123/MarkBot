@@ -535,8 +535,7 @@ client.on('ready', () => {
 
             })();
 
-            if(action !== "status") {
-                
+            if((action == "stop") || (action == "start") || (action == "restart")) { 
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 4,
@@ -563,7 +562,7 @@ client.on('ready', () => {
                     data: {
                         type: 4,
                         data: {
-                            content: `${processDescription}`
+                            content: "```json\n" + `${processDescription}` + "\n```"
                         }
                     }
                 });                       
