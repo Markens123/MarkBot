@@ -556,7 +556,7 @@ client.on('ready', () => {
                 });                       
             })            
         } else if(action == "dump") {
-            pm2.describe(bot, (err, processDescription) => {
+            pm2.describe(bot, async (err, processDescription) => {
                 const haste = await hastebin(processDescription, { extension: "json" });
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
