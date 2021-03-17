@@ -562,7 +562,7 @@ client.on('ready', () => {
                     data: {
                         type: 4,
                         data: {
-                            content: "```json\n" + processDescription[0] + "\n```"
+                            content:  processDescription //"```json\n" + processDescription[0] + "\n```"
                         }
                     }
                 });                       
