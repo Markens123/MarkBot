@@ -558,11 +558,12 @@ client.on('ready', () => {
             })            
         } else if(action == "dump") {
             pm2.describe(bot, (err, processDescription) => {
+                console.log(processDescription)
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 4,
                         data: {
-                            content: "```json\n" + `${processDescription[0].pm2_env.status}` + "\n```"
+                            content: "```json\n" + `${processDescription}` + "\n```"
                         }
                     }
                 });                       
