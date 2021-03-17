@@ -423,7 +423,11 @@ client.on('ready', () => {
                         {
                             "name": "status",
                             "value": "status"
-                        }                        
+                        },
+                        {
+                            "name": "dump",
+                            "value": "dump"
+                        }                                                
                     ]                  
                 }
             ]
@@ -541,7 +545,7 @@ client.on('ready', () => {
                         }
                     }
                 });
-        } else {
+        } else if(action == "status") {
             pm2.describe(bot, (err, processDescription) => {
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
@@ -552,7 +556,18 @@ client.on('ready', () => {
                     }
                 });                       
             })            
-        }
+        } else if(action == "dump") {
+            pm2.describe(bot, (err, processDescription) => {
+                client.api.interactions(interaction.id, interaction.token).callback.post({
+                    data: {
+                        type: 4,
+                        data: {
+                            content: "```json\n" + `${processDescription[0].pm2_env.status}` + "\n```"
+                        }
+                    }
+                });                       
+            })            
+        } 
     }
 
         if(command == 'shrug') {
