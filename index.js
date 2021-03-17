@@ -26,7 +26,7 @@ var store = require('app-store-scraper');
 const { basename } = require('path');
 const { SSL_OP_TLS_ROLLBACK_BUG } = require('constants');
 var pm2 = require('pm2');
-
+const hastebin = require("hastebin-gen");
 
 pm2.connect(function(err) {
     if (err) {
@@ -557,12 +557,12 @@ client.on('ready', () => {
             })            
         } else if(action == "dump") {
             pm2.describe(bot, (err, processDescription) => {
-                console.log(processDescription)
+                const haste = await hastebin(processDescription, { extension: "json" });
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 4,
                         data: {
-                            content:  processDescription //"```json\n" + processDescription[0] + "\n```"
+                            content:  `${bot} dump link: ${haste}`
                         }
                     }
                 });                       

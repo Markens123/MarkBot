@@ -21,6 +21,7 @@
     "fs": "0.0.1-security",
     "google-play-scraper": "^8.0.2",
     "got": "^11.8.1",
+    "hastebin-gen": "^2.0.5",
     "html-get": "^2.8.16",
     "imgbb-uploader": "^1.2.0",
     "imgur": "^0.3.1",
