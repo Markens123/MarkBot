@@ -557,7 +557,7 @@ client.on('ready', () => {
             })            
         } else if(action == "dump") {
             pm2.describe(bot, async (err, processDescription) => {
-                const haste = await hastebin(processDescription, { url: "https://pastie.io", extension: "json" });
+                const haste = await hastebin(processDescription[0], { url: "https://pastie.io", extension: "json" });
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 4,
