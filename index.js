@@ -68,6 +68,9 @@ client.on('message', async message => {
           message.channel.send(message.content.slice(command.length + '!'.length))
 
     }
+    if((command == "ask") && (message.author.id == "396726969544343554")) {
+        return message.channel.send("no")
+    }
     /*if((command == "minfo") && (message.author.id !== "762369554864537620")) {
         //const m = await message.channel.messages.fetch(args[0])
         var a = getChannelIDs(message.guild.id)
