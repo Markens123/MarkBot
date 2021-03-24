@@ -621,15 +621,10 @@ client.on('ready', () => {
             .addField("iOS", istable)
             .addField("Android", astable)
             //.setFooter("Test", "https://cdn.discordapp.com/emojis/783706778290356284.gif")
-            .setTimestamp();        
-            client.api.channels(interaction.channel_id).messages.post({
-            data: {
-                content: null,
-                tts: false,
-                embed: embed
-                }
-            
-        })
+            .setTimestamp();
+            client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
+                data: await createAPIMessage(interaction, embed)
+            })      
 
 
 
@@ -664,13 +659,8 @@ client.on('ready', () => {
                 .setDescription("Discord testflight is full!")
                 .setColor("FF0000")
                 .setTimestamp();        
-                client.api.channels(interaction.channel_id).messages.post({
-                data: {
-                    content: null,
-                    tts: false,
-                    embed: embed
-                    }
-                
+                client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
+                data: await createAPIMessage(interaction, embed)
             })
     
 
@@ -683,12 +673,8 @@ client.on('ready', () => {
                 .setDescription("Discord testflight has slots available!")
                 .setColor("7fff01")
                 .setTimestamp();        
-                client.api.channels(interaction.channel_id).messages.post({
-                data: {
-                    content: null,
-                    tts: false,
-                    embed: embed
-                    }
+                client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
+                data: await createAPIMessage(interaction, embed)
                 
             })
     
@@ -709,6 +695,7 @@ client.on('ready', () => {
                     type: 5
                 }
             });
+            Patch(client.user.id, interaction.token)
         }        
 
         if(command == 'eval') {
@@ -885,23 +872,14 @@ client.on('ready', () => {
                 }
             });
 
-            for (i = 0; i < res.length; i++) {
-                          
-            await client.api.channels(interaction.channel_id).messages.post({
-                data: {
-                    content: '<' + res[i] + '>',
-                    tts: false               
-                }
-            });
-          
-        }
-        client.api.channels(interaction.channel_id).messages.post({
-            data: {
-                content: 'Done!',
-                tts: false               
+            console.log(res) // 
+            if(res.includes("An error has occured please send the command again!")) {
+                return client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
+                data: {content: "An error has occured please send the command again!"}}) 
+            } else {
+                return client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
+                    data: {content: `<${res.join(">\n<")}>`}})                
             }
-        });
-
 
         }      
         
@@ -1227,6 +1205,10 @@ async function checkPerm(uid, p, gid){
     }       
 }
 
+async function Patch(id, token){
+    client.api.webhooks(id, token).messages('@original').patch({data: {content: "​"}});
+}
+
 async function noPerms(id, token){
     client.api.interactions(id, token).callback.post({
         data: {
@@ -1342,18 +1324,19 @@ async function tfStuff() {
 
 function getChannelIDs(fetch) {
 
-var array = [] 
-{
-try{
-let channels = client.channels.cache.array();
-for (const channel of channels) 
-{
-    array.push(channel.id);
-    console.log(channel.id);
-}}catch(err){
-    console.log('array error')
-    message.channel.send('An error occoured while getting the channels.')
-    console.log(err)
+    var array = [] 
+    {
+    try{
+        let channels = client.channels.cache.array();
+        for (const channel of channels) 
+        {
+            array.push(channel.id);
+            console.log(channel.id);
+        }
+    }catch(err){
+        console.log('array error')
+        message.channel.send('An error occoured while getting the channels.')
+        console.log(err)
 }
 
 return array;
