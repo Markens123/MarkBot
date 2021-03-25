@@ -27,6 +27,7 @@ const { basename } = require('path');
 const { SSL_OP_TLS_ROLLBACK_BUG } = require('constants');
 var pm2 = require('pm2');
 const hastebin = require("hastebin-gen");
+const { exec } = require('child_process');
 
 pm2.connect(function(err) {
     if (err) {
@@ -824,7 +825,6 @@ client.on('ready', () => {
                 } else {
                     createlog(interaction.channel_id, cmd(command, args), interaction.member.user.id, await makeJumpLink(interaction.guild_id, interaction.channel_id, m[0].id), config.lchannel)                        
                 }
-                Patch(client.user.id, interaction.token)                
         }
         } else {
             noPerms(interaction.id, interaction.token);
