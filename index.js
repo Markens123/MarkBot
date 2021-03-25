@@ -535,12 +535,6 @@ client.on('ready', () => {
                 pm2.stop(bot, (err, proc) => {
                 })
             }
-            if(action == "pull") {
-                let { stdout, stderr } = await promiseExec(`pm2 pull ${bot}`).catch(err => console.log(`\`\`\`bash\n${err}\`\`\``));
-
-                console.log(stdout)
-                console.log(stderr)
-            }
 
                 
             const res = await (async () => {
@@ -590,7 +584,8 @@ client.on('ready', () => {
                         content:  `${bot} has been updated to the latest repo`
                     }
                 }
-            });               
+            });
+            await promiseExec(`pm2 pull ${bot}`).catch(err => console.log(`\`\`\`bash\n${err}\`\`\``));               
         }
     }
 
