@@ -537,6 +537,9 @@ client.on('ready', () => {
             }
             if(action == "pull") {
                 let { stdout, stderr } = await promiseExec(`pm2 pull ${bot}`).catch(err => console.log(`\`\`\`bash\n${err}\`\`\``));
+
+                console.log(stdout)
+                console.log(stderr)
             }
 
                 
@@ -825,6 +828,8 @@ client.on('ready', () => {
                 } else {
                     createlog(interaction.channel_id, cmd(command, args), interaction.member.user.id, await makeJumpLink(interaction.guild_id, interaction.channel_id, m[0].id), config.lchannel)                        
                 }
+                Patch(client.user.id, interaction.token)
+
         }
         } else {
             noPerms(interaction.id, interaction.token);
