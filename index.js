@@ -430,7 +430,11 @@ client.on('ready', () => {
                         {
                             "name": "dump",
                             "value": "dump"
-                        }                                                
+                        },
+                        {
+                            "name": "pull",
+                            "value": "pull"
+                        }                                                                        
                     ]                  
                 }
             ]
@@ -514,6 +518,7 @@ client.on('ready', () => {
         }
 
         if(command == 'bots') {
+            if(interaction.member.user.id !== config.ownerid) return noPerms(interaction.id, interaction.token)
             const bot = args.find(arg => arg.name.toLowerCase() == "bot").value;
             const action = args.find(arg => arg.name.toLowerCase() == "action").value;
 
@@ -528,7 +533,10 @@ client.on('ready', () => {
             if(action == "stop") {
                 pm2.stop(bot, (err, proc) => {
                 })
-                }
+            }
+            if(action == "pull") {
+                let { stdout, stderr } = await promiseExec(`pm2 pull ${bot}`).catch(err => console.log(`\`\`\`bash\n${err}\`\`\``));
+            }
 
                 
             const res = await (async () => {
@@ -570,7 +578,16 @@ client.on('ready', () => {
                     }
                 });                       
             })            
-        } 
+        } else if(action == "pull") {
+            client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 4,
+                    data: {
+                        content:  `${bot} has been updated to the latest repo`
+                    }
+                }
+            });               
+        }
     }
 
         if(command == 'shrug') {
@@ -1365,6 +1382,18 @@ function clean(text) {
   
     return answer;
   }
+
+function promiseExec(action) {
+    return new Promise((resolve, reject) =>
+      exec(action, (err, stdout, stderr) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ stdout, stderr });
+        }
+      }),
+    );
+  }  
 
 function getFromDataURL(u,f){
     fetch(u).then(a=>a.text().then(f));
