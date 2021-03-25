@@ -823,7 +823,8 @@ client.on('ready', () => {
                     createlog(interaction.channel_id, cmd(command, args), interaction.member.user.id, await makeJumpLink(interaction.guild_id, interaction.channel_id, m[0].id), config.bdlchannel)     
                 } else {
                     createlog(interaction.channel_id, cmd(command, args), interaction.member.user.id, await makeJumpLink(interaction.guild_id, interaction.channel_id, m[0].id), config.lchannel)                        
-            }
+                }
+                Patch(client.user.id, interaction.token)                
         }
         } else {
             noPerms(interaction.id, interaction.token);
