@@ -1,0 +1,1 @@
+## [View the documentation here.](http://bot.corncierge.com/#/docs/ethanboat/master/class/Boat)

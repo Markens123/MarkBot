@@ -1,14 +1,8 @@
 const discord = require('discord.js');
-const Discord = require('discord.js');
-const { memeAsync } = require('memejs');
-const { meme } = require('memejs');
-const ball = require("8ball.js");
 var stringCalculator = require("string-calculator")
 const got = require("got");
 const fs = require("fs");
-var path = require('path');
 const cleverbot = require("cleverbot-free");
-const ytdl = require('ytdl-core');
 const client = new discord.Client();
 var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 //const captureWebsite = require('capture-website');
@@ -23,74 +17,35 @@ const { ClientBuild } = require('discord-build-info-js');
 const clientBuild = new ClientBuild();
 var gplay = require('google-play-scraper');
 var store = require('app-store-scraper');
-const { basename } = require('path');
-const { SSL_OP_TLS_ROLLBACK_BUG } = require('constants');
-var pm2 = require('pm2');
 const hastebin = require("hastebin-gen");
 const { exec } = require('child_process');
+require('dotenv').config();
 
-pm2.connect(function(err) {
-    if (err) {
-      console.error(err);
-      process.exit(2);
-    }  
-});
 
+
+const shipyard = require('./src/boat');
+const botconfig = {
+  debug: true,
+  token: process.env.DISCORD_TOKEN,
+  clientOpts: {},
+  owners: ['396726969544343554'],
+  log: {
+    outputFile: process.env.LOG_LOCATION,
+    verbose: true,
+    webhookToken: process.env.LOG_WEBHOOK,
+  },
+};
+
+const markBot = new shipyard(botconfig);
+
+markBot.log('#', 'Starting...');
+
+markBot.boot();
 
 setInterval(tfStuff, 60000); 
 
-client.on('message', async message => {
-    if (!message.content.startsWith('!') || message.author.bot) return; 
-    const args = message.content.slice('!'.length).trim().replace(/  +/g, ' ').split(' ');
-    const command = args.shift().toLowerCase()
-
-
-    if((message.channel.id == "792919194936147985") && (message.author.id !== "762369554864537620") && (message.type == "DEFAULT")) {
-        //chat_clever(message.content).then(t => {message.channel.send(t)})
-        //client.api.channels("744947742857756812").messages.post({data:{content: message.content, tts: false}})
-
-    }
-    /*if(message.content.includes("hastebin" || "pastebin")) {
-        var input = message.content
-        var expression = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
-        var matches = input.match(expression);
-        var results = [];
-        for(match in matches)
-        {
-            var result = {};
-            result = matches[match];
-        results.push(result);      
-        }
-
-
-        getFromDataURL('https://pastebin.com/raw/PzgesDhD',(a)=>c=a); 816693257199157308
-    }*/
-    if((command == "echo") && (message.author.id !== "762369554864537620")) {
-          message.channel.send(message.content.slice(command.length + '!'.length))
-
-    }
-    if((command == "ask") && (message.author.id == "396726969544343554")) {
-        return message.channel.send("no")
-    }
-    /*if((command == "minfo") && (message.author.id !== "762369554864537620")) {
-        //const m = await message.channel.messages.fetch(args[0])
-        var a = getChannelIDs(message.guild.id)
-
-        var ttest = a.forEach(async e => { 
-            var c = client.channels.cache.get(e)
-
-            await c.messages.fetch(args[0]).catch(err => console.log(err))
-        });
-
-        console.log(ttest)
-          
-
-  }*/
-
-
-  });
-
-  client.on('guildMemberAdd', async member => {
+/*
+client.on('guildMemberAdd', async member => {
     //console.log(member.guild)
     if(member.guild.id !== "816098833054302208") return
     c = member.guild.channels.cache.get("817152710439993385");
@@ -103,409 +58,12 @@ client.on('message', async message => {
 })
 
   
-client.on('ready', () => {
-    console.log('ready');
 
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "hello",
-            description: "Replies with Hello World!"
-        }
-    });
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "checktf",
-            description: "Check's the status of Discord TestFlight."
-        }
-    });
-
-    client.api.applications(client.user.id).commands.post({
-        data: {
-            name: "shrug",
-            description: "Just shrug"
-        }
-    });    
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "discordver",
-            description: "Check all the current discord versions."
-        }
-    });   
-    
-    client.api.applications(client.user.id).commands.post({
-        data: {
-            name: "noresp",
-            description: "This won't send a response."
-        }
-    });      
-
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "eval",
-            description: "Evaluate text as javascript code. Must be Markens to use this command",
-
-            options: [
-            {
-                name: "code",
-                description: "Text to evaluate",
-                type: 3,
-                required: true
-            }
-
-            ]
-        }
-    });        
-   
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "mention",
-            description: "Mentions any user for you",
-
-            options: [
-            {
-                name: "user",
-                description: "User to mention",
-                type: 6,
-                required: true
-            }
-
-            ]
-        }
-    });    
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "atol",
-            description: "Converts imgur album link to direct links",
-
-            options: [
-            {
-                name: "hash",
-                description: "The last string in the link",
-                type: 3,
-                required: true
-            }
-
-            ]
-        }
-    });     
-
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "avatar",
-            description: "Gets the avatar of any user",
-
-            options: [
-            {
-                name: "user",
-                description: "User to get the avatar from. Use this if you don't want to use the id!",
-                type: 6,
-                required: false
-            },
-            {
-                name: "user_id",
-                description: "User to get the avatar from. Use this if you're going to use the id!",
-                type: 3,
-                required: false
-            }            
-
-            ]
-        }
-    });
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "uqt",
-            description: "Sends an image of the user saying \"I'm a qt\"",
-
-            options: [
-            {
-                name: "user",
-                description: "User that is saying \"I'm a qt\". Use this if you don't want to use the id!",
-                type: 6,
-                required: false
-            },
-            {
-                name: "user_id",
-                description: "User that is saying \"I'm a qt\". Use this if you're going to use the id!",
-                type: 3,
-                required: false
-            }            
-
-            ]
-        }
-    });
-
-
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "meme",
-            description: "Sends a random meme"
-        }
-    });  
-
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "onlyme",
-            description: "Sends a message that you can only see"
-        }
-    });  
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "ping",
-            description: "Sends the bot\'s ping"
-        }
-    });  
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "8ball",
-            description: "The Magic 8 Ball Oracle has answer to all the questions",
-            options: [
-                {
-                    name: "question",
-                    description: "Question to ask",
-                    type: 3,
-                    required: true
-                }
-    
-                ]            
-        }
-    });      
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "bulkdelete",
-            description: "Bulk deletes messages for you.",
-            options: [
-                {
-                    name: "number", 
-                    description: "Number of messages to delete",
-                    type: 4,
-                    required: true
-                }
-    
-                ]            
-        }
-    });
-    
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "clear",
-            description: "Clears all messages between the 2 given ids",
-            options: [
-                {
-                    name: "start_id",
-                    description: "The message to start",
-                    type: 4,
-                    required: true
-                },
-                {
-                    name: "end_id",
-                    description: "The message to end",
-                    type: 4,
-                    required: true
-                }                
-    
-                ]            
-        }
-    });       
-
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "calc",
-            description: "Calculate",
-            options: [
-                {
-                    name: "input",
-                    description: "What to calculate",
-                    type: 3,
-                    required: true
-                }
-    
-                ]            
-        }
-    });
-    client.api.applications(client.user.id).commands.post({
-        data: {
-            name: "test",
-            description: "Test stuff",
-            options: [
-                {
-                    name: "string",
-                    description: "Sequence of characters",
-                    type: 3,
-                    required: false
-                },
-                {
-                    name: "integer",
-                    description: "Whole numbers",
-                    type: 4,
-                    required: false
-                },
-                {
-                    name: "boolean",
-                    description: "True or false",
-                    type: 5,
-                    required: false
-                },
-                {
-                    name: "user",
-                    description: "User that is in this server",
-                    type: 6,
-                    required: false
-                },
-                {
-                    name: "channel",
-                    description: "Channel that is in this server",
-                    type: 7,
-                    required: false
-                },
-                {
-                    name: "role",
-                    description: "Role that is in this server",
-                    type: 8,
-                    required: false
-                }                                                                                        
-                                                                                                            
-    
-                ]            
-        }
-    });
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "bots",
-            description: "Manages my bots (and the api)",
-            options: [
-                {
-                    name: "bot",
-                    description: "The bot that you will be taking the action on",
-                    type: 3,
-                    required: true,
-                    choices: [
-                        {
-                            "name": "EternaBot",
-                            "value": "EternaBot"
-                        },
-                        {
-                            "name": "EternaAPI",
-                            "value": "EternaAPI"
-                        },
-                        {
-                            "name": "MarkBot",
-                            "value": "MarkBot"
-                        }                      
-                    ]                  
-                },                
-                {
-                    name: "action",
-                    description: "The action to take on the bot",
-                    type: 3,
-                    required: true,
-                    choices: [
-                        {
-                            "name": "start",
-                            "value": "start"
-                        },
-                        {
-                            "name": "stop",
-                            "value": "stop"
-                        },
-                        {
-                            "name": "restart",
-                            "value": "restart"
-                        },
-                        {
-                            "name": "status",
-                            "value": "status"
-                        },
-                        {
-                            "name": "dump",
-                            "value": "dump"
-                        },
-                        {
-                            "name": "pull",
-                            "value": "pull"
-                        }                                                                        
-                    ]                  
-                }
-            ]
-        }
-    });
-
-
-    client.api.applications(client.user.id).guilds('274765646217216003').commands.post({
-        data: {
-            name: "embed",
-            description: "Sends an embed",
-
-            options: [
-                {
-                    name: "color",
-                    description: "Color of the embed. Must use hex code!",
-                    type: 3,
-                    required: true
-                    /*choices: [
-                        {
-                            "name": "Red",
-                            "value": "#FF0000"
-                        },
-                        {
-                            "name": "Blue",
-                            "value": "#0000ff"
-                        },
-                        {
-                            "name": "Purple",
-                            "value": "#9932cc"
-                        },
-                        {
-                            "name": "White",
-                            "value": "#FFFFFF"
-                        },
-                        {
-                            "name": "Black",
-                            "value": "#000000"
-                        },                                                                              
-                        {
-                            "name": "Green",
-                            "value": "#00FF00"
-                        }
-                    ]*/                    
-                },                
-                {
-                    name: "title",
-                    description: "Title of the embed",
-                    type: 3,
-                    required: true
-                },
-                {
-                    name: "content",
-                    description: "Content of the embed",
-                    type: 3,
-                    required: true
-                }
-            ]
-        }
-    });
-
-
-
-    client.ws.on('INTERACTION_CREATE', async interaction => {
+client.ws.on('INTERACTION_CREATE', async interaction => {
         const command = interaction.data.name.toLowerCase();
         const args = interaction.data.options;
         const server = client.guilds.cache.get(interaction.guild_id);
         
-        
-
         if(command == 'hello') {
             console.log(await client.api.applications(client.user.id).guilds('274765646217216003').commands.get())
             await client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -517,202 +75,6 @@ client.on('ready', () => {
                 }
             });
         }
-
-        if(command == 'bots') {
-            if(interaction.member.user.id !== config.ownerid) return noPerms(interaction.id, interaction.token)
-            const bot = args.find(arg => arg.name.toLowerCase() == "bot").value;
-            const action = args.find(arg => arg.name.toLowerCase() == "action").value;
-
-            if(action == "start") {
-                pm2.start(bot, (err, proc) => {
-                })
-            }
-            if(action == "restart") {
-                pm2.restart(bot, (err, proc) => {
-                })
-            }    
-            if(action == "stop") {
-                pm2.stop(bot, (err, proc) => {
-                })
-            }
-
-                
-            const res = await (async () => {
-                if(action == "stop") return `${bot} has been stopped!`
-                if(action == "start") return `${bot} has been started!`
-                if(action == "restart") return `${bot} has been restarted!`
-
-            })();
-
-            if((action == "stop") || (action == "start") || (action == "restart")) { 
-                client.api.interactions(interaction.id, interaction.token).callback.post({
-                    data: {
-                        type: 4,
-                        data: {
-                            content: res
-                        }
-                    }
-                });
-        } else if(action == "status") {
-            pm2.describe(bot, (err, processDescription) => {
-                client.api.interactions(interaction.id, interaction.token).callback.post({
-                    data: {
-                        type: 4,
-                        data: {
-                            content: `${bot}'s status is ${processDescription[0].pm2_env.status}`
-                        }
-                    }
-                });                       
-            })            
-        } else if(action == "dump") {
-            pm2.describe(bot, async (err, processDescription) => {
-                const haste = await hastebin(JSON.stringify(processDescription, null, 2), { url: "https://pastie.io", extension: "json" });
-                client.api.interactions(interaction.id, interaction.token).callback.post({
-                    data: {
-                        type: 4,
-                        data: {
-                            content:  `${bot} dump link: ${haste}`
-                        }
-                    }
-                });                       
-            })            
-        } else if(action == "pull") {
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content:  `${bot} has been updated to the latest repo`
-                    }
-                }
-            });
-            await promiseExec(`pm2 pull ${bot}`).catch(err => console.log(`\`\`\`bash\n${err}\`\`\``));               
-        }
-    }
-
-        if(command == 'shrug') {
-
-            await client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content: "¯\\_(ツ)_/¯"
-                    }
-                }
-            });
-        }        
-
-        
-
-        if(command == 'discordver') {
-
-            await client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 5
-                }
-            });            
-
-            const stable = await clientBuild.getClientBuildInfo(`stable`).then(data => {
-                return "Stable " + data.buildNumber + " (" + data.buildID + ")"
-            });  
-            const PTB = await clientBuild.getClientBuildInfo(`PTB`).then(data => {
-                return "PTB " + data.buildNumber + " (" + data.buildID + ")"
-            });                                  
-            const canary = await clientBuild.getClientBuildInfo(`canary`).then(data => {
-                return "Canary " + data.buildNumber + " (" + data.buildID + ")"
-            });
-
-            const astable = await gplay.app({appId: 'com.discord'})
-            .then(data => {
-                return "Stable " + data.version 
-            });  
-
-            const istable = await store.app({id: 985746746}).then(data => {
-                return "Stable " + data.version 
-            }).catch(console.log);  
-            
-            const embed = new discord.MessageEmbed()
-            .setTitle("Current Discord Builds")
-            .setColor("00FF00")
-            .addField("Desktop", stable + "\n" + PTB + "\n" + canary)
-            .addField("iOS", istable)
-            .addField("Android", astable)
-            //.setFooter("Test", "https://cdn.discordapp.com/emojis/783706778290356284.gif")
-            .setTimestamp();
-            client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
-                data: await createAPIMessage(interaction, embed)
-            })      
-
-
-
-
-        }        
-
-        if(command == 'checktf') {
-
-            await client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 5
-                }
-            });
-
-            var l = "https://testflight.apple.com/join/gdE4pRzI"
-    
-            const html = await getHTML(l).then(({ url, html, stats, headers, statusCode })  => {return html})
-
-
-
-
-            var title = getHtmlTitle({ html });        
-            var title = title.slice(9);
-            var title = title.replace(' beta - TestFlight - Apple','');
-            
-    
-        if(html.includes("This beta is full.") == true) {
-        
-                const embed = new discord.MessageEmbed()
-                .setTitle(title + " - TestFlight Status")
-                .setURL(l)
-                .setDescription("Discord testflight is full!")
-                .setColor("FF0000")
-                .setTimestamp();        
-                client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
-                data: await createAPIMessage(interaction, embed)
-            })
-    
-
-        } else {
-    
-    
-                const embed = new discord.MessageEmbed()
-                .setTitle(title + " - TestFlight Status")
-                .setURL(l)
-                .setDescription("Discord testflight has slots available!")
-                .setColor("7fff01")
-                .setTimestamp();        
-                client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
-                data: await createAPIMessage(interaction, embed)
-                
-            })
-    
-    
-    
-    
-          }            
-
-
-
-        }        
-
-        if(command == 'test') {
-
-
-            await client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 5
-                }
-            });
-            Patch(client.user.id, interaction.token)
-        }        
 
         if(command == 'eval') {
             const check = config.ownerid;
@@ -868,53 +230,6 @@ client.on('ready', () => {
 
         }      
 
-        if(command == 'atol') {
-            const hash = args.find(arg => arg.name.toLowerCase() == "hash").value;
-
-            const res = await (async () => {
-                try {
-                    const t = await got.get('https://api.imgur.com/3/album/' + hash + '/images',{headers: {Authorization: config.imgur}}).json();
-                    var a = [];
-                    for (i = 0; i < t.data.length; i++) {
-                        a.push(t.data[i].link)
-                      }
-                    return a;
-                } catch (error) {
-                    return "An error has occured please send the command again!";  
-                }
-            })();
-
-            await client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 5
-                }
-            });
-
-            console.log(res) // 
-            if(res.includes("An error has occured please send the command again!")) {
-                return client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
-                data: {content: "An error has occured please send the command again!"}}) 
-            } else {
-                return client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
-                    data: {content: `<${res.join(">\n<")}>`}})                
-            }
-
-        }      
-        
-      
-        if(command == '8ball') {
-
-            var res = ball();
-
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content: res
-                    }
-                }
-            });
-        }  
 
         if(command == 'calc') {
 
@@ -1068,17 +383,7 @@ client.on('ready', () => {
                     if (err) throw err;
                     console.log('File deleted!');
                   });
-
-
-
-
-
-
-
         }        
-
-
-
         if(command == 'mention') {
 
             const user = args.find(arg => arg.name.toLowerCase() == "user").value;
@@ -1092,22 +397,6 @@ client.on('ready', () => {
                 }
             });
         }      
-        
-        if(command == 'onlyme') {
-
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 3, 
-                    data: {
-                        flags: 64,
-                        content: "You are the only one that can see this message!"
-                    }
-                }
-            });
-        }  
-
-
-
         if(command == "embed") {
             var check = await checkPerm(interaction.member.user.id, "MANAGE_MESSAGES", interaction.guild_id);
             if(check == true){     
@@ -1160,12 +449,8 @@ client.on('ready', () => {
     }
 
 
-    });
-
-
-
 });
-
+*/
 
 
 async function createAPIMessage(interaction, content) {
@@ -1400,4 +685,3 @@ function getFromDataURL(u,f){
     fetch(u).then(a=>a.text().then(f));
 }
 
-client.login(require('./config.json').token);

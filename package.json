@@ -16,6 +16,7 @@
     "cleverbot-free": "^1.0.5",
     "discord-build-info-js": "^1.0.4",
     "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
     "easy-get-request-with-headers": "^1.0.1",
     "format-json-files": "^1.0.6",
     "fs": "0.0.1-security",
@@ -26,7 +27,7 @@
     "imgbb-uploader": "^1.2.0",
     "imgur": "^0.3.1",
     "memejs": "^1.2.3",
-    "pm2": "^4.5.5",
+    "pm2": "^4.5.6",
     "puppeteer": "^7.0.0",
     "replace-in-file": "^6.1.0",
     "string-calculator": "^1.0.1",
@@ -35,6 +36,7 @@
     "vue": "^2.6.12",
     "vue-discord-message": "^5.0.2",
     "wait": "^0.4.2",
+    "winston": "^3.3.3",
     "ytdl-core": "^4.2.1"
   }
 }
