@@ -8,6 +8,7 @@ const rafts = require('./rafts');
 const BaseRaft = require('./rafts/BaseRaft');
 const logBuilder = require('./rafts/captainsLog/LogRouter');
 const util = require('./util');
+const Enmap = require("enmap");
 
 /**
  * The main entry point for any instance of this bot.
@@ -136,6 +137,9 @@ class Boat {
       });
     });
     // End addition
+
+    // Loads database for MAL data 
+    this.client.maldata = new Enmap("MALData");
 
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }

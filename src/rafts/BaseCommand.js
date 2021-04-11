@@ -38,6 +38,12 @@ class BaseCommand {
      * @type {boolean}
      */
     this.owner = options.owner ?? false;
+
+    /**
+     * Whether this command can be used in dms
+     * @type {boolean}
+     */
+     this.dms = options.dms ?? false;    
   }
 
   /**

@@ -6,8 +6,6 @@ module.exports = async (boat, message) => {
   // Ignore bots
   if (message.author.bot) return;
 
-  if (message.channel.type !== 'text') return;
-
   if (!message.content.startsWith(boat.prefix)) {
     handleRaft(boat.rafts, message);
     return;
@@ -21,6 +19,9 @@ module.exports = async (boat, message) => {
     handleRaft(boat.rafts, message);
     return;
   }
+  if (message.channel.type !== 'text' && message.channel.type !== 'dm') return;
+
+  if (message.channel.type == 'dm' && !handler.dms) return;
 
   if (handler.owner && !boat.owners.includes(message.author.id)) return;
 
