@@ -19,7 +19,13 @@ class LinkCommand extends BaseCommand {
 
   async run(message, args) {
     let client = this.boat.client;
-    if (args.length < 2) return message.channel.send(`Invalid link command`);
+    if (args.length < 2) {
+      let embed = new Discord.MessageEmbed()
+      .setDescription(`To link your account you must authorize it first [here](${process.env.MAL_AUTH_LINK}) then send the link command!`)
+      .setColor('FF0000');
+      return message.channel.send(embed)
+    }
+    
     const url = `https://myanimelist.net/v1/oauth2/token`
     const params = new URLSearchParams()
     params.append('client_id', process.env.MAL_CLIENT_ID);
@@ -37,8 +43,9 @@ class LinkCommand extends BaseCommand {
     console.log(out.data)
     client.maldata.set(`${message.author.id}AToken`, out.data.access_token);
     client.maldata.set(`${message.author.id}RToken`, out.data.refresh_token);
-    
-  }
+    client.maldata.set(`${message.author.id}EXPD`, Date.now() + (out.data.expires_in * 1000));
+    message.channel.send('Successful linked account!')
+  } 
 }
 
 
