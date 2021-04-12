@@ -95,9 +95,8 @@ class BotsInteraction extends BaseInteraction {
     else if(action == 'status') pm2.describe(bot, (err, processDescription) => { return interaction.reply(`${bot}'s status is ${processDescription[0].pm2_env.status}`) })
 
     else if(action == 'dump') pm2.describe(bot, async (err, processDescription) => {  
-      let attachment = new Discord.MessageAttachment(Buffer.from(util.inspect(processDescription), 'utf-8'), 'dump.js');
       interaction.reply(`Loading file`);
-      const apiMessage = Discord.APIMessage.create(interaction.webhook, null, attachment).resolveData();
+      const apiMessage = Discord.APIMessage.create(interaction.webhook, null, Buffer.from(util.inspect(processDescription))).resolveData();
       console.log(apiMessage.files)
       console.log(apiMessage.data)
       this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
