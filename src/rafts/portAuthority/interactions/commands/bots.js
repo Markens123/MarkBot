@@ -7,6 +7,7 @@ pm2.connect(function(err) {
   }  
 });
 const util = require('util');
+const { exec } = require('child_process');
 const Discord = require('discord.js');
 const BaseInteraction = require('../../../BaseInteraction');
 
@@ -97,10 +98,22 @@ class BotsInteraction extends BaseInteraction {
       let attachment = new Discord.MessageAttachment(Buffer.from(util.inspect(processDescription), 'utf-8'), 'dump.js');
       return interaction.reply(attachment);
     });
-    else if(pull == 'pull') {
+    else if(action == 'pull') {
       await promiseExec(`pm2 pull ${bot}`).then(a => {return interaction.reply(`${bot} has been updated to the latest commit`)}).catch(err => { return interaction.reply(`\`\`\`bash\n${err}\`\`\``)});      
     }
   }
+}
+
+function promiseExec(action) {
+  return new Promise((resolve, reject) =>
+    exec(action, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ stdout, stderr });
+      }
+    }),
+  );
 }
 
 module.exports = BotsInteraction;
