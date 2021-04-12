@@ -96,7 +96,7 @@ class BotsInteraction extends BaseInteraction {
 
     else if(action == 'dump') pm2.describe(bot, async (err, processDescription) => {  
       interaction.reply(`Loading file`);
-      const apiMessage = Discord.APIMessage.create(interaction.webhook, null, Buffer.from(util.inspect(processDescription))).resolveData();
+      const apiMessage = Discord.APIMessage.create(interaction.webhook, null, files[Buffer.from(util.inspect(processDescription))] ).resolveData();
       console.log(apiMessage.files)
       console.log(apiMessage.data)
       this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
