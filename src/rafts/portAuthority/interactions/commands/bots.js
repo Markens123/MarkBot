@@ -96,7 +96,9 @@ class BotsInteraction extends BaseInteraction {
 
     else if(action == 'dump') pm2.describe(bot, async (err, processDescription) => {  
       let attachment = new Discord.MessageAttachment(Buffer.from(util.inspect(processDescription), 'utf-8'), 'dump.js');
-      return interaction.reply(attachment);
+      interaction.reply(`Loading file`);
+      const apiMessage = Discord.APIMessage.create(interaction.webhook, null, attachment).resolveData();
+      this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
     });
     else if(action == 'pull') {
       await promiseExec(`pm2 pull ${bot}`).then(a => {return interaction.reply(`${bot} has been updated to the latest commit`)}).catch(err => { return interaction.reply(`\`\`\`bash\n${err}\`\`\``)});      
