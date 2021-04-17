@@ -19,51 +19,67 @@ class MALCommand extends BaseCommand {
   async run(message, args) {
     let client = this.boat.client;
     if (!client.maldata.has(`${message.author.id}AToken`)) return message.channel.send('Error: You did not link your MAL account yet!')
-    const offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
+    let offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
+    offset = offset < 0 ? 0 : offset 
 
     if (args[0] == 'show') {
-      if (args.length === 0) return message.channel.send(`Usage: !mal show`);
+      if (args.length === 0) return message.channel.send(`Usage: !mal show (#)`);
       const rmsg = await message.channel.send('Loading data...')
 
       // Token refresh
       if (Date.now() >= client.maldata.get(`${message.author.id}EXPD`)) await refreshtoken(client.maldata.get(`${message.author.id}RToken`), client) 
 
       // Var setup
-      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=list_status&limit=1&sort=anime_title&offset=${offset}`
-      const url2 = `https://api.myanimelist.net/v2/users/@me?fields=anime_statistics`
+      const url = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics&limit=100&sort=anime_title'
       const config = {
         headers: {
           'Authorization': `Bearer ${client.maldata.get(`${message.author.id}AToken`)}`
         }
       }      
-      // User search
-      const userreq = await axios.get(url2, config);
-      const user = userreq.data
-      if (offset + 1 > user.anime_statistics.num_items) return error(message, rmsg, `Error: You only have **${user.anime_statistics.num_items}** items in your list`)
-    // Anime search
-      const idreq = await axios.get(url, config);
-      const url3 = `https://api.myanimelist.net/v2/anime/${idreq.data.data[0].node.id}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics`
+      // Data search
+      let data = await axios.get(url, config);
+      data = data.data
+      if (!(data.paging && Object.keys(data.paging).length === 0 && data.paging.constructor === Object)) {
+        if (data.paging.next) {
+          let w = false;
+          while (w == false) {
+            let req = await axios.get(data.paging.next, config);
+            req = req.data
+            data.data = data.data.concat(req.data)
 
-      const animereq = await axios.get(url3, config);
-      const anime = animereq.data
+            if (req.paging.next) w = false 
+            else w = true
+          }
+        }
+      }
+      if (offset + 1 > data.data.length) return error(message, rmsg, `Error: You only have **${data.data.length}** items in your list`)
 
-
-      let synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis
-
-      let embed = new Discord.MessageEmbed()
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setColor(gencolor(anime.my_list_status.status))
-      .setTitle(anime.title)
-      .setURL(`https://myanimelist.net/anime/${anime.id}`)
-      .setThumbnail(anime.main_picture.medium)
-      .setFooter(`${offset + 1}/${user.anime_statistics.num_items} • ${anime.media_type} ${hreadable(anime.status)} • ${(anime.genres.map(a => a.name)).join(', ')}`)
-      .addField('Status', hreadable(anime.my_list_status.status))
-      .addField('Score given', genscore(anime.my_list_status.score))
-      .addField('Info', `**Score** ${anime.mean}\n**Ranked** #${anime.rank}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(anime.num_list_users).toLocaleString('en-US')}`)
-      .addField('Synopsis', synopsis);
+      let embed = await genEmbed(data, message, offset);
 
       if (rmsg.deletable) rmsg.delete();
-      message.channel.send(embed);
+      message.channel.send(embed).then(async msg => {
+        let currentIndex = offset
+
+        if (currentIndex !== 0) await msg.react('⬅️')
+        if (currentIndex + 1 < data.data.length) await msg.react('➡️')
+
+        const collector = msg.createReactionCollector(
+          // only collect left and right arrow reactions from the message author
+          (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id,
+          // time out after a minute
+          {time: 60000}
+        )        
+        collector.on('collect', reaction => {
+          msg.reactions.removeAll().then(async () => {
+            reaction.emoji.name === '⬅️' ? currentIndex -= 1 : currentIndex += 1
+            msg.edit(await genEmbed(data, message, currentIndex))
+            if (currentIndex !== 0) await msg.react('⬅️')
+            if (currentIndex + 1 < data.data.length) msg.react('➡️')
+          });
+        });
+      });
+
+
     } 
   }
 }
@@ -78,7 +94,7 @@ function gencolor(status) {
 }
 
 function hreadable(text) {
-  var str = text.split('_').join(' ')
+  let str = text.split('_').join(' ')
   return str.replace(/\w\S*/g, function(txt){
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 });
@@ -103,6 +119,26 @@ function genscore(score) {
   if (score == 10) return '10 (Masterpiece)'
 }
 
+
+async function genEmbed(data, message, offset) {
+
+  const anime = data.data[offset].node
+
+  let synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis
+
+  return new Discord.MessageEmbed()
+  .setAuthor(message.author.tag, message.author.displayAvatarURL())
+  .setColor(gencolor(anime.my_list_status.status))
+  .setTitle(anime.title)
+  .setURL(`https://myanimelist.net/anime/${anime.id}`)
+  .setThumbnail(anime.main_picture.medium)
+  .setFooter(`${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${(anime.genres.map(a => a.name)).join(', ')}`)
+  .addField('Status', hreadable(anime.my_list_status.status))
+  .addField('Score given', genscore(anime.my_list_status.score))
+  .addField('Info', `**Score** ${anime.mean}\n**Ranked** #${anime.rank}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(anime.num_list_users).toLocaleString('en-US')}`)
+  .addField('Synopsis', synopsis);
+}
+
 async function refreshtoken(rtoken, client) {
   const url = `https://myanimelist.net/v1/oauth2/token`
   const params = new URLSearchParams()
@@ -119,7 +155,6 @@ async function refreshtoken(rtoken, client) {
   await client.maldata.set(`${message.author.id}AToken`, out.data.access_token);
   await client.maldata.set(`${message.author.id}RToken`, out.data.refresh_token);
   await client.maldata.set(`${message.author.id}EXPD`, Date.now() + (out.data.expires_in * 1000));
-
 
 }
 
