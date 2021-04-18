@@ -23,19 +23,31 @@ class MALCommand extends BaseCommand {
     offset = offset < 0 ? 0 : offset 
 
     if (args[0] == 'mylist' || args[0] == 'ml') {
-      if (args.length === 0) return message.channel.send(`Usage: !mal show (#)`);
+      let sort = 'anime_title';
+      if (args.includes('--sort') || args.includes('-s')) {
+        const index = args.indexOf('--sort') > -1 ? args.indexOf('--sort') : args.indexOf('-s');
+        const filter = ['score', 'updated', 'title', 'date'] 
+        if (filter.includes(args[index + 1])) {
+          if (args[index + 1] == 'score') sort = 'list_score'
+          if (args[index + 1] == 'updated') sort = 'list_updated_at'
+          if (args[index + 1] == 'title') sort = 'anime_title'
+          if (args[index + 1] == 'date') sort = 'anime_start_date'
+        } else return message.channel.send(`Error: valid sort options are \`${filter.join('` `')}\``)
+        args.splice(index, 2);
+      }
       const rmsg = await message.channel.send('Loading data...')
 
       // Token refresh
       if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(client.maldata.get(message.author.id, 'RToken'), client) 
 
       // Var setup
-      const url = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics&limit=100&sort=anime_title'
+      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics&limit=100&sort=${sort}`
       const config = {
         headers: {
           'Authorization': `Bearer ${client.maldata.get(message.author.id, 'AToken')}`
         }
-      }      
+      }
+            
       // Data search
       let data = await axios.get(url, config);
       data = data.data
