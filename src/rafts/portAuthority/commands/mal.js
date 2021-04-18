@@ -22,10 +22,15 @@ class MALCommand extends BaseCommand {
     let offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
     offset = offset < 0 ? 0 : offset 
 
+    // Token refresh 
+    if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(client.maldata.get(message.author.id, 'RToken'), client) 
+
+
     if (args[0] == 'mylist' || args[0] == 'ml') {
       let sort = 'anime_title';
-      if (args.includes('--sort') || args.includes('-s')) {
-        const index = args.indexOf('--sort') > -1 ? args.indexOf('--sort') : args.indexOf('-s');
+      let status = '';
+      if (args.includes('--sort') || args.includes('-so')) {
+        const index = args.indexOf('--sort') > -1 ? args.indexOf('--sort') : args.indexOf('-so');
         const filter = ['score', 'updated', 'title', 'date'] 
         if (filter.includes(args[index + 1])) {
           if (args[index + 1] == 'score') sort = 'list_score'
@@ -35,19 +40,37 @@ class MALCommand extends BaseCommand {
         } else return message.channel.send(`Error: valid sort options are \`${filter.join('` `')}\``)
         args.splice(index, 2);
       }
+
+      if (args.includes('--status') || args.includes('-st')) {
+        const index = args.indexOf('--status') > -1 ? args.indexOf('--status') : args.indexOf('-st');
+        const filter = ['watching', 'completed', 'oh', 'onhold', 'dropped', 'ptw'] 
+
+        if (filter.includes(args[index + 1])) {
+          if (args[index + 1] == 'watching') status = 'watching'
+          if (args[index + 1] == 'completed') status = 'completed'
+          if (args[index + 1] == 'dropped') status = 'dropped'
+          if (args[index + 1] == 'oh') status = 'on_hold'
+          if (args[index + 1] == 'onhold') status = 'on_hold'
+          if (args[index + 1] == 'ptw') status = 'plan_to_watch'
+
+        } else return message.channel.send(`Error: valid sort options are \`${filter.join('` `')}\``)
+        args.splice(index, 2);
+      }      
+
+      offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
+      offset = offset < 0 ? 0 : offset 
+
       const rmsg = await message.channel.send('Loading data...')
 
-      // Token refresh
-      if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(client.maldata.get(message.author.id, 'RToken'), client) 
-
       // Var setup
-      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics&limit=100&sort=${sort}`
+      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=100&sort=${sort}${status ? `&status=${status}` : ''}`
+      
       const config = {
         headers: {
           'Authorization': `Bearer ${client.maldata.get(message.author.id, 'AToken')}`
         }
       }
-            
+
       // Data search
       let data = await axios.get(url, config);
       data = data.data
@@ -91,8 +114,7 @@ class MALCommand extends BaseCommand {
         });
       });
 
-
-    } 
+    }
   }
 }
 
@@ -135,7 +157,7 @@ function genscore(score) {
 async function genEmbed(data, message, offset) {
 
   const anime = data.data[offset].node
-
+  console.log(anime)
   let synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis
 
   return new Discord.MessageEmbed()
@@ -147,7 +169,7 @@ async function genEmbed(data, message, offset) {
   .setFooter(`${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${(anime.genres.map(a => a.name)).join(', ')}`)
   .addField('Status', hreadable(anime.my_list_status.status))
   .addField('Score given', genscore(anime.my_list_status.score))
-  .addField('Info', `**Score** ${anime.mean}\n**Ranked** #${anime.rank}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(anime.num_list_users).toLocaleString('en-US')}`)
+  .addField('Info', `**Score** ${anime.mean}\n**Ranked** #${anime.rank}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(anime.num_list_users).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`)
   .addField('Synopsis', synopsis);
 }
 
