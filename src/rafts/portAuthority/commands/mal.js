@@ -21,7 +21,7 @@ class MALCommand extends BaseCommand {
     if (!client.maldata.has(message.author.id) || !client.maldata.has(message.author.id, 'AToken')) return message.channel.send('Error: You did not link your MAL account yet!')
 
     // Token refresh 
-    if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(client.maldata.get(message.author.id, 'RToken'), client) 
+    if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(message, client.maldata.get(message.author.id, 'RToken'), client) 
 
 
     if (args[0] == 'mylist' || args[0] == 'ml') {
@@ -152,7 +152,7 @@ class MALCommand extends BaseCommand {
       let embed = await genEmbed(data, message, offset);
 
       if (rmsg.deletable) rmsg.delete();
-      message.channel.send(embed).then(async msg => {
+      return message.channel.send(embed).then(async msg => {
         let currentIndex = offset
 
         if (currentIndex !== 0) await msg.react('⬅️')
@@ -175,8 +175,63 @@ class MALCommand extends BaseCommand {
       });
 
     }
-     
+    if (args[0] == 'get' || args[0] == 'g') {
+      let offset = 0; 
+      if (!args[1]) return message.channel.send('You must provide an anime id!')
+      if (!parseInt(args[1])) return message.channel.send('You must provide an anime id!')
+      const rmsg = await message.channel.send('Loading data...');
+      
+      // Var setup
+      const url = `https://api.myanimelist.net/v2/anime/${args[1]}?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes` 
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${client.maldata.get(message.author.id, 'AToken')}`
+        }
+      }
+
+      // Data search
+      let data = await axios.get(url, config).catch(err => { return err })
+
+      if (data.response && data.response.statusText == 0) return error(message, rmsg, 'No results found');
+
+      data = {'data': [{'node': data.data}]}
+
+
+      let embed = await genEmbed(data, message, offset);
+
+      if (rmsg.deletable) rmsg.delete();
+      return message.channel.send(embed).then(async msg => {
+        let currentIndex = offset
+
+        if (currentIndex !== 0) await msg.react('⬅️')
+        if (currentIndex + 1 < data.data.length) await msg.react('➡️')
+
+        const collector = msg.createReactionCollector(
+          // only collect left and right arrow reactions from the message author
+          (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id,
+          // time out after a minute
+          {time: 60000}
+        )        
+        collector.on('collect', reaction => {
+          msg.reactions.removeAll().then(async () => {
+            reaction.emoji.name === '⬅️' ? currentIndex -= 1 : currentIndex += 1
+            msg.edit(await genEmbed(data, message, currentIndex))
+            if (currentIndex !== 0) await msg.react('⬅️')
+            if (currentIndex + 1 < data.data.length) msg.react('➡️')
+          });
+        });
+      });
+    }
+    const cmd = this.boat.prefix + this.name    
+    const embed = new Discord.MessageEmbed()
+    .setColor('DARK_RED')
+    .setTitle('Usage')
+    .addField('Commands', `${cmd} ml/mylist (page #) (flags)\n${cmd} get/g <anime id>\n${cmd} search/s <title>\n`)
+    .addField('Flags', '--sort/-so <sort type>\n--status/-st <status>\n*Only usable with mylist*')
+    
+    message.channel.send(embed)
   }
+
 }
 
 function gencolor(status) {
@@ -236,11 +291,11 @@ async function genEmbed(data, message, offset) {
   .setFooter(`${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${(anime.genres.map(a => a.name)).join(', ')}`)
   .addField('Status', hreadable(anime.my_list_status.status))
   .addField('Score given', genscore(anime.my_list_status.score))
-  .addField('Info', `**Score** ${anime.mean}\n**Ranked** #${anime.rank}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(anime.num_list_users).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`)
+  .addField('Info', `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? '#'+anime.rank: 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(anime.num_list_users).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`)
   .addField('Synopsis', synopsis);
 }
 
-async function refreshtoken(rtoken, client) {
+async function refreshtoken(message, rtoken, client) {
   const url = `https://myanimelist.net/v1/oauth2/token`
   const params = new URLSearchParams()
   params.append('client_id', process.env.MAL_CLIENT_ID);
