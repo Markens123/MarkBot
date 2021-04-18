@@ -38,7 +38,7 @@ class EvalCommand extends BaseCommand {
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
     }
-    let cleaned = await this.clean(util.inspect(evaluated, { depth }));
+    let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
     if (cleaned.split(/\r\n|\r|\n/).length > 8) {
       if (nf === true) {
         return message.channel.send(`\`\`\`js\n${cleaned.slice(0, 1950)}\n\`\`\``);
@@ -49,8 +49,12 @@ class EvalCommand extends BaseCommand {
     return message.channel.send(`\`\`\`js\n${cleaned}\n\`\`\``);
   }
 
-  clean(text) {
+  clean(client, text) {
     if (typeof text === 'string') {
+      client.maldata.fetchEverything().forEach(element => {
+        text = text.replace(element.AToken, 'Redacted')
+        .replace(element.RToken, 'Redacted')
+      }); 
       return text
         .replace(/` /g, `\`${String.fromCharCode(8203)}`)
         .replace(/@/g, `@${String.fromCharCode(8203)}`)
