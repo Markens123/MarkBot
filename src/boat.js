@@ -138,8 +138,10 @@ class Boat {
     });
     // End addition
 
-    // Loads database for MAL data 
+    // Loads databases
     this.client.maldata = new Enmap("MALData");
+    this.client.cooldowns = new Collection();
+
 
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }

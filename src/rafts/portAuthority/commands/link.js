@@ -40,10 +40,9 @@ class LinkCommand extends BaseCommand {
     }
 
     const out = await axios.post(url, params, config)//.catch(error => message.channel.send('An error has occured please relink your account and send the new command given!'))
-    console.log(out.data)
-    client.maldata.set(`${message.author.id}AToken`, out.data.access_token);
-    client.maldata.set(`${message.author.id}RToken`, out.data.refresh_token);
-    client.maldata.set(`${message.author.id}EXPD`, Date.now() + (out.data.expires_in * 1000));
+    client.maldata.set(message.author.id, out.data.access_token, 'AToken');
+    client.maldata.set(message.author.id, out.data.refresh_token, 'RToken');
+    client.maldata.set(message.author.id, Date.now() + (out.data.expires_in * 1000), 'EXPD');
     message.channel.send('Successful linked account!')
   } 
 }

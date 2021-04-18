@@ -43,7 +43,31 @@ class BaseCommand {
      * Whether this command can be used in dms
      * @type {boolean}
      */
-     this.dms = options.dms ?? false;    
+     this.dms = options.dms ?? false;
+
+    /**
+     * Which channels can use this command
+     * @type {string[]}
+     */
+     this.channels = options.channels ?? false;
+     
+    /**
+     * The aliases for this command
+     * @type {string[]}
+     */
+     this.aliases = options.aliases ?? false;
+     
+    /**
+     * The cooldown for this command
+     * @type {int[]}
+     */
+     this.cooldown = options.cooldown ?? false;
+     
+    /**
+     * The permission needed for this command
+     * @type {string}
+     */
+     this.permissions = options.permissions ?? false;       
   }
 
   /**

@@ -18,22 +18,22 @@ class MALCommand extends BaseCommand {
 
   async run(message, args) {
     let client = this.boat.client;
-    if (!client.maldata.has(`${message.author.id}AToken`)) return message.channel.send('Error: You did not link your MAL account yet!')
+    if (!client.maldata.has(message.author.id) || !client.maldata.has(message.author.id, 'AToken')) return message.channel.send('Error: You did not link your MAL account yet!')
     let offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
     offset = offset < 0 ? 0 : offset 
 
-    if (args[0] == 'show') {
+    if (args[0] == 'mylist' || args[0] == 'ml') {
       if (args.length === 0) return message.channel.send(`Usage: !mal show (#)`);
       const rmsg = await message.channel.send('Loading data...')
 
       // Token refresh
-      if (Date.now() >= client.maldata.get(`${message.author.id}EXPD`)) await refreshtoken(client.maldata.get(`${message.author.id}RToken`), client) 
+      if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(client.maldata.get(message.author.id, 'RToken'), client) 
 
       // Var setup
       const url = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics&limit=100&sort=anime_title'
       const config = {
         headers: {
-          'Authorization': `Bearer ${client.maldata.get(`${message.author.id}AToken`)}`
+          'Authorization': `Bearer ${client.maldata.get(message.author.id, 'AToken')}`
         }
       }      
       // Data search
@@ -152,9 +152,9 @@ async function refreshtoken(rtoken, client) {
     }
   }
   const out = await axios.post(url, params, config)
-  await client.maldata.set(`${message.author.id}AToken`, out.data.access_token);
-  await client.maldata.set(`${message.author.id}RToken`, out.data.refresh_token);
-  await client.maldata.set(`${message.author.id}EXPD`, Date.now() + (out.data.expires_in * 1000));
+  await client.maldata.set(message.author.id, out.data.access_token, 'AToken');
+  await client.maldata.set(message.author.id, out.data.refresh_token, 'RToken');
+  await client.maldata.set(message.author.id, Date.now() + (out.data.expires_in * 1000), 'EXPD');
 
 }
 
