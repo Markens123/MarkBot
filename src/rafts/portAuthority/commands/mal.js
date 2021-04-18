@@ -19,8 +19,6 @@ class MALCommand extends BaseCommand {
   async run(message, args) {
     let client = this.boat.client;
     if (!client.maldata.has(message.author.id) || !client.maldata.has(message.author.id, 'AToken')) return message.channel.send('Error: You did not link your MAL account yet!')
-    let offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
-    offset = offset < 0 ? 0 : offset 
 
     // Token refresh 
     if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(client.maldata.get(message.author.id, 'RToken'), client) 
@@ -57,7 +55,7 @@ class MALCommand extends BaseCommand {
         args.splice(index, 2);
       }      
 
-      offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
+      let offset = parseInt(args[1]) ? parseInt(args[1]) - 1 : 0
       offset = offset < 0 ? 0 : offset 
 
       const rmsg = await message.channel.send('Loading data...')
@@ -92,6 +90,68 @@ class MALCommand extends BaseCommand {
       let embed = await genEmbed(data, message, offset);
 
       if (rmsg.deletable) rmsg.delete();
+      return message.channel.send(embed).then(async msg => {
+        let currentIndex = offset
+
+        if (currentIndex !== 0) await msg.react('⬅️')
+        if (currentIndex + 1 < data.data.length) await msg.react('➡️')
+
+        const collector = msg.createReactionCollector(
+          // only collect left and right arrow reactions from the message author
+          (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id,
+          // time out after a minute
+          {time: 60000}
+        )        
+        collector.on('collect', reaction => {
+          msg.reactions.removeAll().then(async () => {
+            reaction.emoji.name === '⬅️' ? currentIndex -= 1 : currentIndex += 1
+            msg.edit(await genEmbed(data, message, currentIndex))
+            if (currentIndex !== 0) await msg.react('⬅️')
+            if (currentIndex + 1 < data.data.length) msg.react('➡️')
+          });
+        });
+      });
+
+    }
+    if (args[0] == 'search' || args[0] == 's') {
+      let offset = 0; 
+      args.splice(0, 1);
+      const q = args.join(' ')
+      console.log(q)
+      if (!q) return message.channel.send('You must enter a title to search for!')
+      const rmsg = await message.channel.send('Loading data...');
+      // Var setup
+      const url = `https://api.myanimelist.net/v2/anime?q=${encodeURI(q)}&limit=100&fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes` 
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${client.maldata.get(message.author.id, 'AToken')}`
+        }
+      }
+
+      // Data search
+      let data = await axios.get(url, config);
+      data = data.data
+      if (!(data.paging && Object.keys(data.paging).length === 0 && data.paging.constructor === Object)) {
+        if (data.paging.next) {
+          let w = false;
+          let i = 0;
+          while (w == false) {
+            let req = await axios.get(data.paging.next, config);
+            req = req.data
+            data.data = data.data.concat(req.data)
+
+            if (req.paging.next) w = false 
+            else w = true
+            i++
+            if (i >= 2) w = true
+          }
+        }
+      }
+      if (data.data.length == 0) return error(message, rmsg, 'No results found');
+
+      let embed = await genEmbed(data, message, offset);
+
+      if (rmsg.deletable) rmsg.delete();
       message.channel.send(embed).then(async msg => {
         let currentIndex = offset
 
@@ -115,6 +175,7 @@ class MALCommand extends BaseCommand {
       });
 
     }
+     
   }
 }
 
@@ -156,9 +217,15 @@ function genscore(score) {
 
 async function genEmbed(data, message, offset) {
 
-  const anime = data.data[offset].node
-  console.log(anime)
+  let anime = data.data[offset].node
   let synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis
+  
+  if (!anime.my_list_status) {
+    anime.my_list_status = {}
+    anime.my_list_status.status = 'not_watched'
+    anime.my_list_status.score = 0
+    anime.my_list_status.num_episodes_watched = 0
+  }
 
   return new Discord.MessageEmbed()
   .setAuthor(message.author.tag, message.author.displayAvatarURL())
