@@ -21,7 +21,7 @@ class MALCommand extends BaseCommand {
     if (!client.maldata.has(message.author.id) || !client.maldata.has(message.author.id, 'AToken')) return message.channel.send('Error: You did not link your MAL account yet!')
 
     // Token refresh 
-    if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(message, client.maldata.get(message.author.id, 'RToken'), client) 
+    if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(this.raft, message, client.maldata.get(message.author.id, 'RToken'), client) 
 
 
     if (args[0] == 'mylist' || args[0] == 'ml') {
@@ -61,7 +61,7 @@ class MALCommand extends BaseCommand {
       const rmsg = await message.channel.send('Loading data...')
 
       // Var setup
-      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=100&sort=${sort}${status ? `&status=${status}` : ''}`
+      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=10&sort=${sort}${status ? `&status=${status}` : ''}`
       
       const config = {
         headers: {
@@ -79,7 +79,7 @@ class MALCommand extends BaseCommand {
             let req = await axios.get(data.paging.next, config);
             req = req.data
             data.data = data.data.concat(req.data)
-
+            data.paging.next = req.paging.next
             if (req.paging.next) w = false 
             else w = true
           }
@@ -295,22 +295,14 @@ async function genEmbed(data, message, offset) {
   .addField('Synopsis', synopsis);
 }
 
-async function refreshtoken(message, rtoken, client) {
-  const url = `https://myanimelist.net/v1/oauth2/token`
-  const params = new URLSearchParams()
-  params.append('client_id', process.env.MAL_CLIENT_ID);
-  params.append('client_secret', process.env.MAL_CLIENT_SECRET);
-  params.append('grant_type', 'refresh_token');
-  params.append('refresh_token', rtoken);
-  const config = {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  }
-  const out = await axios.post(url, params, config)
-  await client.maldata.set(message.author.id, out.data.access_token, 'AToken');
-  await client.maldata.set(message.author.id, out.data.refresh_token, 'RToken');
-  await client.maldata.set(message.author.id, Date.now() + (out.data.expires_in * 1000), 'EXPD');
+async function refreshtoken(raft, message, rtoken, client) {
+  const out = await raft.apis.oauth.refreshToken(rtoken).catch(err => {this.boat.log.verbose(module, `Error getting token ${err}`)});
+
+  if (!out.access_token) return message.channel.send("An error has occured please relink your account, if there's still an issue please contact the bot dev!")
+
+  await client.maldata.set(message.author.id, out.access_token, 'AToken');
+  await client.maldata.set(message.author.id, out.refresh_token, 'RToken');
+  await client.maldata.set(message.author.id, Date.now() + (out.expires_in * 1000), 'EXPD');
 
 }
 

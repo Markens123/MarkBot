@@ -8,9 +8,6 @@ module.exports = async (boat, message) => {
   // Ignore bots
   if (message.author.bot) return;
 
-  if (message.channel.type !== 'text' && message.channel.type !== 'dm') return;
-
-  if (message.channel.type == 'dm' && !handler.dms) return;
 
   if (!message.content.startsWith(boat.prefix)) {
     handleRaft(boat.rafts, message);
@@ -21,11 +18,15 @@ module.exports = async (boat, message) => {
   const command = args.shift().toLowerCase();
 
   const handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
-   
+
   if (!handler) {
     handleRaft(boat.rafts, message);
     return;
   }
+  if (message.channel.type !== 'text' && message.channel.type !== 'dm') return;
+
+  if (message.channel.type == 'dm' && !handler.dms) return;
+
   if (handler.permissions) {
     const authorPerms = message.channel.permissionsFor(message.author);
     if (!authorPerms || !authorPerms.has(handler.permissions)) {

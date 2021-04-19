@@ -51,10 +51,10 @@ class EvalCommand extends BaseCommand {
 
   clean(client, text) {
     if (typeof text === 'string') {
-      client.maldata.fetchEverything().forEach(element => {
+      /* client.maldata.fetchEverything().forEach(element => {
         text = text.replace(element.AToken, 'Redacted')
         .replace(element.RToken, 'Redacted')
-      }); 
+      }); */ 
       return text
         .replace(/` /g, `\`${String.fromCharCode(8203)}`)
         .replace(/@/g, `@${String.fromCharCode(8203)}`)
