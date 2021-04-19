@@ -32,7 +32,11 @@ const definition = {
         {
             'name': 'MarkBot',
             'value': 'MarkBot'
-        }                      
+        },
+        {
+          'name': 'EthanBoatD',
+          'value': 'EthanBoatD'
+      }                              
       ]                  
     },                
     {
