@@ -12,6 +12,9 @@ commands.shrug = require('./shrug.js');
 commands.test = require('./test.js');
 commands.noresp = require('./noresp.js');
 commands.onlyme = require('./onlyme.js');
+commands.ephemeral = require('./ephemeral.js');
+
+
 
 
 
