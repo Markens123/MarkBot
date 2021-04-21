@@ -19,6 +19,7 @@ class EphemeralInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'ephemeral',
+      guild: '274765646217216003',      
       type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
