@@ -34,19 +34,36 @@ class EvalCommand extends BaseCommand {
       message.channel.send(`Error: Execution of command refused`);
       return message.channel.send('https://media.tenor.com/images/59de4445b8319b9936377ec90dc5b9dc/tenor.gif');
     }
-    let evaluated = await eval(args);
+    let evaluated;
+    let e = false;
+    try {
+    evaluated = await eval(args);
+    } 
+    catch(error) {
+    evaluated = error;
+    e = true
+    }
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
     }
     let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
-    if (cleaned.split(/\r\n|\r|\n/).length > 8) {
+    console.log(e)
+    let embed = new Discord.MessageEmbed()
+    .setColor(e === true ? 'FF0000' : '32CD32')
+    .addField('📥 Input', `\`\`\`js\n${args}\`\`\``)
+    
+    if (cleaned.split(/\r\n|\r|\n/).length > 4) {
       if (nf === true) {
-        return message.channel.send(`\`\`\`js\n${cleaned.slice(0, 1950)}\n\`\`\``);
+        embed.addField('📤 Output', `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``)
+        return message.channel.send(embed);
       }
+      embed.addField('📤 Output', '\`\`\`Eval output too long, see the attached file\`\`\`')
       let attachment = new Discord.MessageAttachment(Buffer.from(cleaned, 'utf-8'), 'eval.js');
-      return message.channel.send('Eval output too long, see the attached file', attachment);
+      await message.channel.send(embed)
+      return message.channel.send(attachment);
     }
-    return message.channel.send(`\`\`\`js\n${cleaned}\n\`\`\``);
+    embed.addField('📤 Output', `\`\`\`js\n${cleaned}\`\`\``)
+    return message.channel.send(embed);
   }
 
   clean(client, text) {
