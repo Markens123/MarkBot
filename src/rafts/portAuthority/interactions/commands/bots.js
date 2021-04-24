@@ -7,6 +7,7 @@ pm2.connect(function(err) {
   }  
 });
 const util = require('util');
+const { exec } = require('child_process');
 const Discord = require('discord.js');
 const BaseInteraction = require('../../../BaseInteraction');
 
@@ -31,7 +32,11 @@ const definition = {
         {
             'name': 'MarkBot',
             'value': 'MarkBot'
-        }                      
+        },
+        {
+          'name': 'EthanBoatD',
+          'value': 'EthanBoatD'
+      }                              
       ]                  
     },                
     {
@@ -94,13 +99,28 @@ class BotsInteraction extends BaseInteraction {
     else if(action == 'status') pm2.describe(bot, (err, processDescription) => { return interaction.reply(`${bot}'s status is ${processDescription[0].pm2_env.status}`) })
 
     else if(action == 'dump') pm2.describe(bot, async (err, processDescription) => {  
-      let attachment = new Discord.MessageAttachment(Buffer.from(util.inspect(processDescription), 'utf-8'), 'dump.js');
-      return interaction.reply(attachment);
+      interaction.reply(`Loading file`);
+      const apiMessage = Discord.APIMessage.create(interaction.webhook, null, [Buffer.from(util.inspect(processDescription))] ).resolveData();
+      console.log(apiMessage.files)
+      console.log(apiMessage.data)
+      this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
     });
-    else if(pull == 'pull') {
+    else if(action == 'pull') {
       await promiseExec(`pm2 pull ${bot}`).then(a => {return interaction.reply(`${bot} has been updated to the latest commit`)}).catch(err => { return interaction.reply(`\`\`\`bash\n${err}\`\`\``)});      
     }
   }
+}
+
+function promiseExec(action) {
+  return new Promise((resolve, reject) =>
+    exec(action, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ stdout, stderr });
+      }
+    }),
+  );
 }
 
 module.exports = BotsInteraction;

@@ -25,16 +25,20 @@ require('dotenv').config();
 
 const shipyard = require('./src/boat');
 const botconfig = {
-  debug: true,
-  token: process.env.DISCORD_TOKEN,
-  clientOpts: {},
-  owners: ['396726969544343554'],
-  log: {
-    outputFile: process.env.LOG_LOCATION,
-    verbose: true,
-    webhookToken: process.env.LOG_WEBHOOK,
-  },
-};
+    debug: true,
+    token: process.env.DISCORD_TOKEN,
+    clientOpts: {},
+    owners: ['396726969544343554'],
+    log: {
+      outputFile: process.env.LOG_LOCATION,
+      verbose: true,
+      webhookToken: process.env.LOG_WEBHOOK,
+    },
+    commandPrefix: process.env.DISCORD_PREFIX,
+    tokens: {
+      nasa: process.env.NASA_API_KEY,
+    },
+  };
 
 const markBot = new shipyard(botconfig);
 
