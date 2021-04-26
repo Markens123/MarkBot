@@ -31,7 +31,7 @@ class AvatarInteraction extends BaseInteraction {
     const client = this.boat.client;
     let user = args?.find(arg => arg.name === `user`)?.value;
     let res = await client.users.fetch(user).then(myUser => {
-      return myUser.avatarURL()
+      return myUser.displayAvatarURL({size: 256})
     }).catch(error => {return error}) 
 
     interaction.reply(res);
