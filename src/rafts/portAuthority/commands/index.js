@@ -2,6 +2,7 @@
 
 const commands = {};
 
+commands.ceval = require('./ceval');
 commands.eval = require('./eval');
 commands.ping = require('./ping');
 commands.echo = require('./echo');
