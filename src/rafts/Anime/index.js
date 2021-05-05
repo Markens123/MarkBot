@@ -7,10 +7,10 @@ const util = require('../../util');
 const BaseRaft = require('../BaseRaft');
 
 /**
- * The management raft for this boat.
+ * The anime commands raft for this boat.
  * @extends {BaseRaft}
  */
-class MAL extends BaseRaft {
+class Anime extends BaseRaft {
   constructor(boat) {
     super(boat);
     /**
@@ -36,4 +36,4 @@ class MAL extends BaseRaft {
   }
 }
 
-module.exports = MAL;
+module.exports = Anime;

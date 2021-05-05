@@ -1,5 +1,4 @@
 'use strict';
-/* We did this without ck's help */
 
 const Discord = require('discord.js');
 const axios = require('axios');
@@ -61,7 +60,7 @@ class MALCommand extends BaseCommand {
       const rmsg = await message.channel.send('Loading data...')
 
       // Var setup
-      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=10&sort=${sort}${status ? `&status=${status}` : ''}`
+      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=10&sort=${sort}${status ? `&status=${status}` : ''}${message.channel.nsfw ? '&nsfw=true' : '&nsfw=false'}`
       
       const config = {
         headers: {
@@ -117,11 +116,10 @@ class MALCommand extends BaseCommand {
       let offset = 0; 
       args.splice(0, 1);
       const q = args.join(' ')
-      console.log(q)
       if (!q) return message.channel.send('You must enter a title to search for!')
       const rmsg = await message.channel.send('Loading data...');
       // Var setup
-      const url = `https://api.myanimelist.net/v2/anime?q=${encodeURI(q)}&limit=100&fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes` 
+      const url = `https://api.myanimelist.net/v2/anime?q=${encodeURI(q)}&limit=100&fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes${message.channel.nsfw ? '&nsfw=true' : '&nsfw=false'}` 
       const config = {
         headers: {
           'Authorization': `Bearer ${client.maldata.get(message.author.id, 'AToken')}`
@@ -182,7 +180,7 @@ class MALCommand extends BaseCommand {
       const rmsg = await message.channel.send('Loading data...');
       
       // Var setup
-      const url = `https://api.myanimelist.net/v2/anime/${args[1]}?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes` 
+      const url = `https://api.myanimelist.net/v2/anime/${args[1]}?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes${message.channel.nsfw ? '&nsfw=true' : '&nsfw=false'}` 
       const config = {
         headers: {
           'Authorization': `Bearer ${client.maldata.get(message.author.id, 'AToken')}`
