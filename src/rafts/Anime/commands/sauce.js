@@ -57,12 +57,12 @@ class SauceCommand extends BaseCommand {
 
 async function genEmbed(data, message, offset) {
   let info = data[offset]
+  let attachment = new Discord.MessageAttachment(Buffer.from(util.inspect(data), 'utf-8'), 'eval.js');
+  message.channel.send(attachment)
 
   const embed = new Discord.MessageEmbed();
 
   if (info.source) embed.addField('Title', info.source);
-  let attachment = new Discord.MessageAttachment(Buffer.from(util.inspect(data), 'utf-8'), 'eval.js');
-  message.channel.send(attachment)
   embed.setTitle('Sauce found')
   .setImage(info.thumbnail)
   .addField('Similarity', info.similarity)
