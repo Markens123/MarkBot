@@ -58,12 +58,14 @@ async function genEmbed(data, message, offset) {
   let info = data[offset]
 
   const embed = new Discord.MessageEmbed();
-  if (info.source) embed.addField('Title', info.ext_urls.join('\n'));
+
+  if (info.source) embed.addField('Title', info.source);
+
   embed.setTitle('Sauce found')
   .setImage(info.thumbnail)
   .addField('Similarity', info.similarity)
   .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`)
-  if (info.source) embed.addField('Title', info.ext_urls.join('\n'))
+
   if (info.est_time) embed.addField('Estimated Time', info.est_time)
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'))
 
