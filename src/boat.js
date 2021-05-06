@@ -140,6 +140,7 @@ class Boat {
 
     // Loads databases
     this.client.maldata = new Enmap("MALData");
+    this.client.epdata = new Enmap("EPData");
     this.client.cooldowns = new Collection();
 
 
