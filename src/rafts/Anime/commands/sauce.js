@@ -17,40 +17,40 @@ class SauceCommand extends BaseCommand {
     super(boat, options);
   }
 
-async run(message, args) {
-  let client = this.boat.client;
-  let url = '';    
-  if (message.attachments.size > 0) url = message.attachments.array()[0].url
-  if (message.embeds > 0 && message.embeds[0].type == 'image') url = reaction.message.embeds[0].thumbnail.url
-  if (args && isImageUrl(args[0])) url = args[0]
-  if (!url) return message.channel.send('Please provide a valid image url or image attachment!')
-  
-  let out = await sauce(url)
+  async run(message, args) {
+    let client = this.boat.client;
+    let url = '';    
+    if (message.attachments.size > 0) url = message.attachments.array()[0].url
+    if (message.embeds > 0 && message.embeds[0].type == 'image') url = reaction.message.embeds[0].thumbnail.url
+    if (args && isImageUrl(args[0])) url = args[0]
+    if (!url) return message.channel.send('Please provide a valid image url or image attachment!')
+    
+    let out = await sauce(url)
 
-  const embed = await genEmbed(out, message, 0)
+    const embed = await genEmbed(out, message, 0)
 
-  return message.channel.send(embed).then(async msg => {
-    let currentIndex = 0
+    return message.channel.send(embed).then(async msg => {
+      let currentIndex = 0
 
-    if (currentIndex !== 0) await msg.react('⬅️')
-    if (currentIndex + 1 < out.length) await msg.react('➡️')
+      if (currentIndex !== 0) await msg.react('⬅️')
+      if (currentIndex + 1 < out.length) await msg.react('➡️')
 
-    const collector = msg.createReactionCollector(
-      // only collect left and right arrow reactions from the message author
-      (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id,
-      // time out after a minute
-      {time: 60000}
-    )        
-    collector.on('collect', reaction => {
-      msg.reactions.removeAll().then(async () => {
-        reaction.emoji.name === '⬅️' ? currentIndex -= 1 : currentIndex += 1
-        msg.edit(await genEmbed(out, message, currentIndex))
-        if (currentIndex !== 0) await msg.react('⬅️')
-        if (currentIndex + 1 < out.length) msg.react('➡️')
+      const collector = msg.createReactionCollector(
+        // only collect left and right arrow reactions from the message author
+        (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id,
+        // time out after a minute
+        {time: 60000}
+      )        
+      collector.on('collect', reaction => {
+        msg.reactions.removeAll().then(async () => {
+          reaction.emoji.name === '⬅️' ? currentIndex -= 1 : currentIndex += 1
+          msg.edit(await genEmbed(out, message, currentIndex))
+          if (currentIndex !== 0) await msg.react('⬅️')
+          if (currentIndex + 1 < out.length) msg.react('➡️')
+        });
       });
     });
-  });
-  }
+    }
 }
 
 
