@@ -57,8 +57,6 @@ class SauceCommand extends BaseCommand {
 
 async function genEmbed(data, message, offset) {
   let info = data[offset]
-  let attachment = new Discord.MessageAttachment(Buffer.from(util.inspect(data), 'utf-8'), 'eval.js');
-  message.channel.send(attachment)
 
   const embed = new Discord.MessageEmbed();
 
