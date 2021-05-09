@@ -11,7 +11,7 @@ class LinkCommand extends BaseCommand {
     const options = {
       name: 'link',
       owner: false,
-      dms: true,
+      dms: 'only',
       enabled: true,
     };
     super(boat, options);
@@ -25,7 +25,7 @@ class LinkCommand extends BaseCommand {
       state = makeid(10)
       client.maldata.set('states', state, message.author.id)
     }
-    
+
     if (args.length < 2) {
       let embed = new Discord.MessageEmbed()
       .setDescription(`To link your account you must authorize it first [here](${process.env.MAL_AUTH_LINK}&state=${state}) then send the link command!`)
