@@ -19,9 +19,16 @@ class LinkCommand extends BaseCommand {
 
   async run(message, args) {
     let client = this.boat.client;
+    let state = '';
+    if (client.maldata.has('states', message.author.id)) state = client.maldata.get('states', message.author.id)
+    else {
+      state = makeid(10)
+      client.maldata.set('states', state, message.author.id)
+    }
+    
     if (args.length < 2) {
       let embed = new Discord.MessageEmbed()
-      .setDescription(`To link your account you must authorize it first [here](${process.env.MAL_AUTH_LINK}) then send the link command!`)
+      .setDescription(`To link your account you must authorize it first [here](${process.env.MAL_AUTH_LINK}&state=${state}) then send the link command!`)
       .setColor('FF0000');
       return message.channel.send(embed)
     }
@@ -35,6 +42,18 @@ class LinkCommand extends BaseCommand {
     client.maldata.set(message.author.id, Date.now() + (out.expires_in * 1000), 'EXPD');
     message.channel.send('Successful linked account!')
   } 
+}
+
+
+function makeid(length) {
+  var result           = [];
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result.push(characters.charAt(Math.floor(Math.random() * 
+charactersLength)));
+ }
+ return result.join('');
 }
 
 

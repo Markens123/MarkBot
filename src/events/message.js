@@ -25,6 +25,7 @@ module.exports = async (boat, message) => {
   }
   if (message.channel.type !== 'text' && message.channel.type !== 'dm') return;
 
+  if (message.channel.type == 'text' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!')
   if (message.channel.type == 'dm' && !handler.dms) return;
 
   if (handler.permissions) {

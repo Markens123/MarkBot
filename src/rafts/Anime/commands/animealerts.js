@@ -20,12 +20,22 @@ class AnimeAlertsCommand extends BaseCommand {
     let client = this.boat.client;
     const Anilist = new anilist();
     if (!args) return message.channel.send(`Usage: ${this.boat.prefix + this.name} <anime id> <channel id/mention> (role id/mention to ping)`)
+    //if (args.length < 2) return message.channel.send(`Usage: ${this.boat.prefix + this.name} <anime id> <channel id/mention> (role id/mention to ping)`)
     let myFilter = {
       idMal: parseInt(args[0])
     };
     const s = await Anilist.searchEntry.anime(null, myFilter)
     if (s.media.length === 0) return message.channel.send('An anime with that id does not exist!')
     const anime = await Anilist.media.anime(s.media[0].id)
+
+    console.log(anime)
+    if (!client.epdata.has(parseInt(args[0]))) {
+      client.epdata.set(parseInt(args[0]), anime.nextAiringEpisode.airingAt, 'NextAir')
+      client.epdata.set(parseInt(args[0]), anime.nextAiringEpisode.episode, 'NextEP')
+      client.apdata.set(parseInt(args[0]), args[1], `Channels`)
+    }
+
+
 
   } 
 }

@@ -41,7 +41,7 @@ class BaseCommand {
 
     /**
      * Whether this command can be used in dms
-     * @type {boolean}
+     * @type {boolean|'only'}
      */
      this.dms = options.dms ?? false;
 

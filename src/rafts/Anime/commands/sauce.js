@@ -57,7 +57,7 @@ class SauceCommand extends BaseCommand {
 
 async function genEmbed(data, message, offset) {
   let info = data[offset]
-
+  
   const embed = new Discord.MessageEmbed();
 
   if (info.source) embed.addField('Title', info.source);
