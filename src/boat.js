@@ -143,6 +143,7 @@ class Boat {
     this.client.epdata = new Enmap("EPData");
     this.client.cooldowns = new Collection();
     this.client.maldata.ensure('states', {})
+    this.client.epdata.ensure('channels', {})
 
 
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
