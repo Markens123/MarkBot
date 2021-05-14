@@ -3,7 +3,7 @@
 const util = require('util');
 const Discord = require('discord.js');
 const BaseCommand = require('../../BaseCommand');
-const { clean } = require('../../../util/functions')
+
 class EvalCommand extends BaseCommand {
   constructor(boat) {
     const options = {
@@ -46,7 +46,7 @@ class EvalCommand extends BaseCommand {
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
     }
-    let cleaned = await clean(util.inspect(evaluated, { depth }));
+    let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
     let embed = new Discord.MessageEmbed()
     .setColor(e === true ? 'FF0000' : '32CD32')
     .addField('📥 Input', `\`\`\`js\n${args}\`\`\``)
@@ -65,7 +65,20 @@ class EvalCommand extends BaseCommand {
     return message.channel.send(embed);
   }
 
-
+  clean(client, text) {
+    if (typeof text === 'string') {
+      /* client.maldata.fetchEverything().forEach(element => {
+        text = text.replace(element.AToken, 'Redacted')
+        .replace(element.RToken, 'Redacted')
+      }); */ 
+      return text
+        .replace(/` /g, `\`${String.fromCharCode(8203)}`)
+        .replace(/@/g, `@${String.fromCharCode(8203)}`)
+        .replace(this.boat.token, 'Redacted')
+        .replace(this.boat.options.log.webhookToken, 'Redacted');
+    }
+    return text;
+  }
 }
 
 module.exports = EvalCommand;

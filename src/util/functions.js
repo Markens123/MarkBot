@@ -28,19 +28,3 @@ exports.promiseExec = (action, exec) => {
   );
 }
 
-exports.clean = (text, redact = false) => {
-  if (typeof text === 'string') {
-    /* client.maldata.fetchEverything().forEach(element => {
-      text = text.replace(element.AToken, 'Redacted')
-      .replace(element.RToken, 'Redacted')
-    }); */ 
-    text
-      .replace(/` /g, `\`${String.fromCharCode(8203)}`)
-      .replace(/@/g, `@${String.fromCharCode(8203)}`);
-    if (redact) {
-      text.replace(this.boat.token, 'Redacted').replace(this.boat.options.log.webhookToken, 'Redacted');
-      return text;
-    }
-  }
-  return text;
-}
