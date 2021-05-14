@@ -10,6 +10,7 @@ const util = require('util');
 const { exec } = require('child_process');
 const Discord = require('discord.js');
 const BaseInteraction = require('../../../BaseInteraction');
+const { promiseExec } = require('../../../../util/functions')
 
 const definition = {
   name: 'bots',
@@ -106,21 +107,9 @@ class BotsInteraction extends BaseInteraction {
       this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
     });
     else if(action == 'pull') {
-      await promiseExec(`pm2 pull ${bot}`).then(a => {return interaction.reply(`${bot} has been updated to the latest commit`)}).catch(err => { return interaction.reply(`\`\`\`bash\n${err}\`\`\``)});      
+      await promiseExec(`pm2 pull ${bot}`, exec).then(a => {return interaction.reply(`${bot} has been updated to the latest commit`)}).catch(err => { return interaction.reply(`\`\`\`bash\n${err}\`\`\``)});      
     }
   }
-}
-
-function promiseExec(action) {
-  return new Promise((resolve, reject) =>
-    exec(action, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ stdout, stderr });
-      }
-    }),
-  );
 }
 
 module.exports = BotsInteraction;

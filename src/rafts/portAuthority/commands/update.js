@@ -3,6 +3,7 @@
 const { exec } = require('child_process');
 const { MessageEmbed } = require('discord.js');
 const BaseCommand = require('../../BaseCommand');
+const { clean, promiseExec } = require('../../../util/functions')
 
 class UpdateCommand extends BaseCommand {
   constructor(raft) {
@@ -25,22 +26,22 @@ class UpdateCommand extends BaseCommand {
       if (message.author.id !== '396726969544343554') branch = false;
     }
     let embed = new MessageEmbed().setColor('BLURPLE');
-    await promiseExec('git stash').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
+    await promiseExec('git stash', exec).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
     if (branch !== false) {
-      let { stdout, stderr } = await promiseExec(`git checkout ${branch}`).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
+      let { stdout, stderr } = await promiseExec(`git checkout ${branch}`, exec).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
       if (!stdout && !stderr) return;
       embed.setTitle('Branch switched').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
       await message.channel.send(embed);
     }
-    let { stdout, stderr } = await promiseExec('git pull').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
+    let { stdout, stderr } = await promiseExec('git pull', exec).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
     embed.setTitle('Git Pulled').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
     await message.channel.send(embed);
-    await promiseExec('git stash pop').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
+    await promiseExec('git stash pop', exec).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
 
-    ({ stdout, stderr } = await promiseExec('npm i').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
+    ({ stdout, stderr } = await promiseExec('npm i', exec).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
@@ -49,23 +50,5 @@ class UpdateCommand extends BaseCommand {
   }
 }
 
-function promiseExec(action) {
-  return new Promise((resolve, reject) =>
-    exec(action, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ stdout, stderr });
-      }
-    }),
-  );
-}
-
-function clean(text) {
-  if (typeof text === 'string') {
-    return text.replace(/` /g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
-  }
-  return text;
-}
 
 module.exports = UpdateCommand;

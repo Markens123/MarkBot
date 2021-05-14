@@ -3,6 +3,7 @@
 const Discord = require('discord.js');
 const axios = require('axios');
 const BaseCommand = require('../../BaseCommand');
+const { hreadable } = require('../../../util/functions')
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
@@ -239,13 +240,6 @@ function gencolor(status) {
   if (status === 'dropped') return 'A12F31'
   if (status === 'plan_to_watch') return '8F8F8F'
   return '000001'
-}
-
-function hreadable(text) {
-  let str = text.split('_').join(' ')
-  return str.replace(/\w\S*/g, function(txt){
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-});
 }
 
 function error(message, rmsg, emsgtext) {

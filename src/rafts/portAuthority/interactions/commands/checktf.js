@@ -6,7 +6,7 @@ const getHtmlTitle = require('vamtiger-get-html-title').default;
 const { MessageEmbed, APIMessage } = require('discord.js');
 
 const definition = {
-  name: 'discordver',
+  name: 'checktf',
   description: 'Checks the status of Discord TestFlight'
 };
 
