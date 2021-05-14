@@ -18,7 +18,7 @@ module.exports = async (boat, message) => {
   const command = args.shift().toLowerCase();
 
   const handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
-
+  
   if (!handler) {
     handleRaft(boat.rafts, message);
     return;

@@ -46,7 +46,7 @@ class EvalCommand extends BaseCommand {
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
     }
-    let cleaned = await clean(client, util.inspect(evaluated, { depth }), true);
+    let cleaned = await clean(util.inspect(evaluated, { depth }));
     let embed = new Discord.MessageEmbed()
     .setColor(e === true ? 'FF0000' : '32CD32')
     .addField('📥 Input', `\`\`\`js\n${args}\`\`\``)

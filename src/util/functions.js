@@ -36,10 +36,11 @@ exports.clean = (text, redact = false) => {
     }); */ 
     text
       .replace(/` /g, `\`${String.fromCharCode(8203)}`)
-      .replace(/@/g, `@${String.fromCharCode(8203)}`)
-  if (redact) text
-      .replace(this.boat.token, 'Redacted')
-      .replace(this.boat.options.log.webhookToken, 'Redacted');
+      .replace(/@/g, `@${String.fromCharCode(8203)}`);
+    if (redact) {
+      text.replace(this.boat.token, 'Redacted').replace(this.boat.options.log.webhookToken, 'Redacted');
+      return text;
+    }
   }
   return text;
 }
