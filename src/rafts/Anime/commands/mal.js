@@ -124,6 +124,10 @@ class MALCommand extends BaseCommand {
           let e = await genEmbed(data, message, currentIndex)
           msg.edit({embed: e, buttons: [back, next, del]})
         });
+        collector.on('end', () => {
+          message.channel.send('SHOUDL REMOVE BUTTONS')
+          msg.edit({buttons: []})
+        });
       });
 
     }
