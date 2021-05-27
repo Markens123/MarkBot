@@ -125,8 +125,11 @@ class MALCommand extends BaseCommand {
           msg.edit({embed: e, buttons: [back, next, del]})
         });
         collector.on('end', () => {
-          message.channel.send('SHOUDL REMOVE BUTTONS')
-          msg.edit({buttons: []})
+          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
+          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
+          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
+
+          msg.edit({buttons: [next, back, del]})
         });
       });
 
