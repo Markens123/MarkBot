@@ -243,14 +243,9 @@ class MALCommand extends BaseCommand {
       if (rmsg.deletable) rmsg.delete();
       return message.channel.send(embed).then(async msg => {
         let currentIndex = offset
-        let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
-        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back') 
         let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
 
-        if (currentIndex == 0) back.setDisabled() 
-        if (currentIndex + 1 >= data.data.length) next.setDisabled() 
-
-        msg.edit({buttons:[back, next, del]})
+        msg.edit({button:del})
 
         const collector = msg.createButtonCollector(
           // only collect left and right arrow reactions from the message author
@@ -258,29 +253,17 @@ class MALCommand extends BaseCommand {
           // time out after a minute
           {time: 60000}
         )        
-        collector.on('collect', async b => {
-          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
-          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
-          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
-  
+        collector.on('collect', async b => {  
           b.defer();
           if (b.id === 'delete') {
             msg.delete()
             collector.stop()
           }
-          
-          b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
-          if (currentIndex == 0) back.setDisabled() 
-          if (currentIndex + 1 >= data.data.length) next.setDisabled() 
-          let e = await genEmbed(data, message, currentIndex)
-          msg.edit({embed: e, buttons: [back, next, del]})
         });
         collector.on('end', () => {
-          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
-          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
 
-          msg.edit({buttons: [next, back, del]})
+          msg.edit({button:del})
         });
       });
     }
