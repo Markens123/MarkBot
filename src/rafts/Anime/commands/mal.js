@@ -129,7 +129,7 @@ class MALCommand extends BaseCommand {
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
 
-          msg.edit({buttons: [next, back, del]})
+          msg.edit({buttons: [back, next, del]})
         });
       });
 
@@ -211,7 +211,7 @@ class MALCommand extends BaseCommand {
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
 
-          msg.edit({buttons: [next, back, del]})
+          msg.edit({buttons: [back, next, del]})
         });
       });
 
@@ -242,7 +242,6 @@ class MALCommand extends BaseCommand {
 
       if (rmsg.deletable) rmsg.delete();
       return message.channel.send(embed).then(async msg => {
-        let currentIndex = offset
         let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
 
         msg.edit({button:del})
