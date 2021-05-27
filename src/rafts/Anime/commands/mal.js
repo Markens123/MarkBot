@@ -93,12 +93,13 @@ class MALCommand extends BaseCommand {
       return message.channel.send(embed).then(async msg => {
         let currentIndex = offset
         let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
-        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
+        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back') 
+        let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
 
         if (currentIndex == 0) back.setDisabled() 
-        if (currentIndex + 1 > data.data.length) next.setDisabled() 
+        if (currentIndex + 1 >= data.data.length) next.setDisabled() 
 
-        msg.edit({buttons:[back, next]})
+        msg.edit({buttons:[back, next, del]})
 
         const collector = msg.createButtonCollector(
           // only collect left and right arrow reactions from the message author
@@ -109,14 +110,19 @@ class MALCommand extends BaseCommand {
         collector.on('collect', async b => {
           let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
+          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
   
           b.defer();
-
+          if (b.id === 'delete') {
+            msg.delete()
+            collector.stop()
+          }
+          
           b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
           if (currentIndex == 0) back.setDisabled() 
           if (currentIndex + 1 >= data.data.length) next.setDisabled() 
           let e = await genEmbed(data, message, currentIndex)
-          msg.edit({embed: e, buttons: [back, next]})
+          msg.edit({embed: e, buttons: [back, next, del]})
         });
       });
 
