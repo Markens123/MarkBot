@@ -144,7 +144,9 @@ class Boat {
     this.client.cooldowns = new Collection();
     this.client.maldata.ensure('states', {})
     this.client.epdata.ensure('channels', {})
-        
+    
+    // Loads button addon
+    require('discord-buttons')(this.client);
 
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }
