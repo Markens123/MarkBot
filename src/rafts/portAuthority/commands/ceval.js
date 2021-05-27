@@ -3,7 +3,6 @@
 const Discord = require('discord.js');
 const BaseCommand = require('../../BaseCommand');
 const { exec } = require('child_process');
-const { promiseExec } = require('../../../util/functions')
 
 class CEvalCommand extends BaseCommand {
   constructor(boat) {
@@ -32,7 +31,7 @@ class CEvalCommand extends BaseCommand {
     let stdout, stderr;
     let e = false;
     try {
-        let out = await promiseExec(args, exec)
+        let out = await promiseExec(args)
         stdout = out.stdout
         stderr = out.stderr
     } 
@@ -57,6 +56,18 @@ class CEvalCommand extends BaseCommand {
     embed.addField('📤 Output', `\`\`\`bash\n${out}\`\`\``)
     return message.channel.send(embed);
   }
+}
+
+function promiseExec(action) {
+  return new Promise((resolve, reject) =>
+    exec(action, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ stdout, stderr });
+      }
+    }),
+  );
 }
 
 module.exports = CEvalCommand;

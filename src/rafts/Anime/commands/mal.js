@@ -3,7 +3,7 @@
 const Discord = require('discord.js');
 const axios = require('axios');
 const BaseCommand = require('../../BaseCommand');
-const { hreadable } = require('../../../util/functions')
+const { MessageButton } = require('discord-buttons');
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
@@ -24,7 +24,7 @@ class MALCommand extends BaseCommand {
     if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(this.raft, message, client.maldata.get(message.author.id, 'RToken'), client) 
 
 
-    if (args[0] == 'mylist' || args[0] == 'ml') {
+    if (args[0] == 'dmylist' || args[0] == 'dml') {
       let sort = 'anime_title';
       let status = '';
       if (args.includes('--sort') || args.includes('-so')) {
@@ -92,23 +92,31 @@ class MALCommand extends BaseCommand {
       if (rmsg.deletable) rmsg.delete();
       return message.channel.send(embed).then(async msg => {
         let currentIndex = offset
+        let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
+        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
 
-        if (currentIndex !== 0) await msg.react('⬅️')
-        if (currentIndex + 1 < data.data.length) await msg.react('➡️')
+        if (currentIndex == 0) back.setDisabled() 
+        if (currentIndex + 1 > data.data.length) next.setDisabled() 
 
-        const collector = msg.createReactionCollector(
+        msg.edit({buttons:[back, next]})
+
+        const collector = msg.createButtonCollector(
           // only collect left and right arrow reactions from the message author
-          (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id,
+          (button) => button.clicker.user.id === message.author.id,
           // time out after a minute
           {time: 60000}
         )        
-        collector.on('collect', reaction => {
-          msg.reactions.removeAll().then(async () => {
-            reaction.emoji.name === '⬅️' ? currentIndex -= 1 : currentIndex += 1
-            msg.edit(await genEmbed(data, message, currentIndex))
-            if (currentIndex !== 0) await msg.react('⬅️')
-            if (currentIndex + 1 < data.data.length) msg.react('➡️')
-          });
+        collector.on('collect', async b => {
+          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
+          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
+  
+          b.defer();
+
+          b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
+          if (currentIndex == 0) back.setDisabled() 
+          if (currentIndex + 1 > data.data.length) next.setDisabled() 
+          let e = await genEmbed(data, message, currentIndex)
+          msg.edit({embed: e, buttons: [back, next]})
         });
       });
 
@@ -240,6 +248,13 @@ function gencolor(status) {
   if (status === 'dropped') return 'A12F31'
   if (status === 'plan_to_watch') return '8F8F8F'
   return '000001'
+}
+
+function hreadable(text) {
+  let str = text.split('_').join(' ')
+  return str.replace(/\w\S*/g, function(txt){
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+});
 }
 
 function error(message, rmsg, emsgtext) {

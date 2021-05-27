@@ -19,6 +19,7 @@
     "cleverbot-free": "^1.0.5",
     "crypto": "^1.0.1",
     "discord-build-info-js": "^1.0.4",
+    "discord-buttons": "^2.4.1",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "easy-get-request-with-headers": "^1.0.1",

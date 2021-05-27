@@ -8,7 +8,6 @@ module.exports = async (boat, message) => {
   // Ignore bots
   if (message.author.bot) return;
 
-
   if (!message.content.startsWith(boat.prefix)) {
     handleRaft(boat.rafts, message);
     return;

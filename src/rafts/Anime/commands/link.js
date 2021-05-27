@@ -1,10 +1,8 @@
 'use strict';
-/* We did this without ck's help */
 
 const Discord = require('discord.js');
 const axios = require('axios');
 const BaseCommand = require('../../BaseCommand');
-const { makeid } = require('../../../util/functions')
 
 class LinkCommand extends BaseCommand {
   constructor(boat) {
@@ -42,6 +40,17 @@ class LinkCommand extends BaseCommand {
     client.maldata.set(message.author.id, Date.now() + (out.expires_in * 1000), 'EXPD');
     message.channel.send('Successful linked account!')
   } 
+}
+
+function makeid(length) {
+  var result           = [];
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result.push(characters.charAt(Math.floor(Math.random() * 
+charactersLength)));
+ }
+ return result.join('');
 }
 
 module.exports = LinkCommand;

@@ -11,10 +11,12 @@ const InteractionResponseType = {
 const InteractionType = {
   PING: 1,
   APPLICATION_COMMAND: 2,
+  BUTTON: 3,
 };
 
 module.exports = (client, data) => {
   switch (data.type) {
+    case InteractionType.BUTTON: return
     case InteractionType.PING:
       return {
         type: InteractionResponseType.PONG,
