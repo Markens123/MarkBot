@@ -24,7 +24,7 @@ class MALCommand extends BaseCommand {
     if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) await refreshtoken(this.raft, message, client.maldata.get(message.author.id, 'RToken'), client) 
 
 
-    if (args[0] == 'dmylist' || args[0] == 'dml') {
+    if (args[0] == 'mylist' || args[0] == 'ml') {
       let sort = 'anime_title';
       let status = '';
       if (args.includes('--sort') || args.includes('-so')) {
@@ -114,7 +114,7 @@ class MALCommand extends BaseCommand {
 
           b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
           if (currentIndex == 0) back.setDisabled() 
-          if (currentIndex + 1 > data.data.length) next.setDisabled() 
+          if (currentIndex + 1 >= data.data.length) next.setDisabled() 
           let e = await genEmbed(data, message, currentIndex)
           msg.edit({embed: e, buttons: [back, next]})
         });
