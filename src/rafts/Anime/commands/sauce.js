@@ -5,7 +5,7 @@ let nsauce = require('node-sauce')
 let sauce = new nsauce(process.env.SAUCE_API_KEY)
 const BaseCommand = require('../../BaseCommand');
 const isImageUrl = require('is-image-url');
-const util = require('util');
+const { MessageButton } = require('discord-buttons');
 
 class SauceCommand extends BaseCommand {
   constructor(boat) {
@@ -19,7 +19,6 @@ class SauceCommand extends BaseCommand {
   }
 
   async run(message, args) {
-    let client = this.boat.client;
     let url = '';    
     if (message.attachments.size > 0) url = message.attachments.array()[0].url
     if (message.embeds > 0 && message.embeds[0].type == 'image') url = reaction.message.embeds[0].thumbnail.url
@@ -32,28 +31,42 @@ class SauceCommand extends BaseCommand {
 
     return message.channel.send(embed).then(async msg => {
       let currentIndex = 0
+      let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
+      let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back') 
 
-      if (currentIndex !== 0) await msg.react('⬅️')
-      if (currentIndex + 1 < out.length) await msg.react('➡️')
+      if (currentIndex == 0) back.setDisabled() 
+      if (currentIndex + 1 >= out.length) next.setDisabled() 
 
-      const collector = msg.createReactionCollector(
-        // only collect left and right arrow reactions from the message author
-        (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id,
-        // time out after a minute
-        {time: 60000}
-      )        
-      collector.on('collect', reaction => {
-        msg.reactions.removeAll().then(async () => {
-          reaction.emoji.name === '⬅️' ? currentIndex -= 1 : currentIndex += 1
-          msg.edit(await genEmbed(out, message, currentIndex))
-          if (currentIndex !== 0) await msg.react('⬅️')
-          if (currentIndex + 1 < out.length) msg.react('➡️')
-        });
+      msg.edit({buttons:[back, next]})
+
+      const collector = msg.createButtonCollector(
+        (button) => button.clicker.user.id === message.author.id,
+        {time: 15000}
+      )
+
+      collector.on('collect', async b => {
+        let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
+        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
+        
+        collector.resetTimer();
+
+        b.defer();
+        
+        b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
+        if (currentIndex == 0) back.setDisabled() 
+        if (currentIndex + 1 >= out.length) next.setDisabled() 
+        let e = await genEmbed(out, message, currentIndex)
+        msg.edit({embed: e, buttons: [back, next]})
       });
+      collector.on('end', () => {
+        let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
+        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
+        msg.edit({buttons: [back, next]});
+      });
+
     });
     }
 }
-
 
 async function genEmbed(data, message, offset) {
   let info = data[offset]

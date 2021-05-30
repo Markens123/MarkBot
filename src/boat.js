@@ -132,6 +132,8 @@ class Boat {
     this.client.ws.on('INTERACTION_CREATE', async packet => {
       const result = await interactionHandler(this.client, packet);
 
+      if (!result) return;
+      
       await this.client.api.interactions(packet.id, packet.token).callback.post({
         data: result,
       });

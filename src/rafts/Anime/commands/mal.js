@@ -102,20 +102,23 @@ class MALCommand extends BaseCommand {
         msg.edit({buttons:[back, next, del]})
 
         const collector = msg.createButtonCollector(
-          // only collect left and right arrow reactions from the message author
           (button) => button.clicker.user.id === message.author.id,
-          // time out after a minute
-          {time: 60000}
-        )        
+          {time: 15000}
+        )
+        let deleted = false;        
         collector.on('collect', async b => {
           let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
-  
+          
+          collector.resetTimer();
+
           b.defer();
           if (b.id === 'delete') {
-            msg.delete()
+            await msg.delete()
+            deleted = true
             collector.stop()
+            return;
           }
           
           b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
@@ -128,8 +131,7 @@ class MALCommand extends BaseCommand {
           let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-
-          msg.edit({buttons: [back, next, del]})
+          if (!deleted) msg.edit({buttons: [back, next, del]});
         });
       });
 
@@ -184,20 +186,23 @@ class MALCommand extends BaseCommand {
         msg.edit({buttons:[back, next, del]})
 
         const collector = msg.createButtonCollector(
-          // only collect left and right arrow reactions from the message author
           (button) => button.clicker.user.id === message.author.id,
-          // time out after a minute
-          {time: 60000}
-        )        
+          {time: 15000}
+        )
+        let deleted = false;        
         collector.on('collect', async b => {
           let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
-  
+          
+          collector.resetTimer();
+
           b.defer();
           if (b.id === 'delete') {
-            msg.delete()
+            await msg.delete()
+            deleted = true
             collector.stop()
+            return;
           }
           
           b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
@@ -210,8 +215,7 @@ class MALCommand extends BaseCommand {
           let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-
-          msg.edit({buttons: [back, next, del]})
+          if (!deleted) msg.edit({buttons: [back, next, del]});
         });
       });
 
@@ -247,22 +251,22 @@ class MALCommand extends BaseCommand {
         msg.edit({button:del})
 
         const collector = msg.createButtonCollector(
-          // only collect left and right arrow reactions from the message author
           (button) => button.clicker.user.id === message.author.id,
-          // time out after a minute
           {time: 60000}
-        )        
-        collector.on('collect', async b => {  
+        )
+        let deleted = false;        
+        collector.on('collect', async b => {
           b.defer();
           if (b.id === 'delete') {
-            msg.delete()
+            await msg.delete()
+            deleted = true
             collector.stop()
+            return;
           }
         });
         collector.on('end', () => {
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-
-          msg.edit({button:del})
+          if (!deleted) msg.edit({button:del});
         });
       });
     }
