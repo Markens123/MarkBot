@@ -1,14 +1,52 @@
 'use strict';
 
 const util = require('util');
-
+var parse = require('parse-duration');
 const { Collection } = require('discord.js');
+
+const { MessageButton } = require('discord-buttons')
 
 module.exports = async (boat, message) => {
   // Ignore bots
   if (message.author.bot) return;
 
   if (!message.content.startsWith(boat.prefix)) {
+    let args = message.content.trim().split(/\s+/g);
+    if (args.includes('--remind') || args.includes('-r')) {
+      if (boat.owners.includes(message.author.id)) {
+        const index = args.indexOf('--remind') > -1 ? args.indexOf('--remind') : args.indexOf('-r');
+        let rtime = parse(args[index + 1], 'ms');
+        args.splice(index, 2);
+        if (rtime) {
+          let yes = new MessageButton().setLabel('✅').setStyle('green').setID('yes')
+          let no = new MessageButton().setLabel('❌').setStyle('red').setID('no')
+          message.channel.send(`Would you like to set a reminder in ${getDur(rtime)}?`, {buttons: [yes, no]}).then(async msg => {
+            const collector = msg.createButtonCollector(
+              (button) => button.clicker.user.id === message.author.id,
+              {time: 15000}
+            )
+            collector.on('collect', async b => {
+              
+              if (b.id === 'no') {
+                await b.reply.send('The reminder was not set <:klukthumbsup:813679725917765662>', true);
+                collector.stop();
+              }
+              if (b.id === 'yes') {
+                await b.reply.send('The reminder was successfully set', true)
+                collector.stop();
+                setTimeout(()=>{
+                  message.channel.send(`${message.author.toString()}, here's a reminder for \`${args.join(' ')}\``)
+                }, rtime)
+              }
+            });
+            collector.on('end', collected => {
+              msg.delete();
+            });
+          });
+        }
+      } 
+    }
+
     handleRaft(boat.rafts, message);
     return;
   }
@@ -73,4 +111,15 @@ function handleRaft(rafts, message) {
       rafts[raft].message(message);
     }
   });
+}
+
+function getDur(ms) {
+  var date = new Date(ms);
+  var str = '';
+  str += date.getUTCDate()-1 + " days, ";
+  str += date.getUTCHours() + " hours, ";
+  str += date.getUTCMinutes() + " minutes, ";
+  str += date.getUTCSeconds() + " seconds, ";
+  str += date.getUTCMilliseconds() + " millis";
+  return str  
 }

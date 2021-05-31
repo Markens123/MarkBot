@@ -1,23 +1,11 @@
 const discord = require('discord.js');
-var stringCalculator = require("string-calculator")
-const got = require("got");
 const fs = require("fs");
 const cleverbot = require("cleverbot-free");
 const client = new discord.Client();
 var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-//const captureWebsite = require('capture-website');
-const replace = require('replace-in-file');
-const trimImage = require('trim-image');
-var wait = require('wait');
-const imgbbUploader = require("imgbb-uploader");
 const getHTML = require('html-get');
 const getHtmlTitle = require('vamtiger-get-html-title').default;
 var formatJsonFiles = require('format-json-files');
-const { ClientBuild } = require('discord-build-info-js');
-const clientBuild = new ClientBuild();
-var gplay = require('google-play-scraper');
-var store = require('app-store-scraper');
-const hastebin = require("hastebin-gen");
 const { exec } = require('child_process');
 var express = require("express");
 require('dotenv').config();

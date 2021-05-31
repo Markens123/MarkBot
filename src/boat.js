@@ -142,10 +142,9 @@ class Boat {
 
     // Loads databases
     this.client.maldata = new Enmap("MALData");
-    this.client.epdata = new Enmap("EPData");
+    this.client.rdata = new Enmap("RData");
     this.client.cooldowns = new Collection();
     this.client.maldata.ensure('states', {})
-    this.client.epdata.ensure('channels', {})
     
     // Loads button addon
     require('discord-buttons')(this.client);
