@@ -33,9 +33,10 @@ module.exports = async (boat, message) => {
               }
               if (b.id === 'yes') {
                 await b.reply.send('The reminder was successfully set', true)
+                let resp = `**Reminder delivery:**\nTo: ${message.author.toString()}\nJump Link:\n${message.url}\nReminder:\n\`\`\`${args.join(' ')}\`\`\``
                 collector.stop();
                 setTimeout(()=>{
-                  message.channel.send(`${message.author.toString()}, here's a reminder for \`${args.join(' ')}\``)
+                  message.channel.send(resp)
                 }, rtime)
               }
             });
