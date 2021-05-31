@@ -20,7 +20,7 @@ module.exports = async (boat, message) => {
         if (rtime) {
           let yes = new MessageButton().setLabel('✅').setStyle('green').setID('yes')
           let no = new MessageButton().setLabel('❌').setStyle('red').setID('no')
-          message.channel.send(`Would you like to set a reminder in ${getDur(rtime)}?`, {buttons: [yes, no]}).then(async msg => {
+          message.channel.send(`Would you like me to remind you about that in ${getDur(rtime)}?`, {buttons: [yes, no]}).then(async msg => {
             const collector = msg.createButtonCollector(
               (button) => button.clicker.user.id === message.author.id,
               {time: 15000}
@@ -115,11 +115,11 @@ function handleRaft(rafts, message) {
 
 function getDur(ms) {
   var date = new Date(ms);
-  var str = '';
-  str += date.getUTCDate()-1 + " days, ";
-  str += date.getUTCHours() + " hours, ";
-  str += date.getUTCMinutes() + " minutes, ";
-  str += date.getUTCSeconds() + " seconds, ";
-  str += date.getUTCMilliseconds() + " millis";
-  return str  
+  var str = [];
+  if (date.getUTCDate()-1) str.push(`${date.getUTCDate()-1} ${date.getUTCDate()-1 > 1 ? 'days': 'day'}`);
+  if (date.getUTCHours()) str.push(`${date.getUTCHours()} ${date.getUTCHours() > 1 ? 'hours': 'hour'}`);
+  if (date.getUTCMinutes()) str.push(`${date.getUTCMinutes()} ${date.getUTCMinutes() > 1 ? 'minutes': 'minute'}`);
+  if (date.getUTCSeconds()) str.push(`${date.getUTCSeconds()} ${date.getUTCSeconds() > 1 ? 'seconds': 'second'}`);
+  if (date.getUTCMilliseconds()) str.push(`${date.getUTCMilliseconds()} millis`);
+  return str.join(', ')
 }
