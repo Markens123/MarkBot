@@ -3,10 +3,9 @@
 const BaseInteraction = require('../../../BaseInteraction');
 const { MessageEmbed, APIMessage } = require('discord.js');
 
-const { ClientBuild } = require('discord-build-info-js');
-const clientBuild = new ClientBuild();
-var gplay = require('google-play-scraper');
-var store = require('app-store-scraper');
+const fetcher = require("discord-build-fetcher-js");
+let gplay = require('google-play-scraper');
+let store = require('app-store-scraper');
 
 const definition = {
   name: 'discordver',
@@ -29,21 +28,21 @@ class DiscordVerInteraction extends BaseInteraction {
     const client = this.boat.client;
     interaction.reply(`Checking Versions...`);
 
-    const stable = await clientBuild.getClientBuildInfo(`stable`).then(data => {
-      return "Stable " + data.buildNumber + " (" + data.buildID + ")"
+    const stable = fetcher(`stable`).then(data => {
+      return "Stable " + data.buildNum + " (" + data.buildID + ")"
     });  
-    const PTB = await clientBuild.getClientBuildInfo(`PTB`).then(data => {
-      return "PTB " + data.buildNumber + " (" + data.buildID + ")"
+    const PTB = fetcher(`PTB`).then(data => {
+      return "PTB " + data.buildNum + " (" + data.buildID + ")"
     });                                  
-    const canary = await clientBuild.getClientBuildInfo(`canary`).then(data => {
-      return "Canary " + data.buildNumber + " (" + data.buildID + ")"
+    const canary = fetcher(`canary`).then(data => {
+      return "Canary " + data.buildNum + " (" + data.buildID + ")"
     });
 
-    const astable = await gplay.app({appId: 'com.discord'}).then(data => {
+    const astable = gplay.app({appId: 'com.discord'}).then(data => {
         return "Stable " + data.version 
     });
 
-    const istable = await store.app({id: 985746746}).then(data => {
+    const istable = store.app({id: 985746746}).then(data => {
       return "Stable " + data.version
     });
     const embed = new MessageEmbed()
