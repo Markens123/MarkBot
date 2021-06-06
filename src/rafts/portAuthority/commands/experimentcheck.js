@@ -34,7 +34,7 @@ class ExperimentCheckCommand extends BaseCommand {
     let text = '';
     
     if (exp === 'all') {
-      for (i = 0; i < experiments.length; i++) {
+      for (let i = 0; i < experiments.length; i++) {
         position = murmur3(`${experiments[i]}:${u.id}`) % 1e4;
         text += `\nThe position of ${u.toString()} for experiment **${experiments[i]}** is #${position}`;   
       }
