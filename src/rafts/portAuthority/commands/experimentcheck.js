@@ -30,17 +30,17 @@ class ExperimentCheckCommand extends BaseCommand {
     }).catch(error => {return false})
 
     if (!u) return message.channel.send('Invalid user!');
-    let position= '';
-    let text;
+    let position;
+    let text = '';
     
     if (exp === 'all') {
       for (i = 0; i < experiments.length; i++) {
-        position; = murmur3(`${experiments[i]}:${u.id}`) % 1e4;
-        text += `\nThe position of ${u.toString()} for experiment **${experiments[i]}** is #${position}`        
+        position = murmur3(`${experiments[i]}:${u.id}`) % 1e4;
+        text += `\nThe position of ${u.toString()} for experiment **${experiments[i]}** is #${position}`;   
       }
     } else {
-      position; = murmur3(`${exp}:${u.id}`) % 1e4;
-      text = `The position of ${u.toString()} for experiment **${exp}** is #${position}`
+      position = murmur3(`${exp}:${u.id}`) % 1e4;
+      text = `The position of ${u.toString()} for experiment **${exp}** is #${position}`;
     } 
     let embed = new Discord.MessageEmbed()
     .setTitle('Experiment position')
