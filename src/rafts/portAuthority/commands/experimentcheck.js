@@ -18,7 +18,7 @@ class ExperimentCheckCommand extends BaseCommand {
 
   async run(message, args) {
     const client = this.boat.client;
-    if (!experiments.includes(args[0])) return message.channel.send('Error you must send a valid experiment!');
+    if (!experiments.includes(args[0]) && args[0] !== 'all') return message.channel.send('Error you must send a valid experiment!');
     let exp = args[0].toLowerCase();
     let user;
     if (message.mentions.members.size > 0) user = message.mentions.members.first().id
@@ -29,12 +29,22 @@ class ExperimentCheckCommand extends BaseCommand {
       return myUser
     }).catch(error => {return false})
 
-    if (!u) return message.channel.send('Invalid user!');  
-
-    const position = murmur3(`${exp}:${u.id}`) % 1e4;
+    if (!u) return message.channel.send('Invalid user!');
+    let position= '';
+    let text;
+    
+    if (exp === 'all') {
+      for (i = 0; i < experiments.length; i++) {
+        position; = murmur3(`${experiments[i]}:${u.id}`) % 1e4;
+        text += `\nThe position of ${u.toString()} for experiment **${experiments[i]}** is #${position}`        
+      }
+    } else {
+      position; = murmur3(`${exp}:${u.id}`) % 1e4;
+      text = `The position of ${u.toString()} for experiment **${exp}** is #${position}`
+    } 
     let embed = new Discord.MessageEmbed()
     .setTitle('Experiment position')
-    .setDescription(`The position of ${u.toString()} for experiment **${exp}** is #${position}`)
+    .setDescription(text)
     .setAuthor(u.tag, u.displayAvatarURL());
     return message.channel.send(embed);
 
