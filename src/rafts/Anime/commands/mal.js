@@ -99,7 +99,7 @@ class MALCommand extends BaseCommand {
         if (currentIndex == 0) back.setDisabled() 
         if (currentIndex + 1 >= data.data.length) next.setDisabled() 
 
-        msg.edit({buttons:[back, next, del]})
+        msg.edit({embed:msg.embeds[0], buttons:[back, next, del]})
 
         const collector = msg.createButtonCollector(
           (button) => button.clicker.user.id === message.author.id,
@@ -131,7 +131,7 @@ class MALCommand extends BaseCommand {
           let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-          if (!deleted) msg.edit({buttons: [back, next, del]});
+          if (!deleted) msg.edit({embed:msg.embeds[0], buttons: [back, next, del]});
         });
       });
 
@@ -183,7 +183,7 @@ class MALCommand extends BaseCommand {
         if (currentIndex == 0) back.setDisabled() 
         if (currentIndex + 1 >= data.data.length) next.setDisabled() 
 
-        msg.edit({buttons:[back, next, del]})
+        msg.edit({embed:msg.embeds[0], buttons:[back, next, del]})
 
         const collector = msg.createButtonCollector(
           (button) => button.clicker.user.id === message.author.id,
@@ -215,7 +215,7 @@ class MALCommand extends BaseCommand {
           let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
           let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-          if (!deleted) msg.edit({buttons: [back, next, del]});
+          if (!deleted) msg.edit({embed:msg.embeds[0], buttons: [back, next, del]});
         });
       });
 
@@ -248,7 +248,7 @@ class MALCommand extends BaseCommand {
       return message.channel.send(embed).then(async msg => {
         let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
 
-        msg.edit({button:del})
+        msg.edit({embed:msg.embeds[0], button:del})
 
         const collector = msg.createButtonCollector(
           (button) => button.clicker.user.id === message.author.id,
@@ -266,7 +266,7 @@ class MALCommand extends BaseCommand {
         });
         collector.on('end', () => {
           let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-          if (!deleted) msg.edit({button:del});
+          if (!deleted) msg.edit({embed:msg.embeds[0], button:del});
         });
       });
     }
