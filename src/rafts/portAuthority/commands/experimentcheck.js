@@ -48,8 +48,7 @@ class ExperimentCheckCommand extends BaseCommand {
     }  
     let embed = new Discord.MessageEmbed()
     .setTitle('Experiment position')
-    .setDescription(text)
-    .setAuthor(u.tag, u.displayAvatarURL());
+    .setDescription(text);
     return message.channel.send(embed);
 
   }
