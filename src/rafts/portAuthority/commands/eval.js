@@ -34,7 +34,7 @@ class EvalCommand extends BaseCommand {
       message.channel.send(`Error: Execution of command refused`);
       return message.channel.send('https://media.tenor.com/images/59de4445b8319b9936377ec90dc5b9dc/tenor.gif');
     }
-    if (args.join(' ').toLowerCase().includes('await')) args = `(async () => {${args}})()`
+    if (args.toLowerCase().includes('await')) args = `(async () => {${args}})()`
     let evaluated;
     let e = false;
     try {
