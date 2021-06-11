@@ -34,7 +34,7 @@ class EvalCommand extends BaseCommand {
       message.channel.send(`Error: Execution of command refused`);
       return message.channel.send('https://media.tenor.com/images/59de4445b8319b9936377ec90dc5b9dc/tenor.gif');
     }
-    if (args.toLowerCase().includes('await')) args = `(async () => {${args}})()`
+    if (args.toLowerCase().includes('await')) args = `(async () => {return ${args}})()`
     let evaluated;
     let e = false;
     try {
@@ -50,7 +50,7 @@ class EvalCommand extends BaseCommand {
     let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
     let embed = new Discord.MessageEmbed()
     .setColor(e === true ? 'FF0000' : '32CD32')
-    .addField('📥 Input', `\`\`\`js\n${args}\`\`\``)
+    .addField('📥 Input', `\`\`\`js\n${args.replace('(async () => {return', '').replace('})()', '')}\`\`\``)
     
     if (cleaned.split(/\r\n|\r|\n/).length > 4) {
       if (nf === true) {
