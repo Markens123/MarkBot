@@ -50,7 +50,7 @@ class EvalCommand extends BaseCommand {
     let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
     let embed = new Discord.MessageEmbed()
     .setColor(e === true ? 'FF0000' : '32CD32')
-    .addField('📥 Input', `\`\`\`js\n${args.replace('(async () => {return', '').replace('})()', '')}\`\`\``)
+    .addField('📥 Input', `\`\`\`js\n${args.replace('(async () => {return ', '').replace('})()', '')}\`\`\``)
     
     if (cleaned.split(/\r\n|\r|\n/).length > 4) {
       if (nf === true) {
