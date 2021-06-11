@@ -33,7 +33,7 @@ class ExperimentCheckCommand extends BaseCommand {
     let position;
     let text = '';
     if (args[1] == 'all') await message.guild.members.fetch(); 
-    let ua = u ? [u.id] : message.guild.members.cache.map(u => u.user.bot === false ? u : undefined).filter(e => e !== undefined)
+    let ua = u ? [u] : message.guild.members.cache.map(u => u.user.bot === false ? u : undefined).filter(e => e !== undefined)
     
     for (let j = 0; j < ua.length; j++) {
       if (exp === 'all') {
