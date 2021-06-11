@@ -29,19 +29,23 @@ class ExperimentCheckCommand extends BaseCommand {
       return myUser
     }).catch(error => {return false})
 
-    if (!u) return message.channel.send('Invalid user!');
+    if (!u && args[1] !== 'all') return message.channel.send('Invalid user!');
     let position;
     let text = '';
+    if (args[1] === 'all') message.guild.members.fetch(); 
+    let ua = u ? [u.id] : message.guild.members.cache.map(u => u.user.bot === false ? u : undefined).filter(e => e !== undefined)
     
-    if (exp === 'all') {
-      for (let i = 0; i < experiments.length; i++) {
-        position = murmur3(`${experiments[i]}:${u.id}`) % 1e4;
-        text += `The position of ${u.toString()} for experiment **${experiments[i]}** is #${position}\n\n`;   
-      }
-    } else {
-      position = murmur3(`${exp}:${u.id}`) % 1e4;
-      text = `The position of ${u.toString()} for experiment **${exp}** is #${position}`;
-    } 
+    for (let j = 0; j < ua.length; j++) {
+      if (exp === 'all') {
+        for (let i = 0; i < experiments.length; i++) {
+          position = murmur3(`${experiments[i]}:${ua[j].id}`) % 1e4;
+          text += `The position of ${ua[j].toString()} for experiment **${experiments[i]}** is #${position}\n\n`;   
+        }
+      } else {
+        position = murmur3(`${exp}:${ua[j].id}`) % 1e4;
+        text += `The position of ${ua[j].toString()} for experiment **${exp}** is #${position}\n\n`;
+      } 
+    }  
     let embed = new Discord.MessageEmbed()
     .setTitle('Experiment position')
     .setDescription(text)
