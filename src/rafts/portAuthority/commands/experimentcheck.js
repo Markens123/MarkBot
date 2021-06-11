@@ -18,7 +18,7 @@ class ExperimentCheckCommand extends BaseCommand {
 
   async run(message, args) {
     const client = this.boat.client;
-    if (!experiments.includes(args[0]) && args[0] !== 'all') return message.channel.send('Error you must send a valid experiment!');
+    if (!experiments.includes(args[0].toLowerCase()) && args[0].toLowerCase() !== 'all') return message.channel.send('Error you must send a valid experiment!');
     let exp = args[0].toLowerCase();
     let user;
     if (message.mentions.members.size > 0) user = message.mentions.members.first().id
@@ -29,10 +29,10 @@ class ExperimentCheckCommand extends BaseCommand {
       return myUser
     }).catch(error => {return false})
 
-    if (!u && args[1] !== 'all') return message.channel.send('Invalid user!');
+    if (!u && args[1].toLowerCase() !== 'all') return message.channel.send('Invalid user!');
     let position;
     let text = '';
-    if (args[1] === 'all') await message.guild.members.fetch(); 
+    if (args[1].toLowerCase() === 'all') await message.guild.members.fetch(); 
     let ua = u ? [u.id] : message.guild.members.cache.map(u => u.user.bot === false ? u : undefined).filter(e => e !== undefined)
     
     for (let j = 0; j < ua.length; j++) {
