@@ -42,6 +42,7 @@ class EvalCommand extends BaseCommand {
       client,
       boat: this.boat,
       cmd: this,
+      Discord,
       me: message.member ?? message.author,
       guild: message.guild,
       channel: message.channel,
@@ -64,6 +65,16 @@ class EvalCommand extends BaseCommand {
     let e = evaluated instanceof Error ?  true : false;
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
+    }
+    if (evaluated instanceof Discord.MessageAttachment || evaluated instanceof Discord.MessageEmbed) {
+      try {
+        let msg = await message.channel.send(evaluated);
+        e = false;
+        evaluated = msg;
+      } catch(err) {
+        e = true
+        evaluated = err;
+      }      
     }
     let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
     let embed = new Discord.MessageEmbed()
