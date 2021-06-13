@@ -3,6 +3,7 @@
 const util = require('util');
 const Discord = require('discord.js');
 const BaseCommand = require('../../BaseCommand');
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
@@ -34,16 +35,33 @@ class EvalCommand extends BaseCommand {
       message.channel.send(`Error: Execution of command refused`);
       return message.channel.send('https://media.tenor.com/images/59de4445b8319b9936377ec90dc5b9dc/tenor.gif');
     }
-    if (args.toLowerCase().includes('await')) args = `(async () => {return ${args}})()`
-    let evaluated;
-    let e = false;
-    try {
-    evaluated = await eval(args);
-    } 
-    catch(error) {
-    evaluated = error;
-    e = true
+    const scope = {
+      require,
+      exports,
+      message,
+      client,
+      boat: this.boat,
+      cmd: this,
+      me: message.member ?? message.author,
+      guild: message.guild,
+      channel: message.channel,
     }
+    if (!args.toLowerCase().includes('return')) args = 'return ' + args;
+    let evaluated;
+    try {
+    evaluated = args.toLowerCase().includes('await') 
+      ? await new AsyncFunction(
+          ...Object.keys(scope), 
+          `try {\n${args}\n} catch (err) {\n  return err;\n}`
+        )(...Object.values(scope))
+      : new Function(
+        ...Object.keys(scope),
+        `try {\n${args}\n} catch (err) {\n  return err;\n}`
+        )(...Object.values(scope));
+    } catch (err) {
+      evaluated = err;
+    }        
+    let e = evaluated instanceof Error ?  true : false;
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
     }
