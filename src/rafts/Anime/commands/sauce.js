@@ -37,7 +37,7 @@ class SauceCommand extends BaseCommand {
       if (currentIndex == 0) back.setDisabled() 
       if (currentIndex + 1 >= out.length) next.setDisabled() 
 
-      msg.edit({buttons:[back, next]})
+      msg.edit({embed:msg.embeds[0], buttons:[back, next]})
 
       const collector = msg.createButtonCollector(
         (button) => button.clicker.user.id === message.author.id,
@@ -61,7 +61,7 @@ class SauceCommand extends BaseCommand {
       collector.on('end', () => {
         let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
         let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
-        msg.edit({buttons: [back, next]});
+        msg.edit({embed:msg.embeds[0], buttons: [back, next]});
       });
 
     });
