@@ -1,7 +1,6 @@
 const discord = require('discord.js');
 const fs = require("fs");
 const cleverbot = require("cleverbot-free");
-const client = new discord.Client();
 var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 const getHTML = require('html-get');
 const getHtmlTitle = require('vamtiger-get-html-title').default;
