@@ -81,7 +81,7 @@ app.listen(process.env.PORT, () => markBot.log('#', `App listening at http://loc
 
 async function tfStuff() {
     var tfd = JSON.parse(fs.readFileSync('./test.json', 'utf8'));
-
+		const channel = client.channels.cache.get(config.notchannel);
     for (i = 0; i < tfd["ids"].length; i++) {
         var cid = tfd["ids"][i]
         var l = tfd[cid][0].link
@@ -103,21 +103,14 @@ async function tfStuff() {
             .setURL(l)
             .setDescription("This beta is now full!")
             .setColor("FF0000")
-            .setTimestamp();        
-            client.api.channels(config.notchannel).messages.post({
-            data: {
-                content: "<@" + cid + ">",
-                tts: false,
-                embed: embed
-                }
-            
-        })
+            .setTimestamp();
+						channel.send({content: `<@${cid}>`, embed});
 
-        tfd[cid][0].status = "closed"
+        		tfd[cid][0].status = "closed";
 
-        fs.writeFile("./test.json", JSON.stringify(tfd), err => {
-            if (err) console.log("Error writing file:", err);
-          });        
+						fs.writeFile("./test.json", JSON.stringify(tfd), err => {
+								if (err) console.log("Error writing file:", err);
+							});        
         
         }
     } else {
@@ -130,20 +123,13 @@ async function tfStuff() {
             .setDescription("This beta now has slots avalible!")
             .setColor("7fff01")
             .setTimestamp();        
-            client.api.channels(config.notchannel).messages.post({
-            data: {
-                content: "<@" + cid + ">",
-                tts: false,
-                embed: embed
-                }
-            
-        })
+            channel.send({content: `<@${cid}>`, embed})
 
-        tfd[cid][0].status = "open"
+						tfd[cid][0].status = "open"
 
-        fs.writeFile("./test.json", JSON.stringify(tfd), err => {
-            if (err) console.log("Error writing file:", err);
-          });        
+						fs.writeFile("./test.json", JSON.stringify(tfd), err => {
+								if (err) console.log("Error writing file:", err);
+							});        
         
         }
 
