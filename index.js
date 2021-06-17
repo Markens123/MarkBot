@@ -36,7 +36,7 @@ markBot.log('#', 'Starting...');
 markBot.boot();
 
 
-//setInterval(tfStuff, 60000);
+setInterval(tfStuff, 60000);
 
 
 var app = express();
@@ -639,11 +639,7 @@ async function tfStuff() {
     }
 
       }
-
-      formatJsonFiles('./test.json');
-      console.log("Done TF Stuff")
-
-
+      console.log("Done TF Stuff");
 }
 
 function getChannelIDs(fetch) {
