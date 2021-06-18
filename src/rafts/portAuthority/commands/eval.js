@@ -114,7 +114,7 @@ class EvalCommand extends BaseCommand {
   }
 }
 
-isPromise(value) {
+function isPromise(value) {
     return value && typeof value.then == "function";
 }
 
