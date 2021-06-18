@@ -59,6 +59,9 @@ class EvalCommand extends BaseCommand {
         ...Object.keys(scope),
         `try {\n${args}\n} catch (err) {\n  return err;\n}`
         )(...Object.values(scope));
+    if (isPromise(evaluated)) {
+        evaluated = await evaluated;
+     }      
     } catch (err) {
       evaluated = err;
     }        
@@ -109,6 +112,10 @@ class EvalCommand extends BaseCommand {
     }
     return text;
   }
+}
+
+isPromise(value) {
+    return value && typeof value.then == "function";
 }
 
 module.exports = EvalCommand;
