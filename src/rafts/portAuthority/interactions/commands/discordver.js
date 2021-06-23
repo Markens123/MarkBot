@@ -15,7 +15,7 @@ const definition = {
 class DiscordVerInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
-      name: 'checktf',
+      name: 'discordver',
       guild: '274765646217216003',
       type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
@@ -31,7 +31,7 @@ class DiscordVerInteraction extends BaseInteraction {
     const stable = fetcher(`stable`).then(data => {
       return "Stable " + data.buildNum + " (" + data.buildID + ")"
     });  
-    const PTB = fetcher(`PTB`).then(data => {
+    const ptb = fetcher(`ptb`).then(data => {
       return "PTB " + data.buildNum + " (" + data.buildID + ")"
     });                                  
     const canary = fetcher(`canary`).then(data => {
@@ -48,10 +48,10 @@ class DiscordVerInteraction extends BaseInteraction {
     const embed = new MessageEmbed()
     .setTitle("Current Discord Builds")
     .setColor("00FF00")
-    .addField("Desktop", `${stable}\n${PTB}\n${canary}`)
+    .addField("Desktop", `${stable}\n${ptb}\n${canary}`)
     .addField("iOS", istable)
     .addField("Android", astable)
-    .setTimestamp();    
+    .setTimestamp();
     
       
     const apiMessage = APIMessage.create(interaction.webhook, null, embed).resolveData();
