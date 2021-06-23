@@ -1,18 +1,40 @@
 {
-    "ids": [
-        "396726969544343554",
-        "162618403130048514"
-    ],
-    "396726969544343554": [
-        {
-            "link": "https://testflight.apple.com/join/gdE4pRzI",
-            "status": "closed"
-        }
-    ],
-    "162618403130048514": [
-        {
-            "link": "https://testflight.apple.com/join/C1a3MRG4",
-            "status": "closed"
-        }
+  "tf-dc": {
+    "type": 1,
+    "url": "https://testflight.apple.com/join/gdE4pRzI",
+    "status": "closed",
+    "mention": [
+      "396726969544343554"
     ]
+  },
+  "tf-fb": {
+    "type": 1,
+    "url": "https://testflight.apple.com/join/C1a3MRG4",
+    "status": "open"
+  },
+  "a-dc-pilot": {
+    "type": 2,
+    "title": "Discord",
+    "id": "com.discord",
+    "version": "79.13 - Stable",
+    "channel": "857267908908548119",
+    "mention": [
+      "133302647431102465"
+    ]
+  },
+  "a-dc": {
+    "type": 2,
+    "title": "Discord",
+    "id": "com.discord",
+    "version": "79.13 - Stable"
+  },
+  "i-dc": {
+    "type": 3,
+    "title": "Discord",
+    "id": 985746746,
+    "version": "80.0",
+    "mention": [
+      "162618403130048514"
+    ]
+  }
 }

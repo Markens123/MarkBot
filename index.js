@@ -1,17 +1,16 @@
 const discord = require('discord.js');
 const fs = require("fs");
-const cleverbot = require("cleverbot-free");
 var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-const getHTML = require('html-get');
-const getHtmlTitle = require('vamtiger-get-html-title').default;
-var formatJsonFiles = require('format-json-files');
-const { exec } = require('child_process');
 var express = require("express");
 require('dotenv').config();
-const fetch = require('node-fetch');
-
+const { checkTF } = require('./src/util/constants');
+let gplay = require('google-play-scraper');
+let store = require('app-store-scraper');
+const editJsonFile = require("edit-json-file");
 
 const shipyard = require('./src/boat');
+const { type } = require('os');
+const message = require('./src/events/message');
 const botconfig = {
     debug: true,
     token: process.env.DISCORD_TOKEN,
@@ -35,10 +34,12 @@ markBot.log('#', 'Starting...');
 markBot.boot();
 
 
-setInterval(tfStuff, 60000);
-
 const client = markBot.client;
 var app = express();
+
+client.on('ready', () =>{
+  setInterval(Updates, 60000);
+});
 
 app.get('/callback', async ({ query }, response) => {
 	const { code, state } = query;
@@ -78,63 +79,99 @@ app.listen(process.env.PORT, () => markBot.log('#', `App listening at http://loc
 
   
 
-async function tfStuff() {
-    var tfd = JSON.parse(fs.readFileSync('./test.json', 'utf8'));
-		const channel = client.channels.cache.get(config.notchannel);
-    for (i = 0; i < tfd["ids"].length; i++) {
-        var cid = tfd["ids"][i]
-        var l = tfd[cid][0].link
-        var s = tfd[cid][0].status
-
-        const html = await getHTML(l).then(({ url, html, stats, headers, statusCode })  => {return html}) 
-
-        var title = getHtmlTitle({ html });        
-        var title = title.slice(9);
-        var title = title.replace(' beta - TestFlight - Apple','');
-        
-
-    if(html.includes("This beta is full.") == true) {
-
-        if(s == "open") {
-
-            const embed = new discord.MessageEmbed()
-            .setTitle(title + " - TestFlight Status Update")
-            .setURL(l)
-            .setDescription("This beta is now full!")
-            .setColor("FF0000")
-            .setTimestamp();
-						channel.send({content: `<@${cid}>`, embed});
-
-        		tfd[cid][0].status = "closed";
-
-						fs.writeFile("./test.json", JSON.stringify(tfd), err => {
-								if (err) console.log("Error writing file:", err);
-							});        
-        
+async function Updates() {
+  var data = await JSON.parse(fs.readFileSync('./test.json', 'utf8'));
+  let file = editJsonFile(`${__dirname}/test.json`);
+  let channel = client.channels.cache.get(config.notchannel);
+  const Types = {
+    TF: 1,
+    ANDROID: 2,
+    IOS: 3,
+  };
+  for (var i in data) {
+    if (data[i].channel) {
+      client.channels.fetch(data[i].channel);
+      channel = client.channels.cache.get(data[i].channel);
+    }    
+    switch (data[i].type) {
+      case Types.TF: {
+        const d = await checkTF(data[i].url);
+        if (d.full) {
+          if (data[i].status === 'open') {
+            const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
+            channel.send({content, embed: tfEmbed(d.full, data[i].url, d.title)});
+            file.set(`${i}.status`, 'closed');
+          }
+        } else {
+          if (data[i].status === 'closed') {
+            const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
+            channel.send({content, embed: tfEmbed(d.full, data[i].url, d.title)});
+            file.set(`${i}.status`, 'open');
+          }
         }
-    } else {
-
-        if(s == "closed") {
-
-            const embed = new discord.MessageEmbed()
-            .setTitle(title + " - TestFlight Status Update")
-            .setURL(l)
-            .setDescription("This beta now has slots avalible!")
-            .setColor("7fff01")
-            .setTimestamp();        
-            channel.send({content: `<@${cid}>`, embed})
-
-						tfd[cid][0].status = "open"
-
-						fs.writeFile("./test.json", JSON.stringify(tfd), err => {
-								if (err) console.log("Error writing file:", err);
-							});        
-        
-        }
-
-    }
-
+        break;
       }
-      console.log("Done TF Stuff");
+      case Types.ANDROID: {
+        let app = await gplay.app({appId: data[i].id});
+        if (app.version !== data[i].version) {
+          const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
+          channel.send({content, embed: aEmbed(app, data[i])});
+          file.set(`${i}.version`, app.version);
+        }
+        break;
+      }
+      case Types.IOS: {
+        let app = await store.app({id: data[i].id});
+        if (app.version !== data[i].version) {
+          const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
+          channel.send({content, embed: iEmbed(app, data[i])});
+          file.set(`${i}.version`, app.version);
+        }
+        break;
+      }
+    }
+  }
+  file.save();
+  console.log('DONEEEEE')
 }
 
+function tfEmbed(status, url, title) {
+  if (status) {
+    return new discord.MessageEmbed()
+    .setTitle(`${title} - TestFlight Status Update`)
+    .setURL(url)
+    .setDescription('This beta is now full!')
+    .setColor("FF0000")
+    .setTimestamp();
+  } else {
+    return new discord.MessageEmbed()
+    .setTitle(`${title} - TestFlight Status Update`)
+    .setURL(url)
+    .setDescription('This beta now has slots avalible!')
+    .setColor('7fff01')
+    .setTimestamp();     
+  }
+}
+
+function aEmbed(app, data) {
+  return new discord.MessageEmbed()
+  .setTitle(`${data.title ?? app.title} - Android update`)
+  .setURL(app.url)
+  .addField('Version', `${data.version} ➝ ${app.version}`)
+  .addField('Android Version', app.androidVersionText ?? app.androidVersion)
+  .addField('Updated', `<t:${app.updated/1000}:R>`)
+  .setColor('a4c639')
+  .setTimestamp();
+}
+
+function iEmbed(app, data) {
+  let date = new Date(app.updated)
+  return new discord.MessageEmbed()
+  .setTitle(`${data.title ?? app.title} - iOS update`)
+  .setURL(app.url)
+  .addField('Version', `${data.version} ➝ ${app.version}`)
+  .addField('iOS Version', `${app.requiredOsVersion}+`)
+  .addField('Updated', `<t:${date.getTime()/1000}:R>`)
+  .setColor('c0c0c0')
+  .setTimestamp();
+}

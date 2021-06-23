@@ -1,4 +1,6 @@
 'use strict';
+const getHTML = require('html-get');
+const getHtmlTitle = require('vamtiger-get-html-title').default;
 
 exports.experiments =
 [
@@ -16,3 +18,10 @@ exports.experiments =
 "2021-05_application_command_suggestions",
 "2021-04_friend_nicknames" 
 ];
+
+exports.checkTF = async (url) => {
+  const { html } = await getHTML(url)
+  let title = getHtmlTitle({ html });
+  title = title.slice(9).replace(' beta - TestFlight - Apple','');
+  return {full: html.includes("This beta is full."), title}
+}
