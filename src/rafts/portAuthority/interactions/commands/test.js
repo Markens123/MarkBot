@@ -62,8 +62,13 @@ function getDefinition() {
           description: "Role that is in this server",
           type: 8,
           required: false
-      }                                                                                        
-                                                                                                  
+      },                                                                                        
+      {
+          name: "mentionable",
+          description: "Anything that you can mention",
+          type: 9,
+          required: false
+      }                                                                                                   
 
       ] 
     } 
