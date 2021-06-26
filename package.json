@@ -27,6 +27,7 @@
     "enmap": "^5.8.4",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
+    "glob": "^7.1.7",
     "google-play-scraper": "^8.0.2",
     "got": "^11.8.1",
     "hastebin-gen": "^2.0.5",

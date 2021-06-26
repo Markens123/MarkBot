@@ -18,6 +18,7 @@ class EvalCommand extends BaseCommand {
   async run(message, args) {
     let depth = 2;
     let nf = false;
+    let ogargs = args;
     if (args.includes('--depth') || args.includes('-d')) {
       const index = args.indexOf('--depth') > -1 ? args.indexOf('--depth') : args.indexOf('-d');
       depth = args[index + 1];
@@ -43,6 +44,7 @@ class EvalCommand extends BaseCommand {
       boat: this.boat,
       cmd: this,
       Discord,
+      args: ogargs,
       me: message.member ?? message.author,
       guild: message.guild,
       channel: message.channel,
