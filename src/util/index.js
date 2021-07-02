@@ -12,6 +12,7 @@ class Util {
    * @returns {Promise}
    */
   static objForEach(obj, func) {
+    if (typeof obj === 'undefined') return Promise.resolve(undefined);
     const objKeys = Object.keys(obj);
     const promises = [];
     // Map each function call to a promises that resolves, whether the function is syncrhonous or not

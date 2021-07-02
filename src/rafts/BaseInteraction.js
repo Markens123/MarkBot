@@ -2,10 +2,6 @@
 
 const BaseCommand = require('./BaseCommand');
 
-const InteractionTypes = {
-  APPLICATION_COMMAND: 2,
-};
-
 class BaseInteraction extends BaseCommand {
   constructor(boat, options) {
     super(boat, options);
@@ -19,14 +15,8 @@ class BaseInteraction extends BaseCommand {
     this.guild = options.guild;
 
     /**
-     * The type of interaction that this handler is expecting
-     * @type {Number}
-     */
-    this.type = options.type;
-
-    /**
-     * The definition for this interaction that gets passed to discord to register it
-     * @type {Object?}
+     * The definition for this interaction that gets passed to discord to register / send it
+     * @type {Object|Function?}
      */
     this.definition = options.definition;
   }
@@ -41,4 +31,3 @@ class BaseInteraction extends BaseCommand {
 }
 
 module.exports = BaseInteraction;
-module.exports.InteractionTypes = InteractionTypes;

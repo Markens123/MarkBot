@@ -3,7 +3,6 @@
 // Import dependencies
 const { Client, Collection } = require('discord.js');
 const events = require('./events');
-const interactionHandler = require('./interactionHandler');
 const rafts = require('./rafts');
 const BaseRaft = require('./rafts/BaseRaft');
 const logBuilder = require('./rafts/captainsLog/LogRouter');
@@ -90,6 +89,8 @@ class Boat {
      */
     this.interactions = {
       commands: new Collection(),
+      buttonComponents: new Collection(),
+      selectMenuComponents: new Collection(),
     };
 
     /**
@@ -128,18 +129,6 @@ class Boat {
     this.log.debug(module, 'Registering events');
     this.attach();
 
-    // Temporary Addition to handle interactions before discord.js does
-    this.client.ws.on('INTERACTION_CREATE', async packet => {
-      const result = await interactionHandler(this.client, packet);
-
-      if (!result) return;
-      
-      await this.client.api.interactions(packet.id, packet.token).callback.post({
-        data: result,
-      });
-    });
-    // End addition
-
     // Loads databases
     this.client.maldata = new Enmap('MALData');
     this.client.rdata = new Enmap('RData');
@@ -148,9 +137,6 @@ class Boat {
     this.client.overrides = new Enmap('Overrides');
     this.client.overrides.ensure('overrides', [])
     
-    // Loads button addon
-    require('discord-buttons')(this.client);
-
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }
 
@@ -198,7 +184,6 @@ class Boat {
    */
   setInteractions() {
     util.objForEach(this.rafts, raft => {
-      if (!raft.interactions) return;
       util.objForEach(raft.interactions, (interactions, type) => {
         interactions.forEach((interaction, name) => {
           this.interactions[type].set(name, interaction);

@@ -1,7 +1,5 @@
 'use strict';
 /* We did this without ck's help */
-/* eslint-disable-next-line no-unused-vars */
-const util = require('util');
 
 const Discord = require('discord.js');
 
@@ -26,7 +24,7 @@ class PingCommand extends BaseCommand {
       .setDescription(description)
       .setFooter('Made by Pilot, Ethan, Markens without ck');
 
-    message.channel.send(embed).then(msg => {
+    message.channel.send({embeds: [embed]}).then(msg => {
       msg.edit(embed.setDescription(`${description} API latency ${msg.createdTimestamp - message.createdTimestamp}ms.`));
     });
   }

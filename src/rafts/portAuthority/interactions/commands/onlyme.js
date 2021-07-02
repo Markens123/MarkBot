@@ -11,7 +11,6 @@ class OnlyMeInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'onlyme',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };
@@ -19,9 +18,7 @@ class OnlyMeInteraction extends BaseInteraction {
   }
 
   async run(interaction) {
-    const client = this.boat.client;
-    
-    interaction.reply('Only you can see this\\😄', {ephemeral: true});
+    interaction.reply({ content: 'Only you can see this\\😄', ephemeral: true});
   }
 }
 

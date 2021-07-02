@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseInteraction = require('../../../BaseInteraction');
-const { MessageEmbed, APIMessage } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const fetcher = require("discord-build-fetcher-js");
 let gplay = require('google-play-scraper');
@@ -17,7 +17,6 @@ class DiscordVerInteraction extends BaseInteraction {
     const info = {
       name: 'discordver',
       guild: '274765646217216003',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };
@@ -25,7 +24,6 @@ class DiscordVerInteraction extends BaseInteraction {
   }
 
   async run(interaction) {
-    const client = this.boat.client;
     interaction.reply(`Checking Versions...`);
 
     const stable = fetcher(`stable`).then(data => {
@@ -54,8 +52,7 @@ class DiscordVerInteraction extends BaseInteraction {
     .setTimestamp();
     
       
-    const apiMessage = APIMessage.create(interaction.webhook, null, embed).resolveData();
-    this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
+    interaction.editReply({embeds: [embed]});
   }
 }
 

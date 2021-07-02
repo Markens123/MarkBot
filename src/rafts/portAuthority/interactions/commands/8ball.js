@@ -4,7 +4,7 @@ const ball = require("8ball.js");
 const BaseInteraction = require('../../../BaseInteraction');
 
 const definition = {
-  name: 'avatar',
+  name: '8ball',
   description: 'The Magic 8 Ball Oracle has answers to all the questions',
   options: [
     {
@@ -21,7 +21,6 @@ class EBallInteraction extends BaseInteraction {
     const info = {
       name: '8ball',
       guild: '274765646217216003',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };
@@ -29,8 +28,6 @@ class EBallInteraction extends BaseInteraction {
   }
 
   async run(interaction) {
-    const client = this.boat.client;
-
     interaction.reply(ball());
   }
 }

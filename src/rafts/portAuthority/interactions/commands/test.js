@@ -8,7 +8,6 @@ class TestInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'test',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };
@@ -16,8 +15,7 @@ class TestInteraction extends BaseInteraction {
   }
 
   async run(interaction, args) {
-    const client = this.boat.client;
-    
+    console.log(interaction.options)
     interaction.reply(`\`\`\`js\n${util.inspect(args)}\`\`\``);
   }
 }

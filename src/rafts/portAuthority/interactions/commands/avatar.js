@@ -20,7 +20,6 @@ class AvatarInteraction extends BaseInteraction {
     const info = {
       name: 'avatar',
       guild: '274765646217216003',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };

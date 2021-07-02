@@ -20,7 +20,6 @@ class EphemeralInteraction extends BaseInteraction {
     const info = {
       name: 'ephemeral',
       guild: '274765646217216003',      
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };
@@ -28,10 +27,9 @@ class EphemeralInteraction extends BaseInteraction {
   }
 
   async run(interaction, args) {
-    const client = this.boat.client;
-    let c = args?.find(arg => arg.name === `content`)?.value;
+    let c = args.find(arg => arg.name === `content`).value;
 
-    interaction.reply(c, {ephemeral: true});
+    interaction.reply({ content: c, ephemeral: true });
   }
 }
 

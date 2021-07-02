@@ -50,6 +50,8 @@ class EvalCommand extends BaseCommand {
       channel: message.channel,
       __dirname,
     }
+    let last = args.split(";").pop(); 
+    args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
     if (!args.toLowerCase().includes('return')) args = 'return ' + args;
     let evaluated;
     try {
@@ -68,13 +70,15 @@ class EvalCommand extends BaseCommand {
     } catch (err) {
       evaluated = err;
     }        
-    let e = evaluated instanceof Error ?  true : false;
+    let e = evaluated instanceof Error;
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
     }
     if (evaluated instanceof Discord.MessageAttachment || evaluated instanceof Discord.MessageEmbed) {
       try {
-        let msg = await message.channel.send(evaluated);
+        let msg;
+        if (evaluated instanceof Discord.MessageAttachment) msg = await message.channel.send({ files: [evaluated] })
+        else msg = await message.channel.send({ embeds: [evaluated] })
         e = false;
         evaluated = msg;
       } catch(err) {
@@ -83,22 +87,22 @@ class EvalCommand extends BaseCommand {
       }      
     }
     let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
-    let embed = new Discord.MessageEmbed()
+    let embed = new Discord.MessageEmbed()  
     .setColor(e === true ? 'FF0000' : '32CD32')
     .addField('📥 Input', `\`\`\`js\n${args.replace('(async () => {return ', '').replace('})()', '')}\`\`\``)
     
     if (cleaned.split(/\r\n|\r|\n/).length > 4) {
       if (nf === true) {
         embed.addField('📤 Output', `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``)
-        return message.channel.send(embed);
+        return message.channel.send({ embeds: [embed] });
       }
       embed.addField('📤 Output', '\`\`\`Eval output too long, see the attached file\`\`\`')
       let attachment = new Discord.MessageAttachment(Buffer.from(cleaned, 'utf-8'), 'eval.js');
-      await message.channel.send(embed)
-      return message.channel.send(attachment);
+      await message.channel.send({ embeds: [embed] })
+      return message.channel.send({ files: [attachment] });
     }
     embed.addField('📤 Output', `\`\`\`js\n${cleaned}\`\`\``)
-    return message.channel.send(embed);
+    return message.channel.send({ embeds: [embed] });
   }
 
   clean(client, text) {

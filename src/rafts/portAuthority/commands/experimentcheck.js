@@ -1,7 +1,7 @@
 'use strict';
 
 const Discord = require('discord.js');
-const { experiments } = require('../../../util/constants');
+const { experiments } = require('../../../util/Constants');
 const BaseCommand = require('../../BaseCommand');
 const { murmur3 } = require('murmurhash-js');
 

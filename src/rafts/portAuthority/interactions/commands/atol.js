@@ -1,6 +1,5 @@
 'use strict';
 
-const { APIMessage } = require('discord.js');
 const BaseInteraction = require('../../../BaseInteraction');
 const got = require('got');
 
@@ -22,7 +21,6 @@ class AtolInteraction extends BaseInteraction {
     const info = {
       name: 'atol',
       guild: '274765646217216003',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,
       definition,
     };
@@ -31,8 +29,6 @@ class AtolInteraction extends BaseInteraction {
 
   async run(interaction, args) {
     let hash = args?.find(arg => arg.name === `hash`)?.value;
-
-    const client = this.boat.client;
 
     const res = await (async () => {
       try {
@@ -49,9 +45,7 @@ class AtolInteraction extends BaseInteraction {
   })();
 
     interaction.reply(`Generating links...`);
-    await new Promise(resolve => setTimeout(resolve, 200));
-    const apiMessage = APIMessage.create(interaction.webhook, res).resolveData();
-    this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
+    interaction.editReply(res);
   }
 }
 

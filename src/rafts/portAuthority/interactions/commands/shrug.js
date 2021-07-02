@@ -11,7 +11,6 @@ class ShrugInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'shrug',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };
@@ -19,8 +18,6 @@ class ShrugInteraction extends BaseInteraction {
   }
 
   async run(interaction) {
-    const client = this.boat.client;
-    
     interaction.reply('¯\\_(ツ)_/¯');
   }
 }

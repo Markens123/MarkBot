@@ -5,8 +5,6 @@ var parse = require('parse-duration');
 const { Collection } = require('discord.js');
 const glob = require('glob');
 
-const { MessageButton } = require('discord-buttons')
-
 module.exports = async (boat, message) => {
   // Ignore bots
   if (message.author.bot) return;

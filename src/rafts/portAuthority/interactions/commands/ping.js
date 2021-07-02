@@ -1,6 +1,6 @@
 'use strict';
 
-const { MessageEmbed, APIMessage, SnowflakeUtil } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const BaseInteraction = require('../../../BaseInteraction');
 
 const definition = {
@@ -9,7 +9,7 @@ const definition = {
 };
 
 class PingInteraction extends BaseInteraction {
-  constructor(boat) {
+  constructor(raft) {
     const info = {
       name: 'ping',
       guild: '826325501605969990',
@@ -17,7 +17,7 @@ class PingInteraction extends BaseInteraction {
       enabled: true,
       definition,
     };
-    super(boat, info);
+    super(raft, info);
   }
 
   async run(interaction) {
@@ -26,12 +26,10 @@ class PingInteraction extends BaseInteraction {
     let embed = new MessageEmbed();
     embed.setTitle('Pong').setColor('#F1C40F').setDescription(description);
 
-    interaction.reply(embed);
-    await new Promise(resolve => setTimeout(resolve, 200));
-    const response = await this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: {} });
-    embed.setDescription(`${description} API latency ${SnowflakeUtil.deconstruct(response.id).timestamp - interaction.createdTimestamp}ms.`);
-    const apiMessage = APIMessage.create(interaction.webhook, embed).resolveData();
-    this.boat.client.api.webhooks(this.boat.client.user.id, interaction.token).messages('@original').patch({ data: apiMessage.data });
+    await interaction.reply(embed);
+    const response = await interaction.fetchReply();
+    embed.setDescription(`${description} API latency ${response.createdTimestamp - interaction.createdTimestamp}ms.`);
+    interaction.editReply(embed);
   }
 }
 

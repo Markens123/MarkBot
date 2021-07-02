@@ -24,7 +24,7 @@ class PuppyCommand extends BaseCommand {
       breed = args[0];
       if (breed === 'random') breed = undefined;
     }
-    const pupper = await this.raft.apis.dog.getRandom(breed, subbreed).catch(err => this.boat.log.verbose(module, `Error getting pupper ${err}`));
+    const pupper = await this.raft.apis.dog.getRandom(breed, subbreed).catch(err => this.boat.log.verbose(module, `Error getting pupper`, err.response?.data));
 
     if (!pupper) {
       if (subbreed) {

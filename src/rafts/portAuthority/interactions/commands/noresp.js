@@ -11,7 +11,6 @@ class NoRespInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'noresp',
-      type: BaseInteraction.InteractionTypes.APPLICATION_COMMAND,
       enabled: true,      
       definition,
     };

@@ -1,37 +1,9 @@
 'use strict';
 
-const LogLevels = {
-  console: {
-    critical: 0,
-    error: 1,
-    warn: 2,
-    info: 3,
-    debug: 4,
-    verbose: 5,
-  },
-  webhook: {
-    error: 'BRIGHT_RED',
-    warn: 'DEEP_GOLD',
-  },
-};
-
-const LogColors = {
-  critical: 'bold white redBG',
-  error: 'red',
-  warn: 'yellow',
-  info: 'cyan',
-  debug: 'green',
-  verbose: 'blue',
-};
-
-const discordColors = {
-  BRIGHT_RED: 0xff0000,
-  CYAN: 0x00ffff,
-  DEEP_GOLD: 0xffab32,
-};
-
-const { WebhookClient, MessageEmbed } = require('discord.js');
+const util = require('util');
+const { WebhookClient, MessageEmbed, MessageAttachment } = require('discord.js');
 const wn = require('winston');
+const { LogLevels, LogColors, DiscordColors } = require('../../util/Constants');
 const BaseRaft = require('../BaseRaft');
 
 /**
@@ -87,13 +59,22 @@ class CaptainsLog extends BaseRaft {
    * Write a message to the log.
    * @param {LogLevel} level the log level
    * @param {Module} source the module sourcing this log
-   * @param {string} message the message to output
+   * @param {string} [message] the message to output
+   * @param {Error} [error] the full error object to use for a stacktrace
    */
-  async out(level, source, message) {
+  async out(level, source, message = 'No message specified', error) {
     const path = this.path(source);
-    this.driver.log(level, `[${path}] ${message}`);
+    if (!error && message instanceof Error) {
+      error = message;
+      message = '';
+    }
+    let formattedError = '';
+    if (error) {
+      formattedError = util.inspect(error, { depth: 6, colors: true });
+    }
+    this.driver.log(level, `[${path}] ${message}${message && formattedError ? `: ` : ''}${formattedError}`);
     if (LogLevels.webhook[level]) {
-      await this.logDiscord(level, path, message);
+      await this.logDiscord(level, path, message, error);
     }
   }
 
@@ -101,11 +82,12 @@ class CaptainsLog extends BaseRaft {
    * Exit the process after writing a message to the log.
    * @param {LogLevel} level the log level
    * @param {Module} source the module sourcing this log
-   * @param {string} message the message to output
+   * @param {string} [message] the message to output
+   * @param {Error} [error] the full error object to use for a stacktrace
    */
-  async fatal(level, source, message) {
+  async fatal(level, source, message, error) {
     const path = this.path(source);
-    await this.out(level, path, message);
+    await this.out(level, path, message, error);
     this.boat.end(1);
   }
 
@@ -114,16 +96,29 @@ class CaptainsLog extends BaseRaft {
    * @param {LogLevel} level the log level
    * @param {string} path the path to the module that this occured in
    * @param {string} message the message to send
-   * @returns {Promise<axiosRequest, axiosResponse>}
+   * @param {Error} [error] the full error object to use for a stacktrace
+   * @returns {Promise<Message>}
    * @private
    */
-  logDiscord(level, path, message) {
+  logDiscord(level, path, message, error) {
     const levels = LogLevels.webhook;
 
     if (!Object.prototype.hasOwnProperty.call(levels, level)) return Promise.reject(new Error('Invalid level'));
 
+    if (!error && message instanceof Error) {
+      error = message;
+      message = '';
+    }
+    let formattedError;
+    if (error) {
+      formattedError = util.inspect(error, { depth: 6 });
+    }
+
     let formatted = typeof message === 'string' ? message : String(message);
-    formatted = formatted.split('\n').slice(0, 5);
+    if (formattedError) {
+      formatted += `: ${formattedError}`;
+    }
+    formatted = formatted.split('\n').slice(0, 4);
     let code = false;
     for (const i in formatted) {
       let line = formatted[i];
@@ -139,10 +134,16 @@ class CaptainsLog extends BaseRaft {
       .setDescription(formatted)
       .setTimestamp(Date.now())
       .setTitle(`${level} \u00B7 ${path}`)
-      .setColor(discordColors[levels[level] ?? 'CYAN']);
+      .setColor(DiscordColors[levels[level] ?? 'CYAN']);
 
-    return this.webhook.send(embed).catch(err => {
-      this.driver.log('error', `[${this.path(module)}] Failed to send webhook: ${err}`);
+    const attachments = [embed];
+
+    if (error?.stack && formattedError.length > 100) {
+      attachments.push(new MessageAttachment(Buffer.from(formattedError), 'stacktrace.ada'));
+    }
+
+    return this.webhook.send(attachments).catch(err => {
+      this.driver.log('error', `[${this.path(module)}] Failed to send webhook`, err);
     });
   }
 

@@ -1,20 +1,19 @@
-const discord = require('discord.js');
+const { Intents, MessageEmbed } = require('discord.js');
 const fs = require("fs");
 var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 var express = require("express");
 require('dotenv').config();
-const { checkTF } = require('./src/util/constants');
+const { checkTF } = require('./src/util/Constants');
 let gplay = require('google-play-scraper');
 let store = require('app-store-scraper');
 const editJsonFile = require("edit-json-file");
 
 const shipyard = require('./src/boat');
-const { type } = require('os');
-const message = require('./src/events/message');
+
 const botconfig = {
     debug: true,
     token: process.env.DISCORD_TOKEN,
-    clientOpts: {},
+    clientOpts: { intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES | Intents.FLAGS.DIRECT_MESSAGES | Intents.FLAGS.GUILD_MESSAGE_REACTIONS },
     owners: ['396726969544343554'],
     log: {
       outputFile: process.env.LOG_LOCATION,
@@ -130,21 +129,21 @@ async function Updates() {
         break;
       }
     }
+    file.save();
   }
-  file.save();
-  console.log('DONEEEEE')
+  console.log('Done');
 }
 
 function tfEmbed(status, url, title) {
   if (status) {
-    return new discord.MessageEmbed()
+    return new MessageEmbed()
     .setTitle(`${title} - TestFlight Status Update`)
     .setURL(url)
     .setDescription('This beta is now full!')
     .setColor("FF0000")
     .setTimestamp();
   } else {
-    return new discord.MessageEmbed()
+    return new MessageEmbed()
     .setTitle(`${title} - TestFlight Status Update`)
     .setURL(url)
     .setDescription('This beta now has slots avalible!')
@@ -154,7 +153,7 @@ function tfEmbed(status, url, title) {
 }
 
 function aEmbed(app, data) {
-  return new discord.MessageEmbed()
+  return new MessageEmbed()
   .setTitle(`${data.title ?? app.title} - Android update`)
   .setURL(app.url)
   .addField('Version', `${data.version} ➝ ${app.version}`)
@@ -166,7 +165,7 @@ function aEmbed(app, data) {
 
 function iEmbed(app, data) {
   let date = new Date(app.updated)
-  return new discord.MessageEmbed()
+  return new MessageEmbed()
   .setTitle(`${data.title ?? app.title} - iOS update`)
   .setURL(app.url)
   .addField('Version', `${data.version} ➝ ${app.version}`)

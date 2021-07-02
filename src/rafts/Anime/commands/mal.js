@@ -1,9 +1,8 @@
 'use strict';
 
-const Discord = require('discord.js');
+const { MessageEmbed, MessageButton } = require('discord.js');
 const axios = require('axios');
 const BaseCommand = require('../../BaseCommand');
-const { MessageButton } = require('discord-buttons');
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
@@ -90,48 +89,46 @@ class MALCommand extends BaseCommand {
       let embed = await genEmbed(data, message, offset);
 
       if (rmsg.deletable) rmsg.delete();
-      return message.channel.send(embed).then(async msg => {
+      return message.channel.send({ embeds: [embed] }).then(async msg => {
         let currentIndex = offset
-        let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
-        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back') 
-        let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
+        let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomID('collector:next'); 
+        let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomID('collector:back'); 
+        let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomID('collector:delete');
 
-        if (currentIndex == 0) back.setDisabled() 
-        if (currentIndex + 1 >= data.data.length) next.setDisabled() 
+        if (currentIndex == 0) back.setDisabled(true);
+        if (currentIndex + 1 >= data.data.length) next.setDisabled(true); 
 
-        msg.edit({embed:msg.embeds[0], buttons:[back, next, del]})
+        msg.edit({ embeds: [msg.embeds[0]], components: [[back, next, del]] })
 
-        const collector = msg.createButtonCollector(
-          (button) => button.clicker.user.id === message.author.id,
-          {time: 15000}
-        )
+        const filter = (interaction) => interaction.user.id === message.author.id;        
+        const collector = msg.createMessageComponentInteractionCollector({ filter, idle: 15000 });
+        
         let deleted = false;        
-        collector.on('collect', async b => {
-          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
-          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
-          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
+        collector.on('collect', async interaction => {
+          let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomID('collector:next'); 
+          let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomID('collector:back'); 
+          let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomID('collector:delete');
           
-          collector.resetTimer();
+          interaction.deferUpdate();
 
-          b.defer();
-          if (b.id === 'delete') {
+          if (interaction.customID === 'collector:delete') {
             await msg.delete()
             deleted = true
             collector.stop()
             return;
           }
           
-          b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
-          if (currentIndex == 0) back.setDisabled() 
-          if (currentIndex + 1 >= data.data.length) next.setDisabled() 
+          interaction.customID === 'collector:back' ? currentIndex -= 1 : currentIndex += 1
+          if (currentIndex == 0) back.setDisabled(true);
+          if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
           let e = await genEmbed(data, message, currentIndex)
-          msg.edit({embed: e, buttons: [back, next, del]})
+          msg.edit({ embeds: [e], components: [[back, next, del]] })
         });
         collector.on('end', () => {
-          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
-          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
-          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-          if (!deleted) msg.edit({embed:msg.embeds[0], buttons: [back, next, del]});
+          let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomID('collector:next').setDisabled(true); 
+          let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomID('collector:back').setDisabled(true); 
+          let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomID('collector:delete').setDisabled(true);
+          if (!deleted) msg.edit({ embeds: [msg.embeds[0]], components: [[back, next, del]] });
         });
       });
 
@@ -174,48 +171,46 @@ class MALCommand extends BaseCommand {
       let embed = await genEmbed(data, message, offset);
 
       if (rmsg.deletable) rmsg.delete();
-      return message.channel.send(embed).then(async msg => {
+      return message.channel.send({ embeds: [embed] }).then(async msg => {
         let currentIndex = offset
-        let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
-        let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back') 
-        let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
+        let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomID('collector:next'); 
+        let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomID('collector:back'); 
+        let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomID('collector:delete');
 
-        if (currentIndex == 0) back.setDisabled() 
-        if (currentIndex + 1 >= data.data.length) next.setDisabled() 
+        if (currentIndex == 0) back.setDisabled(true);
+        if (currentIndex + 1 >= data.data.length) next.setDisabled(true); 
 
-        msg.edit({embed:msg.embeds[0], buttons:[back, next, del]})
+        msg.edit({ embeds: [msg.embeds[0]], components: [[back, next, del]] })
 
-        const collector = msg.createButtonCollector(
-          (button) => button.clicker.user.id === message.author.id,
-          {time: 15000}
-        )
+        const filter = (interaction) => interaction.user.id === message.author.id;
+        const collector = msg.createMessageComponentInteractionCollector({ filter, idle: 15000 });
+
         let deleted = false;        
-        collector.on('collect', async b => {
-          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next') 
-          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back')
-          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
-          
-          collector.resetTimer();
+        collector.on('collect', async interaction => {
+          let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomID('collector:next'); 
+          let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomID('collector:back'); 
+          let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomID('collector:delete');
+            
+          interaction.deferUpdate();
 
-          b.defer();
-          if (b.id === 'delete') {
+          if (interaction.customID === 'collector:delete') {
             await msg.delete()
             deleted = true
             collector.stop()
             return;
           }
           
-          b.id === 'back' ? currentIndex -= 1 : currentIndex += 1
-          if (currentIndex == 0) back.setDisabled() 
-          if (currentIndex + 1 >= data.data.length) next.setDisabled() 
+          interaction.customID === 'collector:back' ? currentIndex -= 1 : currentIndex += 1
+          if (currentIndex == 0) back.setDisabled(true) 
+          if (currentIndex + 1 >= data.data.length) next.setDisabled(true) 
           let e = await genEmbed(data, message, currentIndex)
-          msg.edit({embed: e, buttons: [back, next, del]})
+          msg.edit({ embeds: [e], components: [[back, next, del]] });
         });
         collector.on('end', () => {
-          let next = new MessageButton().setLabel('➡️').setStyle('blurple').setID('next').setDisabled()
-          let back = new MessageButton().setLabel('⬅️').setStyle('blurple').setID('back').setDisabled()
-          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-          if (!deleted) msg.edit({embed:msg.embeds[0], buttons: [back, next, del]});
+          let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomID('collector:next').setDisabled(true);
+          let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomID('collector:back').setDisabled(true);
+          let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomID('collector:delete').setDisabled(true);
+          if (!deleted) msg.edit({ embeds: [msg.embeds[0]], components: [[back, next, del]] });
         });
       });
 
@@ -245,19 +240,20 @@ class MALCommand extends BaseCommand {
       let embed = await genEmbed(data, message, offset);
 
       if (rmsg.deletable) rmsg.delete();
-      return message.channel.send(embed).then(async msg => {
-        let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete')
+      return message.channel.send({ embeds: [embed] }).then(async msg => {
+        let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomID('collector:delete')
 
-        msg.edit({embed:msg.embeds[0], button:del})
+        msg.edit({ embeds: [msg.embeds[0]], components: [[del]] })
 
-        const collector = msg.createButtonCollector(
-          (button) => button.clicker.user.id === message.author.id,
-          {time: 60000}
-        )
+        const filter = (interaction) => interaction.user.id === message.author.id;
+        const collector = msg.createMessageComponentInteractionCollector({ filter, idle: 15000 });
+
         let deleted = false;        
-        collector.on('collect', async b => {
-          b.defer();
-          if (b.id === 'delete') {
+        collector.on('collect', async interaction => {
+
+          interaction.deferUpdate();
+
+          if (interaction.customID === 'collector:delete') {
             await msg.delete()
             deleted = true
             collector.stop()
@@ -265,19 +261,19 @@ class MALCommand extends BaseCommand {
           }
         });
         collector.on('end', () => {
-          let del = new MessageButton().setLabel('🗑️').setStyle('red').setID('delete').setDisabled()
-          if (!deleted) msg.edit({embed:msg.embeds[0], button:del});
+          let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setID('collector:delete').setDisabled(true);
+          if (!deleted) msg.edit({ embeds: [msg.embeds[0]], components: [[del]] });
         });
       });
     }
     const cmd = this.boat.prefix + this.name    
-    const embed = new Discord.MessageEmbed()
+    const embed = new MessageEmbed()
     .setColor('DARK_RED')
     .setTitle('Usage')
     .addField('Commands', `${cmd} ml/mylist (page #) (flags)\n${cmd} get/g <anime id>\n${cmd} search/s <title>\n`)
     .addField('Flags', '--sort/-so <sort type>\n--status/-st <status>\n*Only usable with mylist*')
     
-    message.channel.send(embed)
+    message.channel.send({ embeds: [embed] })
   }
 
 }
@@ -330,7 +326,7 @@ async function genEmbed(data, message, offset) {
     anime.my_list_status.num_episodes_watched = 0
   }
 
-  return new Discord.MessageEmbed()
+  return new MessageEmbed()
   .setAuthor(message.author.tag, message.author.displayAvatarURL())
   .setColor(gencolor(anime.my_list_status.status))
   .setTitle(anime.title)
