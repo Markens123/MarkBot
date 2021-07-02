@@ -46,15 +46,15 @@ class CEvalCommand extends BaseCommand {
     if (out.split(/\r\n|\r|\n/).length > 4) {
       if (nf === true) {
         embed.addField('📤 Output', `\`\`\`bash\n${out.slice(0, 1000)}\n\`\`\``)
-        return message.channel.send(embed);
+        return message.channel.send({ embeds: [embed] });
       }
       embed.addField('📤 Output', '\`\`\`Eval output too long, see the attached file\`\`\`')
       let attachment = new Discord.MessageAttachment(Buffer.from(out, 'utf-8'), 'eval.bash');
-      await message.channel.send(embed)
-      return message.channel.send(attachment);
+      await message.channel.send({ embeds: [embed] })
+      return message.channel.send({ files: [attachment] });
     }
     embed.addField('📤 Output', `\`\`\`bash\n${out}\`\`\``)
-    return message.channel.send(embed);
+    return message.channel.send({ embeds: [embed] });
   }
 }
 
