@@ -3,6 +3,7 @@
 const util = require('util');
 var parse = require('parse-duration');
 const { Collection } = require('discord.js');
+const glob = require('glob');
 
 const { MessageButton } = require('discord-buttons')
 
@@ -55,7 +56,25 @@ module.exports = async (boat, message) => {
   const args = message.content.slice(boat.prefix.length).trim().split(/\s+/g);
   const command = args.shift().toLowerCase();
 
-  const handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
+  let handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
+  
+  /*if (boat.client.overrides.has(message.author.id)) {
+    const overrides = boat.client.overrides.get(message.author.id);
+    const options = {
+      cwd: `${__dirname}../../`,
+      realpath: true
+    }
+    
+    overrides.forEach(o => {
+      if (boat.client.overrides.get(o)?.includes(command)) {
+        let path = glob.sync(`overrides/${o}/${command}.js`, options)[0];
+        if (path) {
+          let cmd = require(path);
+          handler = new cmd(boat.rafts['portAuthority']);
+        }
+      }
+    });
+  }*/
   
   if (!handler) {
     handleRaft(boat.rafts, message);

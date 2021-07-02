@@ -141,10 +141,12 @@ class Boat {
     // End addition
 
     // Loads databases
-    this.client.maldata = new Enmap("MALData");
-    this.client.rdata = new Enmap("RData");
+    this.client.maldata = new Enmap('MALData');
+    this.client.rdata = new Enmap('RData');
     this.client.cooldowns = new Collection();
-    this.client.maldata.ensure('states', {})
+    this.client.maldata.ensure('states', {});
+    this.client.overrides = new Enmap('Overrides');
+    this.client.overrides.ensure('overrides', [])
     
     // Loads button addon
     require('discord-buttons')(this.client);

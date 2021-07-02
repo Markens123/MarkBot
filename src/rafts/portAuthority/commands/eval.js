@@ -48,6 +48,7 @@ class EvalCommand extends BaseCommand {
       me: message.member ?? message.author,
       guild: message.guild,
       channel: message.channel,
+      __dirname,
     }
     if (!args.toLowerCase().includes('return')) args = 'return ' + args;
     let evaluated;
