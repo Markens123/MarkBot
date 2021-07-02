@@ -50,8 +50,10 @@ class EvalCommand extends BaseCommand {
       channel: message.channel,
       __dirname,
     }
-    let last = args.split(";").pop(); 
-    args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
+    if (!args.toLowerCase().includes('return')) {
+      let last = args.split(";").pop(); 
+      args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
+    }
     if (!args.toLowerCase().includes('return')) args = 'return ' + args;
     let evaluated;
     try {
