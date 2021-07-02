@@ -81,13 +81,13 @@ app.listen(process.env.PORT, () => markBot.log('#', `App listening at http://loc
 async function Updates() {
   var data = await JSON.parse(fs.readFileSync('./test.json', 'utf8'));
   let file = editJsonFile(`${__dirname}/test.json`);
-  let channel = client.channels.cache.get(config.notchannel);
   const Types = {
     TF: 1,
     ANDROID: 2,
     IOS: 3,
   };
   for (var i in data) {
+    let channel = client.channels.cache.get(config.notchannel);	  
     if (data[i].channel) {
       client.channels.fetch(data[i].channel);
       channel = client.channels.cache.get(data[i].channel);
