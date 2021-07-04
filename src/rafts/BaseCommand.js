@@ -46,6 +46,12 @@ class BaseCommand {
      this.dms = options.dms ?? false;
 
     /**
+     * Whether this command can be used in threads
+     * @type {boolean|'only'}
+     */
+     this.threads = options.threads ?? true;
+
+    /**
      * Which channels can use this command
      * @type {string[]}
      */

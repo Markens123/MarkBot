@@ -15,6 +15,7 @@ class EvalCommand extends BaseCommand {
       name: 'eval',
       owner: true,
       enabled: true,
+      dms: true,
     };
     super(boat, options);
   }

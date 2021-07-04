@@ -81,8 +81,12 @@ module.exports = async (boat, message) => {
   }
   if (message.channel.type !== 'text' && message.channel.type !== 'dm' && !message.channel.type.includes('thread')) return;
 
-  if (message.channel.type !== 'dm' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!')
+  if (message.channel.type !== 'dm' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!');
   if (message.channel.type === 'dm' && !handler.dms) return;
+
+  if (!message.channel.type.includes('thread') && handler.threads === 'only') return message.channel.send('This command can only be used in threads!');
+  if (message.channel.type.includes('thread') && !handler.threads) return;
+
 
   if (handler.permissions) {
     const authorPerms = message.channel.permissionsFor(message.author);
