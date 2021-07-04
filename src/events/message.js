@@ -2,7 +2,7 @@
 
 const util = require('util');
 var parse = require('parse-duration');
-const { Collection } = require('discord.js');
+const { Collection, MessageButton } = require('discord.js');
 const glob = require('glob');
 
 module.exports = async (boat, message) => {
@@ -17,21 +17,22 @@ module.exports = async (boat, message) => {
         let rtime = parse(args[index + 1], 'ms');
         args.splice(index, 2);
         if (rtime) {
-          let yes = new MessageButton().setLabel('✅').setStyle('green').setID('yes')
-          let no = new MessageButton().setLabel('❌').setStyle('red').setID('no')
-          message.channel.send(`Would you like me to remind you about that in ${getDur(rtime)}?`, {buttons: [yes, no]}).then(async msg => {
-            const collector = msg.createButtonCollector(
-              (button) => button.clicker.user.id === message.author.id,
-              {time: 15000}
-            )
-            collector.on('collect', async b => {
+          let yes = new MessageButton().setLabel('✅').setStyle('PRIMARY').setCustomID('collector:yes');
+          let no = new MessageButton().setLabel('❌').setStyle('DANGER').setCustomID('collector:no');
+          
+          message.channel.send({ content: `Would you like me to remind you about that in ${getDur(rtime)}?`, components: [[yes, no]] }).then(async msg => {
+            
+            const filter = (interaction) => interaction.user.id === message.author.id;
+            const collector = msg.createMessageComponentInteractionCollector({ filter, idle: 15000 });
+
+            collector.on('collect', async interaction => {
               
-              if (b.id === 'no') {
-                await b.reply.send('The reminder was not set <:klukthumbsup:813679725917765662>', true);
+              if (interaction.customID === 'collector:no') {
+                await interaction.reply({ content: 'The reminder was not set <:klukthumbsup:813679725917765662>', ephemeral: true });
                 collector.stop();
               }
-              if (b.id === 'yes') {
-                await b.reply.send('The reminder was successfully set', true)
+              if (interaction.customID === 'collector:yes') {
+                await interaction.reply({ content: 'The reminder was successfully set', ephemeral: true })
                 let resp = `**Reminder delivery:**\nTo: ${message.author.toString()}\nJump Link:\n${message.url}\nReminder:\n\`\`\`${args.join(' ')}\`\`\``
                 collector.stop();
                 setTimeout(()=>{
@@ -54,7 +55,7 @@ module.exports = async (boat, message) => {
   const args = message.content.slice(boat.prefix.length).trim().split(/\s+/g);
   const command = args.shift().toLowerCase();
 
-  let handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
+  let handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases?.includes(command));
   
   /*if (boat.client.overrides.has(message.author.id)) {
     const overrides = boat.client.overrides.get(message.author.id);
@@ -78,10 +79,10 @@ module.exports = async (boat, message) => {
     handleRaft(boat.rafts, message);
     return;
   }
-  if (message.channel.type !== 'text' && message.channel.type !== 'dm') return;
+  if (message.channel.type !== 'text' && message.channel.type !== 'dm' && !message.channel.type.includes('thread')) return;
 
-  if (message.channel.type == 'text' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!')
-  if (message.channel.type == 'dm' && !handler.dms) return;
+  if (message.channel.type !== 'dm' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!')
+  if (message.channel.type === 'dm' && !handler.dms) return;
 
   if (handler.permissions) {
     const authorPerms = message.channel.permissionsFor(message.author);
