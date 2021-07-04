@@ -17,7 +17,7 @@ module.exports = async (boat, message) => {
         let rtime = parse(args[index + 1], 'ms');
         args.splice(index, 2);
         if (rtime) {
-          let yes = new MessageButton().setLabel('✅').setStyle('PRIMARY').setCustomID('collector:yes');
+          let yes = new MessageButton().setLabel('✅').setStyle('SUCCESS').setCustomID('collector:yes');
           let no = new MessageButton().setLabel('❌').setStyle('DANGER').setCustomID('collector:no');
           
           message.channel.send({ content: `Would you like me to remind you about that in ${getDur(rtime)}?`, components: [[yes, no]] }).then(async msg => {
