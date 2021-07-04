@@ -4,6 +4,10 @@ const util = require('util');
 const Discord = require('discord.js');
 const BaseCommand = require('../../BaseCommand');
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const glob = require('glob');
+const { basename } = require('path');
+const fs = require('fs');
+
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
@@ -48,11 +52,16 @@ class EvalCommand extends BaseCommand {
       me: message.member ?? message.author,
       guild: message.guild,
       channel: message.channel,
+      channels: message.guild?.channels,
       __dirname,
+      readFile,
+      readfile: readFile,
     }
     if (!args.toLowerCase().includes('return')) {
-      let last = args.split(";").pop(); 
-      args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
+      if (args.split(";").length > 2) {
+        let last = args.split(";").pop();
+        args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
+      }
     }
     if (!args.toLowerCase().includes('return')) args = 'return ' + args;
     let evaluated;
@@ -125,6 +134,21 @@ class EvalCommand extends BaseCommand {
 
 function isPromise(value) {
     return value && typeof value.then == "function";
+}
+
+function readFile(path, text = false) {
+  const options = {
+    cwd: `${__dirname}../../../../../`,
+    realpath: true
+  }
+  let filepath = glob.sync(path, options)[0];
+
+  if (!filepath) return new SyntaxError('That file does not exist');
+  
+  let file = fs.readFileSync(filepath, { encoding: 'utf8'})
+  
+  if (text) return file;
+  else return new Discord.MessageAttachment(Buffer.from(file), basename(filepath)); 
 }
 
 module.exports = EvalCommand;

@@ -98,13 +98,13 @@ async function Updates() {
         if (d.full) {
           if (data[i].status === 'open') {
             const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-            channel.send({content, embed: tfEmbed(d.full, data[i].url, d.title)});
+            channel.send({ content, embeds: [tfEmbed(d.full, data[i].url, d.title)] });
             file.set(`${i}.status`, 'closed');
           }
         } else {
           if (data[i].status === 'closed') {
             const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-            channel.send({content, embed: tfEmbed(d.full, data[i].url, d.title)});
+            channel.send({ content, embeds: [tfEmbed(d.full, data[i].url, d.title)] });
             file.set(`${i}.status`, 'open');
           }
         }
@@ -114,7 +114,7 @@ async function Updates() {
         let app = await gplay.app({appId: data[i].id});
         if (app.version !== data[i].version) {
           const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-          channel.send({content, embed: aEmbed(app, data[i])});
+          channel.send({ content, embeds: [aEmbed(app, data[i])] });
           file.set(`${i}.version`, app.version);
         }
         break;
@@ -123,7 +123,7 @@ async function Updates() {
         let app = await store.app({id: data[i].id});
         if (app.version !== data[i].version) {
           const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-          channel.send({content, embed: iEmbed(app, data[i])});
+          channel.send({ content, embeds: [iEmbed(app, data[i])] });
           file.set(`${i}.version`, app.version);
         }
         break;
