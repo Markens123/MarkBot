@@ -60,7 +60,7 @@ class EvalCommand extends BaseCommand {
     }
     if (!args.toLowerCase().includes('return')) {
       if (args.split(";").length > 2) {
-        let last = args.split(";").pop();
+        let last = args.split(";").filter(Boolean).pop();
         args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
       }
     }
