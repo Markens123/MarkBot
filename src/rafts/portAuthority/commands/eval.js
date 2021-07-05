@@ -58,6 +58,23 @@ class EvalCommand extends BaseCommand {
       readFile,
       readfile: readFile,
     }
+    scope.scope = {
+      require,
+      exports,
+      message,
+      client,
+      boat: this.boat,
+      cmd: this,
+      Discord,
+      args: ogargs,
+      me: message.member ?? message.author,
+      guild: message.guild,
+      channel: message.channel,
+      channels: message.guild?.channels,
+      __dirname,
+      readFile,
+      readfile: readFile,
+    }
     if (!args.toLowerCase().includes('return')) {
       if (args.split(";").length > 2) {
         let last = args.split(";").filter(Boolean).pop();
