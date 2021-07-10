@@ -131,8 +131,8 @@ class Boat {
     this.attach();
 
     // Loads databases
-    for (const property in databases) {
-      this.client[property] = databases[property];
+    for (const [key, value] of Object.entries(databases)) {
+      this.client[key] = value;
     }
     this.client.maldata.ensure('states', {});
     this.client.overrides.ensure('overrides', []);
