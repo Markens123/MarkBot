@@ -7,7 +7,8 @@ const rafts = require('./rafts');
 const BaseRaft = require('./rafts/BaseRaft');
 const logBuilder = require('./rafts/captainsLog/LogRouter');
 const util = require('./util');
-const Enmap = require("enmap");
+const Enmap = require('enmap');
+const databases = require('./databases');
 
 /**
  * The main entry point for any instance of this bot.
@@ -130,12 +131,11 @@ class Boat {
     this.attach();
 
     // Loads databases
-    this.client.maldata = new Enmap('MALData');
-    this.client.rdata = new Enmap('RData');
-    this.client.cooldowns = new Collection();
+    for (const property in databases) {
+      this.client[property] = databases[property];
+    }
     this.client.maldata.ensure('states', {});
-    this.client.overrides = new Enmap('Overrides');
-    this.client.overrides.ensure('overrides', [])
+    this.client.overrides.ensure('overrides', []);
     
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }
