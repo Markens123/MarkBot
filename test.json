@@ -17,6 +17,7 @@
     "title": "Discord",
     "id": "com.discord",
     "version": "81.14 - Stable",
+    "updated": 0,
     "channel": "857267908908548119",
     "mention": [
       "133302647431102465"
@@ -26,7 +27,8 @@
     "type": 2,
     "title": "Discord",
     "id": "com.discord",
-    "version": "81.14 - Stable"
+    "version": "81.14 - Stable",
+    "updated": 0
   },
   "i-dc": {
     "type": 3,
