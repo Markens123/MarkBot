@@ -112,10 +112,11 @@ async function Updates() {
       }
       case Types.ANDROID: {
         let app = await gplay.app({appId: data[i].id});
-        if (app.version !== data[i].version) {
+        if (app.version !== data[i].version && app.updated > data[i].updated) {
           const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
           channel.send({ content, embeds: [aEmbed(app, data[i])] });
           file.set(`${i}.version`, app.version);
+	  file.set(`${i}.updated`, app.updated);	
         }
         break;
       }
