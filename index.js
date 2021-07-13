@@ -121,10 +121,11 @@ async function Updates() {
       }
       case Types.IOS: {
         let app = await store.app({id: data[i].id});
-        if (app.version !== data[i].version) {
+        if (app.version !== data[i].version && new Date(app.updated).getTime() > data[i].updated) {
           const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
           channel.send({ content, embeds: [iEmbed(app, data[i])] });
           file.set(`${i}.version`, app.version);
+	  file.set(`${i}.updated`, new Date(app.updated).getTime());
         }
         break;
       }
