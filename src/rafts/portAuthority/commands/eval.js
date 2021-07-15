@@ -37,6 +37,7 @@ class EvalCommand extends BaseCommand {
     /* eslint-disable-next-line no-unused-vars */
     const client = this.boat.client;
     args = args.join(' ');
+    if (args.slice(-1) !== ';') args = args.concat(';');
     if (args.toLowerCase().includes('token') || args.toLowerCase().includes('secret')) {
       message.channel.send(`Error: Execution of command refused`);
       return message.channel.send('https://media.tenor.com/images/59de4445b8319b9936377ec90dc5b9dc/tenor.gif');
