@@ -19,7 +19,7 @@
     "cleverbot-free": "^1.0.5",
     "crypto": "^1.0.1",
     "discord-build-fetcher-js": "^1.0.7",
-    "discord.js": "^13.0.0-dev.fe6cc0c.1625227356",
+    "discord.js": "^13.0.0-dev.02f55f0.1626782659",
     "dotenv": "^8.2.0",
     "easy-get-request-with-headers": "^1.0.1",
     "edit-json-file": "^1.6.0",

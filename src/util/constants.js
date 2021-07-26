@@ -67,3 +67,15 @@ function createEnum(keys) {
   }
   return obj;
 }
+
+  const codeblockRegex = /(?:```(?<language>[A-Za-z0-9\\-\\.]*)\n)(?<content>[\s\S]+)(?:```)/im;
+
+exports.getCodeblockMatch = (argument) => {
+  const match = codeblockRegex.exec(argument);
+  const groups = match?.groups;
+  if (groups) {
+    const { language, content } = groups;
+    if (content && language) return { language, content };
+    else if (content) return { content };
+  } else return { content: argument };
+}

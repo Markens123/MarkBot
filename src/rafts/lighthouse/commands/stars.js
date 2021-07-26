@@ -12,18 +12,35 @@ class StarsCommand extends BaseCommand {
       name: 'stars',
       owner: false,
       enabled: true,
+      args: [
+        {
+          name: 'stars',
+          type: 'int',
+        },
+        {
+          name: 'lines',
+          type: 'int',
+        },
+        {
+          name: 'image',
+          type: 'flag',
+          index: 0,
+          flags: ['--image', '-i'],
+          default: false,
+        },
+      ],
     };
     super(raft, options);
   }
 
-  run(message) {
+  run(message, args) {
+    console.log(args)
     const width = 1200;
     const height = 730;
     const canvas = createCanvas(width, height);
     const context = canvas.getContext('2d');
-
-    const stars = Math.floor(Math.random() * 101) + 75;
-    const lines = Math.floor(Math.random() * 4) + 3;
+    const stars = args.stars ?? Math.floor(Math.random() * 101) + 75;
+    const lines = args.lines ?? Math.floor(Math.random() * 4) + 3;
     let a = [];
 
     context.fillStyle = 'black';
@@ -54,12 +71,11 @@ class StarsCommand extends BaseCommand {
     let embed = new Discord.MessageEmbed()
       .setTitle('Random Stars')
       .setColor('000001')
-      .attachFiles(attachment)
       .setImage('attachment://image.png')
       .setFooter(`Dots: ${stars} | Lines: ${lines}`)
       .setAuthor(message.author.tag, message.author.displayAvatarURL());
 
-    message.channel.send(embed);
+    message.channel.send({embeds: args.image ? null : [embed], files: [attachment]});
   }
 }
 

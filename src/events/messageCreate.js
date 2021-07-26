@@ -1,14 +1,13 @@
-'use strict';
-
 const util = require('util');
-var parse = require('parse-duration');
+let parse = require('parse-duration');
 const { Collection, MessageButton } = require('discord.js');
 const glob = require('glob');
+const { getCodeblockMatch } = require('../util/Constants')
 
 module.exports = async (boat, message) => {
   // Ignore bots
   if (message.author.bot) return;
-
+  
   if (!message.content.startsWith(boat.prefix)) {
     let args = message.content.trim().split(/\s+/g);
     if (args.includes('--remind') || args.includes('-r')) {
@@ -17,8 +16,8 @@ module.exports = async (boat, message) => {
         let rtime = parse(args[index + 1], 'ms');
         args.splice(index, 2);
         if (rtime) {
-          let yes = new MessageButton().setLabel('✅').setStyle('SUCCESS').setCustomID('collector:yes');
-          let no = new MessageButton().setLabel('❌').setStyle('DANGER').setCustomID('collector:no');
+          let yes = new MessageButton().setLabel('✅').setStyle('SUCCESS').setCustomId('collector:yes');
+          let no = new MessageButton().setLabel('❌').setStyle('DANGER').setCustomId('collector:no');
           
           message.channel.send({ content: `Would you like me to remind you about that in ${getDur(rtime)}?`, components: [[yes, no]] }).then(async msg => {
             
@@ -52,11 +51,11 @@ module.exports = async (boat, message) => {
     return;
   }
 
-  const args = message.content.slice(boat.prefix.length).trim().split(/\s+/g);
+  let args = message.content.slice(boat.prefix.length).trim().split(/\s+/g);
+  let ogargs = args;
   const command = args.shift().toLowerCase();
 
   let handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
-  
   /*if (boat.client.overrides.has(message.author.id)) {
     const overrides = boat.client.overrides.get(message.author.id);
     const options = {
@@ -79,14 +78,13 @@ module.exports = async (boat, message) => {
     handleRaft(boat.rafts, message);
     return;
   }
-  if (message.channel.type !== 'text' && message.channel.type !== 'dm' && !message.channel.type.includes('thread')) return;
+  if (message.channel.type !== 'GUILD_TEXT' && message.channel.type !== 'DM' && !message.channel.type.includes('THREAD')) return;
 
-  if (message.channel.type !== 'dm' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!');
-  if (message.channel.type === 'dm' && !handler.dms) return;
+  if (message.channel.type !== 'DM' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!');
+  if (message.channel.type === 'DM' && !handler.dms) return;
 
   if (!message.channel.type.includes('thread') && handler.threads === 'only') return message.channel.send('This command can only be used in threads!');
   if (message.channel.type.includes('thread') && !handler.threads) return;
-
 
   if (handler.permissions) {
     const authorPerms = message.channel.permissionsFor(message.author);
@@ -94,7 +92,6 @@ module.exports = async (boat, message) => {
         return message.reply("You don't have the required permissions for this command!");
     }
   }  
-  
   // Cooldown stuff
   const { cooldowns } = boat.client;
 
@@ -119,9 +116,35 @@ module.exports = async (boat, message) => {
   if (handler.owner && !boat.owners.includes(message.author.id)) return;
 
   if (handler.channels && !handler.channels.includes(message.channel.id)) return;
+  if (handler.args) {
+    let newargs = {};
+    let count = 0
+    for (let i = 0; i < handler.args.length; i++) {
+      if (handler.args[i].type === 'flag') {
+        if (args.includes(handler.args[i].flags[0]) || args.includes(handler.args[i].flags[1])) {
+          let index = args.indexOf(handler.args[i].flags[0]) > -1 ? args.indexOf(handler.args[i].flags[0]) : args.indexOf(handler.args[i].flags[1]);
+          newargs[handler.args[i].name] = handler.args[i].index === 0 ? true : args[index + handler.args[i].index];
+          args.splice(index, handler.args[i].index+1);
+        } else {
+          newargs[handler.args[i].name] = handler.args[i].default ?? undefined;  
+        }
+      } else {
+        newargs[handler.args[i].name] = parseArgs(args[count] ?? handler.args[i].default, handler.args[i].type);
+        if (!newargs[handler.args[i].name] && handler.args[i].required) return message.channel.send(`The argument ${handler.args[i].name} is required!`);
+        if (handler.args[i].match === 'codeblock') {
+          let codeblock = getCodeblockMatch(message.content.slice(boat.prefix.length).replace('-nf', ' ').replace('--nofile', ' ').replace('-d', ' ').replace('--depth', ' ').trim()
+          );
+          newargs[handler.args[i].name] = codeblock;
+        }
+        if (newargs[handler.args[i].name] && handler.args[i].validation && !handler.args[i].validation({arg: newargs[handler.args[i].name], message, boat: handler.boat})) return message.channel.send(`The argument ${handler.args[i].name} has failed validation.`)
+        count++
+      }
+    }
+    args = newargs;
+  }
 
   try {
-    await handler.run(message, args);
+    await handler.run(message, args, ogargs);
   } catch (err) {
     boat.log.warn(module, `Error occurred during command call ${handler.name}: ${util.formatWithOptions({}, err)}`);
   }
@@ -145,4 +168,10 @@ function getDur(ms) {
   if (date.getUTCSeconds()) str.push(`${date.getUTCSeconds()} ${date.getUTCSeconds() > 1 ? 'seconds': 'second'}`);
   if (date.getUTCMilliseconds()) str.push(`${date.getUTCMilliseconds()} millis`);
   return str.join(', ')
+}
+
+function parseArgs(thing, w) {
+  if (w === 'int' ||  w === 'integer') return parseInt(thing);
+  if (w === 'float') return parseFloat(thing);
+  return thing;
 }

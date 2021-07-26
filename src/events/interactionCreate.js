@@ -19,6 +19,9 @@ module.exports = async (boat, interaction) => {
       case 'BUTTON':
         handler = boat.interactions.buttonComponents.get(name);
         break;
+      case 'SELECT_MENU':
+        handler = boat.interactions.selectMenus.get(name);
+        break;
     }
   }
 

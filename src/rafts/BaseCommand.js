@@ -52,6 +52,37 @@ class BaseCommand {
      this.threads = options.threads ?? true;
 
     /**
+     * Whether this command can be used in threads
+     * @type {object[] | false}
+     */
+     this.args = options.args ?? false;
+    
+    if (!Array.isArray(this.args)) this.args = false;
+
+    if (this.args) {
+      for (let i = 0; i < this.args.length; i++) {
+        if (!this.args[i].name) {
+          this.args[i] = undefined;
+          break;
+        };
+        if (!this.args[i].type) this.args[i].type = 'string';
+        if (!this.args[i].required) this.args[i].required = false;
+        if (this.args[i].type === 'flag') {
+          if (!this.args[i].flags) this.args[i] = undefined;
+          else {
+            if (!this.args[i].index) this.args[i].index = 0; 
+          }
+        }
+        if (this.args[i].match && this.args[i].match !== 'codeblock') this.args[i] = undefined;
+      };
+      this.args = this.args.filter(x => x !== undefined).sort((a, b) => (a.type !== 'flag') ? 1 : -1);
+
+     } 
+      
+
+
+
+    /**
      * Which channels can use this command
      * @type {string[]}
      */

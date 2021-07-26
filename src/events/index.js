@@ -2,8 +2,8 @@
 
 const events = {};
 
-events.message = require('./message');
+events.messageCreate = require('./messageCreate');
 events.ready = require('./ready');
-events.interaction = require('./interaction');
+events.interactionCreate = require('./interactionCreate');
 
 module.exports = events;
