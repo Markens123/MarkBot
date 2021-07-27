@@ -58,6 +58,7 @@ class EvalCommand extends BaseCommand {
       __dirname,
       readFile,
       readfile: readFile,
+      module,
     }
     scope.scope = {
       require,
@@ -75,6 +76,7 @@ class EvalCommand extends BaseCommand {
       __dirname,
       readFile,
       readfile: readFile,
+      module,
     }
     if (!args.toLowerCase().includes('return')) {
       if (args.split(";").length > 2) {
