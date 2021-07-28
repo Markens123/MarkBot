@@ -75,10 +75,6 @@ export interface LogOptions {
     webhookToken: Snowflake;
 }
 
-export interface CaptinsLogI extends RaftI {
-  
-}
-
 export type LogLevel = {
     console: {
         critical: 0,
