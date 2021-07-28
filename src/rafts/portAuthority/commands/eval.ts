@@ -8,13 +8,14 @@ import * as fs from 'fs';
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 import path, { basename } from 'path';
 import { fileURLToPath } from 'url';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
-    const options = {
+    const options: CommandOptions = {
       name: 'eval',
       owner: true,
       enabled: true,

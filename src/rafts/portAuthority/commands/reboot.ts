@@ -3,17 +3,18 @@
 import { Message } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import { fileURLToPath } from 'url';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 var module = fileURLToPath(import.meta.url);
 
 
 class RebootCommand extends BaseCommand {
   constructor(boat) {
-    const info = {
+    const options: CommandOptions = {
       name: 'reboot',
       owner: true,
       enabled: true,
     };
-    super(boat, info);
+    super(boat, options);
   }
 
   async run(message: Message) {

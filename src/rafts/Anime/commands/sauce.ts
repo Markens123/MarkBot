@@ -4,11 +4,12 @@ import { MessageEmbed, MessageButton, Message, MessageActionRow, ButtonInteracti
 import nsauce from 'node-sauce';
 import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 let sauce = new nsauce(process.env.SAUCE_API_KEY);
 
 class SauceCommand extends BaseCommand {
   constructor(boat) {
-    const options = {
+    const options: CommandOptions = {
       name: 'sauce',
       owner: false,
       dms: true,

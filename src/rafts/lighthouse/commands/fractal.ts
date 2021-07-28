@@ -3,14 +3,15 @@
 import pkg from 'canvas';
 const { createCanvas } = pkg;
 
-import Discord from 'discord.js';
+import Discord, { Guild } from 'discord.js';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import {Util as util} from '../../../util/index.js';
 
 import BaseCommand from '../../BaseCommand.js';
 
 class FractalCommand extends BaseCommand {
   constructor(raft) {
-    const options = {
+    const options: CommandOptions = {
       name: 'fractal',
       owner: false,
       enabled: true,

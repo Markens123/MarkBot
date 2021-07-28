@@ -1,7 +1,7 @@
 'use strict';
 
-import { Snowflake } from "discord.js";
-import { ArgI, BoatI, RaftI } from "../../lib/interfaces/Main.js";
+import { PermissionResolvable, Snowflake } from "discord.js";
+import { ArgI, BoatI, CommandOptions, RaftI } from "../../lib/interfaces/Main.js";
 
 /**
  * Represents a standard text command that can be run
@@ -13,15 +13,15 @@ class BaseCommand {
   dms: boolean | 'only';
   threads: boolean | 'only';
   args: ArgI[] | false;
-  channels: Snowflake[];
-  aliases: string[];
-  cooldown: number[];
-  permissions: string;
+  channels: Snowflake[] | false;
+  aliases: string[] | false;
+  cooldown: number | false;
+  permissions: PermissionResolvable | false;
   boat: BoatI;
   raft: RaftI;
   name: string;
   
-  constructor(raft: RaftI, options) {
+  constructor(raft: RaftI, options: CommandOptions) {
     /**
      * The boat that handles this commands raft
      * @name BaseCommand#boat

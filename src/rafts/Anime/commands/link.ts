@@ -1,11 +1,12 @@
 'use strict';
 
 import * as Discord from 'discord.js';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 
 class LinkCommand extends BaseCommand {
   constructor(boat) {
-    const options = {
+    const options: CommandOptions = {
       name: 'link',
       owner: false,
       dms: 'only',

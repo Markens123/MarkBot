@@ -2,17 +2,18 @@
 
 import { exec } from 'child_process';
 import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 
 class UpdateCommand extends BaseCommand {
   constructor(raft) {
-    const info = {
+    const options: CommandOptions = {
       name: 'update',
-      description: 'updates to the latest master (make sure .env is still good!)',
+      description: 'Updates to the latest master (make sure .env is still good!)',
       owner: true,
       enabled: true,
     };
-    super(raft, info);
+    super(raft, options);
   }
 
   async run(message: Message, args: string[]) {

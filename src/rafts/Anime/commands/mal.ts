@@ -3,11 +3,11 @@
 import { MessageEmbed, MessageButton, Message, MessageActionRow, ButtonInteraction } from 'discord.js';
 import axios from 'axios';
 import BaseCommand from '../../BaseCommand.js';
-import { ClientI, RaftI } from '../../../../lib/interfaces/Main.js';
+import { ClientI, CommandOptions, RaftI } from '../../../../lib/interfaces/Main.js';
 
 class MALCommand extends BaseCommand { 
   constructor(boat) {
-    const options = {
+    const options: CommandOptions = {
       name: 'mal',
       owner: false,
       dms: true,

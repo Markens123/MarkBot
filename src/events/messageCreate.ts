@@ -1,10 +1,10 @@
 import * as util from 'util';
 import parse from 'parse-duration';
-import { Collection, MessageButton, Message } from 'discord.js';
-import glob from 'glob';
+import { Collection, MessageButton, Message, Permissions } from 'discord.js';
 import { getCodeblockMatch } from '../util/Constants.js';
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { fileURLToPath } from 'url';
+import BaseCommand from '../rafts/BaseCommand.js';
 const __filename = fileURLToPath(import.meta.url);
 var module = __filename;
 
@@ -59,7 +59,7 @@ export default async (boat: BoatI, message: Message) => {
   let ogargs = args;
   const command = args.shift().toLowerCase();
 
-  let handler = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
+  let handler: undefined | BaseCommand = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
   /*if (boat.client.overrides.has(message.author.id)) {
     const overrides = boat.client.overrides.get(message.author.id);
     const options = {
@@ -82,17 +82,16 @@ export default async (boat: BoatI, message: Message) => {
     handleRaft(boat.rafts, message);
     return;
   }
-  if (message.channel.type !== 'GUILD_TEXT' && message.channel.type !== 'DM' && !message.channel.type.includes('THREAD')) return;
+  if (!message.channel.isText()) return;
 
   if (message.channel.type !== 'DM' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!');
   if (message.channel.type === 'DM' && !handler.dms) return;
 
-  if (!message.channel.type.includes('thread') && handler.threads === 'only') return message.channel.send('This command can only be used in threads!');
-  if (message.channel.type.includes('thread') && !handler.threads) return;
+  if (!message.channel.isThread() && handler.threads === 'only') return message.channel.send('This command can only be used in threads!');
+  if (message.channel.isThread() && !handler.threads) return;
 
   if (handler.permissions) {
-    //@ts-ignore
-    const authorPerms = message.channel.permissionsFor(message.author);
+    const authorPerms = message.member.permissions;
     if (!authorPerms || !authorPerms.has(handler.permissions)) {
         return message.reply("You don't have the required permissions for this command!");
     }

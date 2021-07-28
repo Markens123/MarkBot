@@ -1,4 +1,4 @@
-import { ClientOptions, Snowflake, Collection, Client } from 'discord.js'
+import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable } from 'discord.js'
 import Enmap from 'enmap'
 
 export interface ClientI extends Client {
@@ -23,7 +23,21 @@ export interface BoatI {
     log: any;
     end(code: any): Promise<void>;
     readonly toJSON: any;
-  }
+}
+
+export interface CommandOptions {
+  name: string;
+  description?: string;
+  enabled?: boolean;
+  owner?: boolean;
+  dms?: boolean | 'only';
+  threads?: boolean | 'only';
+  args?: ArgI[] | false;
+  channels?: Snowflake[] | false;
+  aliases?: string[] | false;
+  cooldown?: number | false;
+  permissions?: PermissionResolvable | false;
+}
 
 export interface BoatOptions {
     debug: boolean;

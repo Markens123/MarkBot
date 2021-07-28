@@ -1,11 +1,12 @@
 'use strict';
 
 import * as Discord from 'discord.js';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 
 class SpaceCommand extends BaseCommand {
   constructor(raft) {
-    const options = {
+    const options: CommandOptions = {
       name: 'space',
       owner: false,
       enabled: true,

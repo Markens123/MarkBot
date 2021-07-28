@@ -5,19 +5,20 @@ import glob from 'glob';
 import { Message } from 'discord.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
 class ReloadCommandCommand extends BaseCommand {
   constructor(boat) {
-    const info = {
+    const options: CommandOptions = {
       name: 'reloadcommand',
       owner: true,
       enabled: false,
       aliases: ['rc'],
     };
-    super(boat, info);
+    super(boat, options);
   }
 
   async run(message: Message, args: string[]) {

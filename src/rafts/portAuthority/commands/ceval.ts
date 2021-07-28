@@ -3,10 +3,11 @@
 import * as Discord from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import { exec } from 'child_process';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 
 class CEvalCommand extends BaseCommand {
   constructor(boat) {
-    const options = {
+    const options: CommandOptions = {
       name: 'ceval',
       owner: true,
       enabled: true,

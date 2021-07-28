@@ -1,12 +1,13 @@
 'use strict';
 
 import * as Discord from 'discord.js';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 
 import BaseCommand from '../../BaseCommand.js';
 
 class HelloCommand extends BaseCommand {
   constructor(boat) {
-    const options = {
+    const options: CommandOptions = {
       name: 'hello',
       owner: true,
       enabled: true,

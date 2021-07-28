@@ -4,12 +4,13 @@ import pkg from 'canvas';
 const { createCanvas } = pkg;
 
 import Discord from 'discord.js';
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 
 import BaseCommand from '../../BaseCommand.js';
 
 class StarsCommand extends BaseCommand {
   constructor(raft) {
-    const options = {
+    const options: CommandOptions = {
       name: 'stars',
       owner: false,
       enabled: true,
