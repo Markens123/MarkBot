@@ -18,7 +18,6 @@ class CaptainsLog extends BaseRaft {
   webhook: WebhookClient;
   constructor(boat) {
     super(boat);
-    console.log(wn.format.colorize())
     /**
      * The log driver.
      * @type {Winston}
