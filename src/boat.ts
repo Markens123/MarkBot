@@ -176,7 +176,6 @@ class Boat implements BoatI {
    * Launches the logging raft
    */
   initLog() {
-    console.log(rafts)
     const raft = new rafts.captainsLog(this);
     if (!(raft instanceof BaseRaft)) throw new TypeError('All rafts must extend BaseRaft');
     if (!raft.active) return;
