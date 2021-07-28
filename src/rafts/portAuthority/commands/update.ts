@@ -46,8 +46,7 @@ class UpdateCommand extends BaseCommand {
     stderr = clean(stderr);
     embed.setTitle('Packages Updated').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
     await message.channel.send({embeds: [embed]});
-    console.log('HEYA');
-    ({ stdout, stderr } = await promiseExec('tsc').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
+    ({ stdout, stderr } = await promiseExec('npm run build').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
