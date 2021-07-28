@@ -11,6 +11,7 @@ import BaseCommand from '../../BaseCommand.js';
 class StarsCommand extends BaseCommand {
   constructor(raft) {
     const options: CommandOptions = {
+      
       name: 'stars',
       owner: false,
       enabled: true,
@@ -36,7 +37,6 @@ class StarsCommand extends BaseCommand {
   }
 
   run(message: Discord.Message, args: any) {
-    console.log(args)
     const width = 1200;
     const height = 730;
     const canvas = createCanvas(width, height);

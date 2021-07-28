@@ -175,7 +175,11 @@ function getDur(ms) {
 }
 
 function parseArgs(thing, w) {
-  if (w === 'int' ||  w === 'integer') return parseInt(thing);
-  if (w === 'float') return parseFloat(thing);
+  let num: number;
+  if (w === 'int' ||  w === 'integer') num = parseInt(thing);
+  else if (w === 'float') num = parseFloat(thing);
+  else if (num === NaN) return null
+  else return num
+
   return thing;
 }
