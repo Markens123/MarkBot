@@ -1,0 +1,46 @@
+'use strict';
+
+import pkg from 'canvas';
+const { createCanvas } = pkg;
+
+import * as Discord from 'discord.js';
+import {Util as util} from '../../../util/index.js';
+
+import BaseCommand from '../../BaseCommand.js';
+
+class AbstractCommand extends BaseCommand {
+  constructor(raft) {
+    const options = {
+      name: 'abstract',
+      owner: false,
+      enabled: true,
+    };
+    super(raft, options);
+  }
+
+  async run(message: Discord.Message) {
+    const width = 1200;
+    const height = 730;
+    const canvas = createCanvas(width, height);
+    const context = canvas.getContext('2d');
+
+    context.fillStyle = '#57C7FF';
+    context.fillRect(0, 0, width, height);
+    const maxIterations = 20;
+    await util.nonBlockLoop(
+      maxIterations,
+      (i, args) => {
+        args.context.fillStyle = `rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`;
+        args.context.arc(Math.random() * 1150 + 1, Math.random() * 720 + 1, 1, 0, 2 * Math.PI);
+        args.context.fill();
+      },
+      { context },
+    );
+
+    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'blue.png');
+
+    message.channel.send({files: [attachment]});
+  }
+}
+
+export default AbstractCommand;
