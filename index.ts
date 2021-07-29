@@ -35,7 +35,6 @@ markBot.boot();
 
 
 const client = markBot.client;
-const boat = markBot.boat;
 
 let app = express();
 
@@ -83,7 +82,7 @@ app.listen(process.env.PORT, () => markBot.log('#', `App listening at http://loc
 
 async function Updates() {
   var data = await JSON.parse(fs.readFileSync('./test.json', 'utf8'));
-  let file = editJsonFile(`${boat.options.basepath}/../../test.json`);
+  let file = editJsonFile(`${markBot.options.basepath}/../../test.json`);
   const Types = {
     TF: 1,
     ANDROID: 2,
