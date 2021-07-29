@@ -32,7 +32,7 @@ class CheckTFInteraction extends BaseInteraction {
     if (full) embed.setDescription("Discord testflight is full!").setColor('#FF0000');
     else embed.setDescription("Discord testflight has slots available!").setColor('#7fff01');
 
-    interaction.editReply({embeds: [embed]});
+    interaction.editReply({ content: null, embeds: [embed] });
   }
 }
 

@@ -3,10 +3,11 @@ import * as fs from 'fs';
 import express from 'express';
 import 'dotenv/config'
 import { checkTF } from './src/util/Constants.js';
-import * as gplay from 'google-play-scraper';
-import * as store from 'app-store-scraper';
+import gplay from 'google-play-scraper';
+import store from 'app-store-scraper';
 import editJsonFile from 'edit-json-file';
 import shipyard from './src/boat.js';
+import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 let config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 
@@ -49,7 +50,7 @@ app.get('/callback', async ({ query }, response) => {
         let user = client.maldata.find(val => Object.keys(val).some(k => {return val[k] === state}));
         if (user) {
             user = Object.keys(user)[0]
-            const out = await markBot.rafts.Anime.apis.oauth.getToken(code).catch(err => {markBot.log.verbose(module, `Error getting token ${err}`)});
+            const out = await markBot.rafts.Anime.apis.oauth.getToken(code).catch(err => {markBot.log.verbose(markBot.options.basepath, `Error getting token ${err}`)});
             if (!out.access_token) response.sendFile('error.html', { root: '.' });
             client.maldata.set(user, out.access_token, 'AToken');
             client.maldata.set(user, out.refresh_token, 'RToken');

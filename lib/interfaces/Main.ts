@@ -25,6 +25,10 @@ export interface BoatI {
     readonly toJSON: any;
 }
 
+interface LogsI {
+
+}
+
 export interface CommandOptions {
   name: string;
   description?: string;

@@ -1,27 +1,10 @@
-import * as getHTML from 'html-get';
-import * as getHtmlTitle from 'vamtiger-get-html-title';
-
-export const experiments =
-[
-"2021-04_product_rebrand",
-"2020-11_expression_suggestions",
-"2021-02_mobile_expression_suggestions",
-"2021-05_premium_increased_content_length",
-"2021-05_stage_public_toggle_users",
-"2021-04_stage_discovery",
-"2021-03_mobile_web_scroll_experiment",
-"2021-05_per_guild_avatars",
-"2021-05_custom_profiles_premium",
-"2021-04_premium_increased_max_guilds",
-"2021-05_application_command_callout",
-"2021-05_application_command_suggestions",
-"2021-04_friend_nicknames" 
-];
+import getHTML from 'html-get';
+import { JSDOM } from 'jsdom';
 
 export const checkTF = async (url: string): Promise<{ full: boolean; title: string; }> => {
-  const { html } = await getHTML(url)
-  //@ts-ignore
-  let title = getHtmlTitle({ html });
+  const { html } = await getHTML(url);
+  const dom = new JSDOM(html);
+  let title = dom.window.document.title;
   title = title.slice(9).replace(' beta - TestFlight - Apple','');
   return {full: html.includes("This beta is full."), title}
 }

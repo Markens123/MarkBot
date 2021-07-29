@@ -37,6 +37,7 @@
     "imgbb-uploader": "^1.2.0",
     "imgur": "^0.3.1",
     "is-image-url": "^1.1.8",
+    "jsdom": "^16.6.0",
     "memejs": "^1.2.3",
     "murmurhash-js": "^1.0.0",
     "node-sauce": "^1.0.5",

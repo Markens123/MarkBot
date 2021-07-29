@@ -52,7 +52,7 @@ class DiscordVerInteraction extends BaseInteraction {
     .setTimestamp();
     
       
-    interaction.editReply({embeds: [embed]});
+    interaction.editReply({ content: null, embeds: [embed] });
   }
 }
 
