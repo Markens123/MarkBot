@@ -7,7 +7,7 @@ import gplay from 'google-play-scraper';
 import store from 'app-store-scraper';
 import editJsonFile from 'edit-json-file';
 import shipyard from './src/boat.js';
-import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
+import { UpdatesFile } from './lib/interfaces/Main.js';
 let config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 
@@ -82,7 +82,7 @@ app.listen(process.env.PORT, () => markBot.log('#', `App listening at http://loc
   
 
 async function Updates() {
-  var data = await JSON.parse(fs.readFileSync('./test.json', 'utf8'));
+  var data = await JSON.parse(fs.readFileSync('./test.json', 'utf8')) as UpdatesFile[];
   let file = editJsonFile(`${markBot.options.basepath}/../../test.json`);
   const Types = {
     TF: 1,
@@ -139,7 +139,7 @@ async function Updates() {
   console.log('Done');
 }
 
-function tfEmbed(status, url, title) {
+function tfEmbed(status: boolean, url: string, title: string) {
   if (status) {
     return new MessageEmbed()
     .setTitle(`${title} - TestFlight Status Update`)
@@ -157,7 +157,7 @@ function tfEmbed(status, url, title) {
   }
 }
 
-function aEmbed(app, data) {
+function aEmbed(app: gplay.IAppItemFullDetail, data) {
   return new MessageEmbed()
   .setTitle(`${data.title ?? app.title} - Android update`)
   .setURL(app.url)

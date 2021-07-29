@@ -94,3 +94,14 @@ export type LogLevel = {
       }
 }
 
+export interface UpdatesFile {
+  type: number;
+  title?: string;
+  url?: string;
+  id?: string;
+  status?: string;
+  version?: string;
+  updated?: number;
+  channel?: Snowflake;
+  mention?: Snowflake[];
+}
