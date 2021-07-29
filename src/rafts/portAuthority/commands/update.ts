@@ -26,7 +26,6 @@ class UpdateCommand extends BaseCommand {
       if (message.author.id !== '396726969544343554') branch = false;
     }
     let embed = new MessageEmbed().setColor('BLURPLE');
-    await promiseExec('git stash').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
     if (branch !== false) {
       let { stdout, stderr } = await promiseExec(`git checkout ${branch}`).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
       if (!stdout && !stderr) return;
@@ -39,7 +38,6 @@ class UpdateCommand extends BaseCommand {
     stderr = clean(stderr);
     embed.setTitle('Git Pulled').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
     await message.channel.send({embeds: [embed]});
-    await promiseExec('git stash pop').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
 
     ({ stdout, stderr } = await promiseExec('npm i').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
