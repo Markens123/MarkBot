@@ -33,10 +33,12 @@ class SauceCommand extends BaseCommand {
       let currentIndex = 0
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next'); 
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back'); 
-      let row = new MessageActionRow().addComponents(back, next)
 
       if (currentIndex == 0) back.setDisabled(true) 
       if (currentIndex + 1 >= out.length) next.setDisabled(true) 
+
+      let row = new MessageActionRow().addComponents(back, next)
+
 
       msg.edit({ embeds: [msg.embeds[0]], components: [row] });
 

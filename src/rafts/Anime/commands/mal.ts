@@ -96,10 +96,11 @@ class MALCommand extends BaseCommand {
         let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next'); 
         let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back'); 
         let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
-        let row = new MessageActionRow().addComponents(back, next, del);
 
         if (currentIndex == 0) back.setDisabled(true);
         if (currentIndex + 1 >= data.data.length) next.setDisabled(true); 
+
+        let row = new MessageActionRow().addComponents(back, next, del);
 
         msg.edit({ embeds: [msg.embeds[0]], components: [row] })
 
@@ -111,7 +112,6 @@ class MALCommand extends BaseCommand {
           let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next'); 
           let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back'); 
           let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
-          let row = new MessageActionRow().addComponents(back, next, del);
 
           interaction.deferUpdate();
 
@@ -122,9 +122,12 @@ class MALCommand extends BaseCommand {
             return;
           }
           
-          interaction.customId === 'collector:back' ? currentIndex -= 1 : currentIndex += 1
+          interaction.customId === 'collector:back' ? currentIndex -= 1 : currentIndex += 1;
+
           if (currentIndex == 0) back.setDisabled(true);
           if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
+
+          let row = new MessageActionRow().addComponents(back, next, del);
           let e = await genEmbed(data, message, currentIndex)
           msg.edit({ embeds: [e], components: [row] })
         });
@@ -183,10 +186,11 @@ class MALCommand extends BaseCommand {
         let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next'); 
         let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back'); 
         let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
-        let row = new MessageActionRow().addComponents(back, next, del);
 
         if (currentIndex == 0) back.setDisabled(true);
-        if (currentIndex + 1 >= data.data.length) next.setDisabled(true); 
+        if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
+        
+        let row = new MessageActionRow().addComponents(back, next, del);
 
         msg.edit({ embeds: [msg.embeds[0]], components: [row] })
 
