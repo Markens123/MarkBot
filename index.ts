@@ -1,4 +1,4 @@
-import { Intents, MessageEmbed, TextChannel } from 'discord.js';
+import { Intents, MessageEmbed, Snowflake, TextChannel } from 'discord.js';
 import * as fs from 'fs';
 import express from 'express';
 import 'dotenv/config'
@@ -7,15 +7,15 @@ import gplay from 'google-play-scraper';
 import store from 'app-store-scraper';
 import editJsonFile from 'edit-json-file';
 import shipyard from './src/boat.js';
-import { UpdatesFile } from './lib/interfaces/Main.js';
+import { BoatOptions, UpdatesFile } from './lib/interfaces/Main.js';
 let config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 
 
-const botconfig = {
+const botconfig: BoatOptions = {
     debug: true,
     token: process.env.DISCORD_TOKEN,
-    clientOpts: { intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES | Intents.FLAGS.DIRECT_MESSAGES | Intents.FLAGS.GUILD_MESSAGE_REACTIONS },
+    clientOpts: { partials: ['CHANNEL'], intents: Intents.FLAGS.DIRECT_MESSAGES | Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES | Intents.FLAGS.GUILD_MESSAGE_REACTIONS },
     owners: ['396726969544343554'],
     log: {
       outputFile: process.env.LOG_LOCATION,

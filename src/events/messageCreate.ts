@@ -11,7 +11,16 @@ var module = __filename;
 export default async (boat: BoatI, message: Message) => {
   // Ignore bots
   if (message.author.bot) return;
-  
+
+  if (message.partial) {
+    try {
+      message.fetch()
+    } catch(error)
+    {
+      boat.log.error('events/messageCreate', error)
+    }
+  }
+
   if (!message.content.startsWith(boat.prefix)) {
     let args = message.content.trim().split(/\s+/g);
     if (args.includes('--remind') || args.includes('-r')) {

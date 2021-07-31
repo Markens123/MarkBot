@@ -51,6 +51,7 @@ export interface BoatOptions {
     commandPrefix?: string;
     log?: LogOptions;
     basepath?: any;
+    tokens?: any;
 }
 
 export interface RaftI {
@@ -73,10 +74,10 @@ export interface ArgI {
 }
 
 export interface LogOptions {
-    maxLevel: LogLevel;
+    maxLevel?: LogLevel;
     outputFile: string;
     verbose: boolean;
-    webhookToken: Snowflake;
+    webhookToken: string;
 }
 
 export type LogLevel = {
