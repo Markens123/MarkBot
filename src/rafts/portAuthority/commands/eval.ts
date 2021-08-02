@@ -12,7 +12,6 @@ import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 class EvalCommand extends BaseCommand {
   constructor(boat) {
     const options: CommandOptions = {
@@ -57,6 +56,7 @@ class EvalCommand extends BaseCommand {
       guild: message.guild,
       channel: message.channel,
       channels: message.guild?.channels,
+      messages: message.channel?.messages,
       __dirname,
       readFile,
       readfile: readFile,

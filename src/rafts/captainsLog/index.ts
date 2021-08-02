@@ -49,14 +49,15 @@ class CaptainsLog extends BaseRaft {
   }
 
   launch() {
-    const token = this.boat.options.log.webhookToken.split('/') as Snowflake[]; 
+    const url = this.boat.options.log.webhookToken; 
     /**
      * The webhook client that handles sending error logs to discord
      * Only available after launching
      * @type {WebhookClient}
      * @private
      */
-    this.webhook = new WebhookClient(token[0], token[1]);
+    //@ts-ignore
+    this.webhook = new WebhookClient({ url });
   }
 
   /**

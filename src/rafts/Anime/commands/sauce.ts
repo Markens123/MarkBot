@@ -20,7 +20,7 @@ class SauceCommand extends BaseCommand {
 
   async run(message: Message, args: any) {
     let url = '';    
-    if (message.attachments.size > 0) url = message.attachments.array()[0].url
+    if (message.attachments.size > 0) url = message.attachments.first().url
     else if (message.embeds.length > 0 && message.embeds[0].type == 'image') url = message.embeds[0].thumbnail.url
     else if (args && isImageUrl(args[0])) url = args[0]
     if (!url) return message.channel.send('Please provide a valid image url or image attachment!')
