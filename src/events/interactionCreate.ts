@@ -24,6 +24,14 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
       case 'SELECT_MENU':
         handler = boat.interactions.selectMenuComponents.get(name);
         break;
+      //@ts-expect-error  
+      case 'USER':
+        handler = boat.interactions.userContextMenuComponents.get(name);
+        break;
+      //@ts-expect-error  
+      case 'MESSAGE':
+        handler = boat.interactions.messageContextMenuComponents.get(name)
+        break;
     }
   }
   if (!handler) {

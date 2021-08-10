@@ -65,8 +65,6 @@ app.get('/callback', async ({ query }, response) => {
 
 app.listen(process.env.PORT, () => markBot.log('#', `App listening at http://localhost:${process.env.PORT}`));
 
-
-
 /*client.on('guildMemberAdd', async member => {
     //console.log(member.guild)
     if(member.guild.id !== "816098833054302208") return

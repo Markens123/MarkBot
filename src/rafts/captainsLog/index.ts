@@ -56,7 +56,6 @@ class CaptainsLog extends BaseRaft {
      * @type {WebhookClient}
      * @private
      */
-    //@ts-ignore
     this.webhook = new WebhookClient({ url });
   }
 
