@@ -16,7 +16,7 @@ export interface BoatI {
     events: any;
     rafts: any;
     commands: any;
-    interactions: any;
+    interactions: InteractionsI;
     token: string;
     debug: boolean;
     ending: boolean;
@@ -25,7 +25,12 @@ export interface BoatI {
     readonly toJSON: any;
 }
 
-interface LogsI {
+interface InteractionsI {
+  commands: Collection<string, any>,
+  buttonComponents: Collection<string, any>,
+  selectMenuComponents: Collection<string, any>,
+  userContextMenuComponents: Collection<string, any>,
+  messageContextMenuComponents: Collection<string, any>,
 
 }
 
