@@ -1,15 +1,26 @@
 'use strict';
 
-import { MessageComponentInteraction } from 'discord.js';
+import {  Interaction } from 'discord.js';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { ComponentFunctions } from '../util/Constants.js';
 
-export default async (boat: BoatI, interaction: MessageComponentInteraction) => {
+export default async (boat: BoatI, interaction: Interaction) => {
   let handler;
   // Check for handler
   if (interaction.isCommand()) {
     handler = boat.interactions.commands.get(interaction.commandName);
+  }
+  if (interaction.isContextMenu()) {
+    switch (interaction.command.type) {
+      case 'MESSAGE':
+        handler = boat.interactions.messageContextMenuComponents.get(interaction.commandName);
+        break;
+      case 'USER':
+        handler = boat.interactions.userContextMenuComponents.get(interaction.commandName);
+        break;
+
+    }
   }
   if (interaction.isMessageComponent()) {
     if (!verifyCustomId(interaction.customId, interaction.message.components)) {
@@ -24,18 +35,12 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
       case 'SELECT_MENU':
         handler = boat.interactions.selectMenuComponents.get(name);
         break;
-      //@ts-expect-error  
-      case 'USER':
-        handler = boat.interactions.userContextMenuComponents.get(name);
-        break;
-      //@ts-expect-error  
-      case 'MESSAGE':
-        handler = boat.interactions.messageContextMenuComponents.get(name)
-        break;
     }
   }
   if (!handler) {
+    //@ts-expect-error
     if (interaction.customId.split(':')[0] === 'collector') return;
+    //@ts-expect-error
     interaction.reply({ content: 'This command has no associated action! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
     return;
   }
