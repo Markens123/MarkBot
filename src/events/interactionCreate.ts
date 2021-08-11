@@ -4,6 +4,8 @@ import {  Interaction } from 'discord.js';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { ComponentFunctions } from '../util/Constants.js';
+import { fileURLToPath } from 'url';
+const module = fileURLToPath(import.meta.url);
 
 export default async (boat: BoatI, interaction: Interaction) => {
   let handler;
@@ -12,12 +14,12 @@ export default async (boat: BoatI, interaction: Interaction) => {
     handler = boat.interactions.commands.get(interaction.commandName);
   }
   if (interaction.isContextMenu()) {
-    switch (interaction.command.type) {
+    switch (interaction.targetType) {
       case 'MESSAGE':
-        handler = boat.interactions.messageContextMenuComponents.get(interaction.commandName);
+        handler = boat.interactions.messageContextMenuComponents.get(interaction.commandName.toLowerCase());
         break;
       case 'USER':
-        handler = boat.interactions.userContextMenuComponents.get(interaction.commandName);
+        handler = boat.interactions.userContextMenuComponents.get(interaction.commandName.toLowerCase());
         break;
 
     }
@@ -39,7 +41,7 @@ export default async (boat: BoatI, interaction: Interaction) => {
   }
   if (!handler) {
     //@ts-expect-error
-    if (interaction.customId.split(':')[0] === 'collector') return;
+    if (interaction.customId?.split(':')[0] === 'collector') return;
     //@ts-expect-error
     interaction.reply({ content: 'This command has no associated action! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
     return;

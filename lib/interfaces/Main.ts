@@ -26,12 +26,11 @@ export interface BoatI {
 }
 
 interface InteractionsI {
-  commands: Collection<string, any>,
-  buttonComponents: Collection<string, any>,
-  selectMenuComponents: Collection<string, any>,
-  userContextMenuComponents: Collection<string, any>,
-  messageContextMenuComponents: Collection<string, any>,
-
+  commands: Collection<string, any>;
+  buttonComponents: Collection<string, any>;
+  selectMenuComponents: Collection<string, any>;
+  userContextMenuComponents: Collection<string, any>;
+  messageContextMenuComponents: Collection<string, any>;
 }
 
 export interface CommandOptions {

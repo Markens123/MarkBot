@@ -48,13 +48,15 @@ class SauceCommand extends BaseCommand {
       collector.on('collect', async (interaction) => {
         let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next'); 
         let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back'); 
-        let row = new MessageActionRow().addComponents(back, next);
 
         await interaction.deferUpdate();
         
         interaction.customId === 'collector:back' ? currentIndex -= 1 : currentIndex += 1
         if (currentIndex == 0) back.setDisabled(true) 
         if (currentIndex + 1 >= out.length) next.setDisabled(true) 
+
+        let row = new MessageActionRow().addComponents(back, next);
+
         let e = await genEmbed(out, currentIndex)
         msg.edit({ embeds: [e], components: [row] })
       });
@@ -68,7 +70,7 @@ class SauceCommand extends BaseCommand {
       });
 
     });
-    }
+  }
 }
 
 async function genEmbed(data, offset) {
