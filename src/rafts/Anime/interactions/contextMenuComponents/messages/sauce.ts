@@ -23,7 +23,7 @@ class ListInteraction extends BaseInteraction {
     let url = '';    
     if (message.attachments.size > 0) url = message.attachments.first().url
     else if (message.embeds.length > 0 && message.embeds[0].type == 'image') url = message.embeds[0].thumbnail.url
-    if (!url) return message.channel.send('Please provide a valid image url or image attachment!')
+    if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true })
     
     let out: any = await sauce(url)
 
