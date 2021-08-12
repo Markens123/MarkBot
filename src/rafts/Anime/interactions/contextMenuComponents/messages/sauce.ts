@@ -1,10 +1,8 @@
 'use strict';
 
-import { MessageButton, MessageActionRow, ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake } from 'discord.js';
+import { MessageButton, MessageActionRow, ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake, ContextMenuInteraction } from 'discord.js';
 import nsauce from 'node-sauce';
 let sauce = new nsauce(process.env.SAUCE_API_KEY);
-
-import { ContextMenuInteraction } from 'discord.js';
 
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
