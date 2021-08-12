@@ -30,7 +30,7 @@ class SauceInteraction extends BaseInteraction {
       });
 
       if (a.length === 1) url = a[0];
-      else {
+      else if (a.length > 0) {
         let code = SnowflakeUtil.generate();
         let components = genButtons(a.length, this.boat, code);
         let filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code;
