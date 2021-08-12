@@ -39,7 +39,7 @@ class ListInteraction extends BaseInteraction {
       if (currentIndex + 1 >= out.length) next.setDisabled(true) 
 
       let row = new MessageActionRow().addComponents(back, next)
-            
+
       interaction.editReply({ components: [row] });
 
       const filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;

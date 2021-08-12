@@ -109,8 +109,8 @@ class Boat implements BoatI {
       commands: new Collection(),
       buttonComponents: new Collection(),
       selectMenuComponents: new Collection(),
-      userContextMenuComponents:new Collection(),
-      messageContextMenuComponents:new Collection(),
+      userContextMenuComponents: new Collection(),
+      messageContextMenuComponents: new Collection(),
     };
 
     /**
