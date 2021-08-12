@@ -1,12 +1,13 @@
 'use strict';
 
-import { MessageButton, MessageActionRow, ButtonInteraction, Message, MessageEmbed, SnowflakeUtil } from 'discord.js';
+import { MessageButton, MessageActionRow, ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake } from 'discord.js';
 import nsauce from 'node-sauce';
 let sauce = new nsauce(process.env.SAUCE_API_KEY);
 
 import { ContextMenuInteraction } from 'discord.js';
 
 import BaseInteraction from '../../../../BaseInteraction.js';
+import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 
 class ListInteraction extends BaseInteraction {
   constructor(boat) {
@@ -21,21 +22,43 @@ class ListInteraction extends BaseInteraction {
   async run(interaction: ContextMenuInteraction) {
     let message = interaction.options.getMessage('message') as Message;
     let url = '';
+    let a = [];
+
     if (message.attachments.size > 0) {
-    message.attachments.forEach(i => {
-    if (i.contentType.includes('image')) 
-    });
+      message.attachments.forEach(i => {
+        if (i.contentType.includes('image')) a.push(i.url);
+      });
+
+      if (a.length === 1) url = a[0];
+      else {
+        let code = SnowflakeUtil.generate();
+        let components = genButtons(a.length, this.boat, code);
+        let filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code;
+
+        await interaction.reply({ content: `There are ${a.length} images on that message which image would you like to get sauce for?`, components })
+        let col = await interaction.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 5000 }).catch(err => {return err});
+        if (!(col instanceof Error)) {
+          url = a[col.customId.split(':')[1]];
+          col.deferUpdate();
+        }
+        else return;
+
+      }
     }
+
     else if (message.embeds.length > 0 && message.embeds[0].type == 'image') url = message.embeds[0].thumbnail.url
     if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true })
     
-    let out: any = await sauce(url)
+    let out: any = await sauce(url);
+    
+    const embed = await genEmbed(out, 0);
 
-    const embed = await genEmbed(out, 0)
-
-    return interaction.reply({ embeds: [embed] }).then(async () => {
+    if (!interaction.replied) await interaction.reply('Loading Data');
+    
+    return interaction.editReply({ content: null, embeds: [embed] }).then(async () => {
       let code = SnowflakeUtil.generate();
       let currentIndex = 0;
+      let message_id = (await interaction.fetchReply()).id;
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`); 
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`); 
 
@@ -43,11 +66,6 @@ class ListInteraction extends BaseInteraction {
       if (currentIndex + 1 >= out.length) next.setDisabled(true) 
 
       let row = new MessageActionRow().addComponents(back, next)
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> eac493d7c79d5bc32010c65830bde6f693497c8b
       interaction.editReply({ components: [row] });
 
       const filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
@@ -67,12 +85,12 @@ class ListInteraction extends BaseInteraction {
         let e = await genEmbed(out, currentIndex)
         interaction.editReply({ embeds: [e], components: [row] })
       });
-      collector.on('end', () => {
+      collector.on('end', async () => {
         let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`).setDisabled(true); 
         let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`).setDisabled(true);
         let row = new MessageActionRow().addComponents(back, next);
-
-        interaction.editReply({ components: [row] });
+        
+        interaction.channel.messages.cache.get(message_id)?.edit({ components: [row] });
       });
 
     });
@@ -96,5 +114,39 @@ async function genEmbed(data, offset) {
 
   return embed;
 }
+
+function genButtons(num: number, boat: BoatI, code: Snowflake) {
+  if (num > 10) {
+    boat.log.warn('Sauce interaction/Gen Buttons function', 'The provided number was over 10');
+    num = 10
+  }
+
+  let a = [];
+
+  for (let i = 0; i < num; i++) {
+    a.push({
+      type: 'BUTTON',
+      label: i+1,
+      customId: `collector:${i}:${code}`,
+      style: 'PRIMARY',
+      emoji: null,
+      url: null,
+      disabled: false,
+    })
+  }
+  //@ts-expect-error
+  return a.chunk(5)
+}
+
+Object.defineProperty(Array.prototype, 'chunk', {
+  value: function(chunkSize) {
+    var array = this;
+    return [].concat.apply([],
+      array.map(function(elem, i) {
+        return i % chunkSize ? [] : new MessageActionRow().addComponents(array.slice(i, i + chunkSize));
+      })
+    );
+  }
+});
 
 export default ListInteraction;
