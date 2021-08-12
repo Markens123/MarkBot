@@ -20,8 +20,12 @@ class ListInteraction extends BaseInteraction {
 
   async run(interaction: ContextMenuInteraction) {
     let message = interaction.options.getMessage('message') as Message;
-    let url = '';    
-    if (message.attachments.size > 0) url = message.attachments.first().url
+    let url = '';
+    if (message.attachments.size > 0) {
+    message.attachments.forEach(i => {
+    if (i.contentType.includes('image')) 
+    });
+    }
     else if (message.embeds.length > 0 && message.embeds[0].type == 'image') url = message.embeds[0].thumbnail.url
     if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true })
     
