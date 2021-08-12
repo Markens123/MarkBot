@@ -9,7 +9,7 @@ import { ContextMenuInteraction } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 
-class ListInteraction extends BaseInteraction {
+class SauceInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'Sauce',
@@ -149,4 +149,4 @@ Object.defineProperty(Array.prototype, 'chunk', {
   }
 });
 
-export default ListInteraction;
+export default SauceInteraction;
