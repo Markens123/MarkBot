@@ -20,8 +20,12 @@ class ListInteraction extends BaseInteraction {
 
   async run(interaction: ContextMenuInteraction) {
     let message = interaction.options.getMessage('message') as Message;
-    let url = '';    
-    if (message.attachments.size > 0) url = message.attachments.first().url
+    let url = '';
+    if (message.attachments.size > 0) {
+    message.attachments.forEach(i => {
+    if (i.contentType.includes('image')) 
+    });
+    }
     else if (message.embeds.length > 0 && message.embeds[0].type == 'image') url = message.embeds[0].thumbnail.url
     if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true })
     
@@ -39,7 +43,11 @@ class ListInteraction extends BaseInteraction {
       if (currentIndex + 1 >= out.length) next.setDisabled(true) 
 
       let row = new MessageActionRow().addComponents(back, next)
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> eac493d7c79d5bc32010c65830bde6f693497c8b
       interaction.editReply({ components: [row] });
 
       const filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
