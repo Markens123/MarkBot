@@ -1,4 +1,3 @@
-'use strict';
 import Discord, { CommandInteraction } from 'discord.js';
 import pm2 from 'pm2';
 pm2.connect(function(err) {

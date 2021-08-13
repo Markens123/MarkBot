@@ -1,5 +1,3 @@
-'use strict';
-
 // Import dependencies
 import { Client, Collection, Snowflake } from 'discord.js';
 import events from './events/index.js';

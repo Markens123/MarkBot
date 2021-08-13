@@ -1,5 +1,3 @@
-'use strict';
-
 const noop = () => {}; // eslint-disable-line no-empty-function
 const reflectors = ['toString', 'valueOf', 'inspect', 'constructor', Symbol.toPrimitive, Symbol.for('nodejs.util.inspect.custom')];
 import { LogLevels } from './index.js'

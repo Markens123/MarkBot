@@ -1,5 +1,3 @@
-'use strict';
-
 import { Message } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import { fileURLToPath } from 'url';

@@ -1,5 +1,3 @@
-'use strict';
-
 import BaseCommand from '../../BaseCommand.js';
 import glob from 'glob';
 import { Message } from 'discord.js';

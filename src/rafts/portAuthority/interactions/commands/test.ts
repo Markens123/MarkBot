@@ -1,5 +1,3 @@
-'use strict';
-
 import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
 import { CommandInteraction } from 'discord.js';

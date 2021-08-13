@@ -1,5 +1,3 @@
-'use strict';
-
 import apis from './apis/index.js';
 import commands from './commands/index.js';
 import interactions from './interactions/index.js'

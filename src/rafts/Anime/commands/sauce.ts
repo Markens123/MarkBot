@@ -1,5 +1,3 @@
-'use strict';
-
 import { MessageEmbed, MessageButton, Message, MessageActionRow, ButtonInteraction } from 'discord.js';
 import nsauce from 'node-sauce';
 import BaseCommand from '../../BaseCommand.js';

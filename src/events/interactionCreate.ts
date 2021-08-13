@@ -1,5 +1,3 @@
-'use strict';
-
 import {  Interaction } from 'discord.js';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';

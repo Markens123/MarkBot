@@ -1,5 +1,3 @@
-'use strict';
-
 import commands from './commands/index.js';
 import interactions from './interactions/index.js';
 import BaseRaft from '../BaseRaft.js';

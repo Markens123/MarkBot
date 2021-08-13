@@ -1,5 +1,3 @@
-'use strict';
-
 const events: any = {};
 
 events.messageCreate = (await import('./messageCreate.js')).default;

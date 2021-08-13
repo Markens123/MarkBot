@@ -1,5 +1,3 @@
-'use strict';
-
 const rafts: any = {};
 
 rafts.portAuthority = (await import('./portAuthority/index.js')).default;

@@ -1,5 +1,3 @@
-'use strict';
-
 import BaseAPI from '../../BaseAPI.js';
 
 class DogAPI extends BaseAPI {

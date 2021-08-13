@@ -1,5 +1,3 @@
-'use strict';
-
 import { Collection } from 'discord.js';
 import BaseAPI from '../../BaseAPI.js';
 

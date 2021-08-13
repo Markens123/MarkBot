@@ -1,5 +1,3 @@
-'use strict';
-
 import * as util from 'util';
 import { WebhookClient, MessageEmbed, MessageAttachment, Snowflake } from 'discord.js';
 import wn from 'winston';

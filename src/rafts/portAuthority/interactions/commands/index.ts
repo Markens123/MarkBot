@@ -1,5 +1,3 @@
-'use strict';
-
 const commands: any = {};
 
 commands['8ball'] = (await import('./8ball.js')).default;

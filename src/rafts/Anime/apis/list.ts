@@ -1,10 +1,8 @@
-'use strict';
-
 import BaseAPI from '../../BaseAPI.js';
 
 class ListAPI extends BaseAPI {
   constructor(raft) {
-    const params = new URLSearchParams()
+    const params = new URLSearchParams();
     params.append('client_id', process.env.MAL_CLIENT_ID);
     const apiConfig = {
       baseURL: 'https://api.myanimelist.net/v2/',
@@ -13,42 +11,52 @@ class ListAPI extends BaseAPI {
   }
 
   /**
-   * Gets the token froma code 
+   * Gets the token froma code
    * @param {string} [code] The code used to get the token
    * @returns {Promise<Object>}
    */
   getToken(code) {
-    let path = this.api.v1.oauth2.token
-    const params = new URLSearchParams()
+    const path = this.api.v1.oauth2.token;
+    const params = new URLSearchParams();
     params.append('client_id', process.env.MAL_CLIENT_ID);
     params.append('client_secret', process.env.MAL_CLIENT_SECRET);
     params.append('code', code);
     params.append('code_verifier', process.env.MAL_CODE_VERIFIER);
     params.append('grant_type', 'authorization_code');
 
-    return path.post({data: params, headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => res.data).catch(err => err);
+    return path
+      .post({ data: params, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+      .then(res => res.data)
+      .catch(err => err);
   }
 
   /**
-   * Gets the list from the paramters 
+   * Gets the list from the paramters
    * @param {string} [token] The access token
-   * @param {string} [sort] The sort option 
-   * @param {string} [status] The status filter option  
+   * @param {string} [sort] The sort option
+   * @param {string} [status] The status filter option
    * @returns {Promise<Object>}
-   */  
+   */
   getList(token, sort, status) {
-    const params = encodeURI(`?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&sort=${sort}${status ? `&status=${status}` : ''}`)
-    let path = this.api.users('@me').animelist
-    return path.get({params: params, headers: {'Authorization': `Bearer ${token}`}}).then(res => res).catch(err => err);
+    const params = encodeURI(
+      `?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&sort=${sort}${
+        status ? `&status=${status}` : ''
+      }`,
+    );
+    const path = this.api.users('@me').animelist;
+    return path
+      .get({ params: params, headers: { Authorization: `Bearer ${token}` } })
+      .then(res => res)
+      .catch(err => err);
   }
 
   getPage(token, url) {
-    this.driver.defaults.baseURL = decodeURI(url)
-    return this.api.get({headers: {'Authorization': `Bearer ${token}`}}).then(res => res).catch(err => err);
+    this.driver.defaults.baseURL = decodeURI(url);
+    return this.api
+      .get({ headers: { Authorization: `Bearer ${token}` } })
+      .then(res => res)
+      .catch(err => err);
   }
-
-
 }
 
 export default ListAPI;
-

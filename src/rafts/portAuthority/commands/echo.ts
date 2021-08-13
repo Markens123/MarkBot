@@ -1,6 +1,3 @@
-'use strict';
-/* We did this without ck's help */
-
 import * as Discord from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 

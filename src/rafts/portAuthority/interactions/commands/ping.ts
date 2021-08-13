@@ -1,5 +1,3 @@
-'use strict';
-
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 

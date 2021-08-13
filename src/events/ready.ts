@@ -1,4 +1,4 @@
-'use strict';
+
 import { fileURLToPath } from 'url';
 var module = fileURLToPath(import.meta.url);
 

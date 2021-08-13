@@ -1,5 +1,3 @@
-'use strict';
-
 import * as util from 'util';
 import * as Discord from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
@@ -26,7 +24,7 @@ class EvalCommand extends BaseCommand {
   async run(message: Discord.Message, args: any) {
     let depth = 2;
     let nf = false;
-    let ogargs = args;
+    const ogargs = args;
     if (args.includes('--depth') || args.includes('-d')) {
       const index = args.indexOf('--depth') > -1 ? args.indexOf('--depth') : args.indexOf('-d');
       depth = args[index + 1];
@@ -57,34 +55,30 @@ class EvalCommand extends BaseCommand {
       channel: message.channel,
       channels: message.guild?.channels,
       messages: message.channel?.messages,
+      application: client.application,
       __dirname,
       readFile,
       readfile: readFile,
-    }
+    };
+
     if (!args.toLowerCase().includes('return')) {
-      if (args.split(";").length > 2) {
-        let last = args.split(";").filter(Boolean).pop();
+      if (args.split(';').length > 2) {
+        const last = args.split(';').filter(Boolean).pop();
         args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
       }
     }
-    if (!args.toLowerCase().includes('return')) args = 'return ' + args;
+    if (!args.toLowerCase().includes('return')) args = `return ${args}`;
     let evaluated;
     try {
-    evaluated = args.toLowerCase().includes('await') 
-      ? await new AsyncFunction(
-          ...Object.keys(scope), 
-          `try {\n${args}\n} catch (err) {\n  return err;\n}`
-        )(...Object.values(scope))
-      : new Function(
-        ...Object.keys(scope),
-        `try {\n${args}\n} catch (err) {\n  return err;\n}`
-        )(...Object.values(scope));
-    if (isPromise(evaluated)) {
+      evaluated = args.toLowerCase().includes('await')
+        ? await new AsyncFunction(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope))
+        : new Function(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope));
+      if (isPromise(evaluated)) {
         evaluated = await evaluated;
-     }      
+      }
     } catch (err) {
       evaluated = err;
-    }        
+    }
     let e = evaluated instanceof Error;
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
@@ -96,23 +90,23 @@ class EvalCommand extends BaseCommand {
         else msg = await message.channel.send({ embeds: [evaluated] })
         e = false;
         evaluated = msg;
-      } catch(err) {
-        e = true
+      } catch (err) {
+        e = true;
         evaluated = err;
-      }      
+      }
     }
-    let cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
-    let embed = new Discord.MessageEmbed()  
-    .setColor(e === true ? '#FF0000' : '#32CD32')
-    .addField('📥 Input', `\`\`\`js\n${args.replace('(async () => {return ', '').replace('})()', '')}\`\`\``)
-    
+    const cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
+    const embed = new Discord.MessageEmbed()
+      .setColor(e === true ? '#FF0000' : '#32CD32')
+      .addField('📥 Input', `\`\`\`js\n${args.replace('(async () => {return ', '').replace('})()', '')}\`\`\``)
+
     if (cleaned.split(/\r\n|\r|\n/).length > 4) {
       if (nf === true) {
-        embed.addField('📤 Output', `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``)
+        embed.addField('📤 Output', `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``);
         return message.channel.send({ embeds: [embed] });
       }
-      embed.addField('📤 Output', '\`\`\`Eval output too long, see the attached file\`\`\`')
-      let attachment = new Discord.MessageAttachment(Buffer.from(cleaned, 'utf-8'), 'eval.js');
+      embed.addField('📤 Output', '```Eval output too long, see the attached file```');
+      const attachment = new Discord.MessageAttachment(Buffer.from(cleaned, 'utf-8'), 'eval.js');
       await message.channel.send({ embeds: [embed] })
       return message.channel.send({ files: [attachment] });
     }
@@ -137,22 +131,23 @@ class EvalCommand extends BaseCommand {
 }
 
 function isPromise(value) {
-    return value && typeof value.then == "function";
+  return value && typeof value.then == 'function';
 }
 
-function readFile(path, text = false) {
+function readFile(path, text = false, newname = undefined) {
   const options = {
     cwd: `${__dirname}../../../../../`,
-    realpath: true
-  }
-  let filepath = glob.sync(path, options)[0];
-  
+    realpath: true,
+  };
+
+  const filepath = glob.sync(path, options)[0];
+
   if (!filepath) return new SyntaxError('That file does not exist');
-  
-  let file = fs.readFileSync(filepath, { encoding: 'utf8'})
-  
+
+  const file = fs.readFileSync(filepath, { encoding: 'utf8' });
+
   if (text) return file;
-  else return new Discord.MessageAttachment(Buffer.from(file), basename(filepath)); 
+  else return new Discord.MessageAttachment(Buffer.from(file), newname ?? basename(filepath));
 }
 
 export default EvalCommand;

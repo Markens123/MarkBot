@@ -1,5 +1,3 @@
-'use strict';
-
 import BaseInteraction from '../../../BaseInteraction.js';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { checkTF } from '../../../../util/Constants.js';

@@ -1,5 +1,3 @@
-'use strict';
-
 const commands: any = {};
 
 commands.abstract = (await import('./abstract.js')).default;

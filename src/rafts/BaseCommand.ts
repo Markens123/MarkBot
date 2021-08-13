@@ -1,7 +1,5 @@
-'use strict';
-
-import { PermissionResolvable, Snowflake } from "discord.js";
-import { ArgI, BoatI, CommandOptions, RaftI } from "../../lib/interfaces/Main.js";
+import { PermissionResolvable, Snowflake } from 'discord.js';
+import { ArgI, BoatI, CommandOptions, RaftI } from '../../lib/interfaces/Main.js';
 
 /**
  * Represents a standard text command that can be run
@@ -20,7 +18,7 @@ class BaseCommand {
   boat: BoatI;
   raft: RaftI;
   name: string;
-  
+
   constructor(raft: RaftI, options: CommandOptions) {
     /**
      * The boat that handles this commands raft
@@ -59,20 +57,20 @@ class BaseCommand {
      * Whether this command can be used in dms
      * @type {boolean|'only'}
      */
-     this.dms = options.dms ?? false;
+    this.dms = options.dms ?? false;
 
     /**
      * Whether this command can be used in threads
      * @type {boolean|'only'}
      */
-     this.threads = options.threads ?? true;
+    this.threads = options.threads ?? true;
 
     /**
      * Arguments for the command
      * @type {object[] | false}
      */
-     this.args = options.args ?? false;
-    
+    this.args = options.args ?? false;
+
     if (!Array.isArray(this.args)) this.args = false;
 
     if (this.args) {
@@ -80,53 +78,48 @@ class BaseCommand {
         if (!this.args[i].name) {
           this.args[i] = undefined;
           break;
-        };
+        }
         if (!this.args[i].type) this.args[i].type = 'string';
         if (!this.args[i].required) this.args[i].required = false;
         if (this.args[i].type === 'flag') {
           if (!this.args[i].flags) this.args[i] = undefined;
-          else {
-            if (!this.args[i].index) this.args[i].index = 0; 
-          }
+          else if (!this.args[i].index) this.args[i].index = 0;
         }
         if (this.args[i].match && this.args[i].match !== 'codeblock') this.args[i] = undefined;
-      };
-      this.args = this.args.filter(x => x !== undefined).sort((a, b) => (a.type !== 'flag') ? 1 : -1);
-
-     } 
-      
-
-
+      }
+      this.args = this.args.filter(x => x !== undefined).sort(a => (a.type !== 'flag' ? 1 : -1));
+    }
 
     /**
      * Which channels can use this command
      * @type {Snowflake[]}
      */
-     this.channels = options.channels ?? false;
-     
+    this.channels = options.channels ?? false;
+
     /**
      * The aliases for this command
      * @type {string[]}
      */
-     this.aliases = options.aliases ?? false;
-     
+    this.aliases = options.aliases ?? false;
+
     /**
      * The cooldown for this command
      * @type {number[]}
      */
-     this.cooldown = options.cooldown ?? false;
-     
+    this.cooldown = options.cooldown ?? false;
+
     /**
      * The permission needed for this command
      * @type {string}
      */
-     this.permissions = options.permissions ?? false;       
+    this.permissions = options.permissions ?? false;
   }
 
   /**
    * Runs the command
    * @param {Message} message the message that executed the command
    * @param {string[]} args the content of the message split on spaces excluding the command name
+   * @param {string[]} ogargs the original arguments for the command
    * @abstract
    */
   run(message: any, args: any, ogargs: any): any {

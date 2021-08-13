@@ -1,5 +1,3 @@
-'use strict';
-
 import { exec } from 'child_process';
 import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';

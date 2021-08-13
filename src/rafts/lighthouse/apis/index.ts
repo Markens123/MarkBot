@@ -1,5 +1,3 @@
-'use strict';
-
 const apis: any = {};
 
 apis.nasa = (await import('./nasa.js')).default;

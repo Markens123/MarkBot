@@ -1,5 +1,3 @@
-'use strict';
-
 class Util {
   constructor() {
     throw new Error('This class may not be instantiated');

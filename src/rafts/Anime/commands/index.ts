@@ -1,5 +1,3 @@
-'use strict';
-
 const commands: any = {};
 
 commands.link = (await import('./link.js')).default;

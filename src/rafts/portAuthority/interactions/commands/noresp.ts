@@ -1,5 +1,3 @@
-'use strict';
-
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {

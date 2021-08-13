@@ -1,4 +1,3 @@
-'use strict';
 import ball from '8ball.js';
 import { CommandInteraction } from 'discord.js';
 

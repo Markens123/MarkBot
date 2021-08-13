@@ -1,5 +1,3 @@
-'use strict';
-
 const commands: any = {};
 
 commands.ceval = (await import('./ceval.js')).default;
