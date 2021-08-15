@@ -1,6 +1,5 @@
 import * as util from 'util';
-import parse from 'parse-duration';
-import { Collection, MessageButton, Message, Permissions } from 'discord.js';
+import { Collection, Message } from 'discord.js';
 import { getCodeblockMatch } from '../util/Constants.js';
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { fileURLToPath } from 'url';

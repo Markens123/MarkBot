@@ -4,8 +4,13 @@ import Enmap from 'enmap'
 export interface ClientI extends Client {
   cooldowns?: Collection<string, Collection<Snowflake, number>>;
   maldata?: Enmap;
-  rdata?: Enmap;
-  overrides?: Enmap;
+  reminders?: Enmap<Snowflake, Reminder[]>;
+}
+
+export interface Reminder {
+  content: string;
+  user: Snowflake;
+  id: number;
 }
 
 export interface BoatI {
