@@ -20,7 +20,7 @@
     "browserless": "^9.0.0-rc.0",
     "canvas": "^2.8.0",
     "discord-build-fetcher-js": "^1.0.7",
-    "discord.js": "^13.1.0-dev.1628636286.0266f28",
+    "discord.js": "^13.1.0",
     "dotenv": "^8.2.0",
     "edit-json-file": "^1.6.0",
     "enmap": "^5.8.4",
