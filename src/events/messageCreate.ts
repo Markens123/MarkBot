@@ -22,44 +22,6 @@ export default async (boat: BoatI, message: Message) => {
   }
 
   if (!message.content.startsWith(boat.prefix)) {
-    let args = message.content.trim().split(/\s+/g);
-    if (args.includes('--remind') || args.includes('-r')) {
-      if (boat.owners.includes(message.author.id)) {
-        const index = args.indexOf('--remind') > -1 ? args.indexOf('--remind') : args.indexOf('-r');
-        let rtime = parse(args[index + 1], 'ms');
-        args.splice(index, 2);
-        if (rtime) {
-          let yes = new MessageButton().setLabel('✅').setStyle('SUCCESS').setCustomId('collector:yes');
-          let no = new MessageButton().setLabel('❌').setStyle('DANGER').setCustomId('collector:no');
-          //@ts-ignore
-          message.channel.send({ content: `Would you like me to remind you about that in ${getDur(rtime)}?`, components: [[yes, no]] }).then(async msg => {
-            
-            const filter = (interaction) => interaction.user.id === message.author.id;
-            const collector = msg.createMessageComponentCollector({ filter, idle: 15000 });
-
-            collector.on('collect', async interaction => {
-              
-              if (interaction.customID === 'collector:no') {
-                await interaction.reply({ content: 'The reminder was not set <:klukthumbsup:813679725917765662>', ephemeral: true });
-                collector.stop();
-              }
-              if (interaction.customID === 'collector:yes') {
-                await interaction.reply({ content: 'The reminder was successfully set', ephemeral: true })
-                let resp = `**Reminder delivery:**\nTo: ${message.author.toString()}\nJump Link:\n${message.url}\nReminder:\n\`\`\`${args.join(' ')}\`\`\``
-                collector.stop();
-                setTimeout(()=>{
-                  message.channel.send(resp)
-                }, rtime)
-              }
-            });
-            collector.on('end', collected => {
-              msg.delete();
-            });
-          });
-        }
-      } 
-    }
-
     handleRaft(boat.rafts, message);
     return;
   }
@@ -69,24 +31,7 @@ export default async (boat: BoatI, message: Message) => {
   const command = args.shift().toLowerCase();
 
   let handler: undefined | BaseCommand = boat.commands.get(command) || boat.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
-  /*if (boat.client.overrides.has(message.author.id)) {
-    const overrides = boat.client.overrides.get(message.author.id);
-    const options = {
-      cwd: `${__dirname}../../`,
-      realpath: true
-    }
-    
-    overrides.forEach(o => {
-      if (boat.client.overrides.get(o)?.includes(command)) {
-        let path = glob.sync(`overrides/${o}/${command}.js`, options)[0];
-        if (path) {
-          let cmd = require(path);
-          handler = new cmd(boat.rafts['portAuthority']);
-        }
-      }
-    });
-  }*/
-  
+
   if (!handler) {
     handleRaft(boat.rafts, message);
     return;
