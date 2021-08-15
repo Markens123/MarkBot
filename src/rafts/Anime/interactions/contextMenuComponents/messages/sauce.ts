@@ -3,8 +3,6 @@ import nsauce from 'node-sauce';
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
-import pkg from 'canvas';
-const { Image } = pkg;
 class SauceInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
