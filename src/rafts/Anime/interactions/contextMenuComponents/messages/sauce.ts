@@ -3,7 +3,8 @@ import nsauce from 'node-sauce';
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
-
+import pkg from 'canvas';
+const { Image } = pkg;
 class SauceInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
@@ -23,27 +24,35 @@ class SauceInteraction extends BaseInteraction {
       message.attachments.forEach(i => {
         if (i.contentType?.includes('image')) a.push(i.url);
       });
+    }
+    if (message.embeds.length > 0) {
+      message.embeds.forEach(async i => {
+        if (testImage(i.url)) a.push(i.url)
+        if (i.image) a.push(i.image.url)
+        if (i.thumbnail) a.push(i.thumbnail.url)
+      })
+    }
+    
+    if (a.length === 1) url = a[0];
+    else if (a.length > 0) {
+      const code = SnowflakeUtil.generate();
+      const components = genButtons(a.length, this.boat, code);
+      const filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code;
 
-      if (a.length === 1) url = a[0];
-      else if (a.length > 0) {
-        const code = SnowflakeUtil.generate();
-        const components = genButtons(a.length, this.boat, code);
-        const filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code;
+      await interaction.reply({ content: `There are ${a.length} images on that message which image would you like to get sauce for?`, components });
+      const col = await interaction.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 5000 }).catch(err => err) as ButtonInteraction;
+      if (!(col instanceof Error)) {
+        url = a[col.customId.split(':')[1]];
+        col.deferUpdate();
+        message.channel.messages.cache.get(col.message.id)?.edit({ content: 'Loading Data', components: [] })
+      } else return;
+    }
 
-        await interaction.reply({ content: `There are ${a.length} images on that message which image would you like to get sauce for?`, components });
-        const col = await interaction.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 5000 }).catch(err => err) as ButtonInteraction;
-        if (!(col instanceof Error)) {
-          url = a[col.customId.split(':')[1]];
-          col.deferUpdate();
-          message.channel.messages.cache.get(col.message.id)?.edit({ content: 'Loading Data', components: [] })
-        } else return;
-      }
-    } else if (message.embeds.length > 0 && message.embeds[0].type === 'image') url = message.embeds[0].thumbnail.url;
     if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true });
 
     const out: any = await sauce(url);
 
-    const embed = await genEmbed(out, 0);
+    const embed = genEmbed(out, 0);
 
     if (!interaction.replied) await interaction.reply('Loading Data');
 
@@ -136,5 +145,9 @@ Object.defineProperty(Array.prototype, 'chunk', {
     return [].concat(...array.map((elem, i) => (i % chunkSize ? [] : new MessageActionRow().addComponents(array.slice(i, i + chunkSize)))));
   },
 });
+
+function testImage(url) {
+  return(url?.match(/\.(jpeg|jpg|gif|png)$/) != null);
+}
 
 export default SauceInteraction;
