@@ -40,7 +40,9 @@ const client = markBot.client;
 let app = express();
 
 client.on('ready', () =>{
-  setInterval(Updates, 60000);
+  if (process.env.UPDATE == 'true') {
+    setInterval(Updates, 60000);
+  }
 });
 
 app.get('/callback', async ({ query }, response) => {
