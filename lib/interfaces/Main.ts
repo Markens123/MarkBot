@@ -9,7 +9,7 @@ export interface ClientI extends Client {
 
 export interface Reminder {
   content: string;
-  user: Snowflake;
+  timestamp: number | string;
   id: number;
 }
 
@@ -77,9 +77,10 @@ export interface ArgI {
   index?: number;
   flags?: string[];
   default?: any;
-  validation?: any;
+  validation?: ({arg: any, message: Message, boat: BoatI}) => any;
   required?: boolean;
   match?: 'codeblock';
+  error?: string
 }
 
 export interface LogOptions {
