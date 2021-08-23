@@ -24,6 +24,33 @@
 		 "const module = fileURLToPath(import.meta.url);"	
 	],
 	"description": "Module boilerplate code;"
-}	
-}
+},
 
+"Command boilerplate": {
+	"prefix": "CommandBP",
+	"body": [
+	  "import { Message } from 'discord.js';",
+	  "import { CommandOptions } from '../../../../lib/interfaces/Main.js';",
+	  "",
+	  "import BaseCommand from  '../../BaseCommand.js';",
+	  "",
+	  "class _Command extends BaseCommand {",
+	  "  constructor(boat) {",
+	  "    const options: CommandOptions = {",
+	  "      name: '',",
+	  "      owner: false,",
+	  "      enabled: true,",
+	  "    };",
+	  "    super(boat, options);",
+	  "  }",
+	  "",
+	  "  run(message: Message, args: any) {",
+	  "",
+	  "  }",
+	  "}",
+	  "",
+	  "export default _Command;"
+	],
+	"description": "Command boilerplate"
+  }
+}
