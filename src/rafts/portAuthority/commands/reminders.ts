@@ -29,9 +29,6 @@ class RemindersCommand extends BaseCommand {
       .setDescription(a.join('\n')) 
 
     message.channel.send({ embeds: [embed] });
-
-    
-
   }
 
 }
