@@ -81,6 +81,8 @@ class BaseCommand {
         }
         if (!this.args[i].type) this.args[i].type = 'string';
         if (!this.args[i].required) this.args[i].required = false;
+        if (!this.args[i].error) this.args[i].error = undefined;
+        
         if (this.args[i].type === 'flag') {
           if (!this.args[i].flags) this.args[i] = undefined;
           else if (!this.args[i].index) this.args[i].index = 0;

@@ -85,15 +85,17 @@ export default async (boat: BoatI, message: Message) => {
         } else {
           newargs[handler.args[i].name] = handler.args[i].default ?? undefined;  
         }
+      } else if (handler.args[i].match === 'codeblock') {
+        let codeblock = getCodeblockMatch(message.content.slice(boat.prefix.length).replace('-nf', ' ').replace('--nofile', ' ').replace('-d', ' ').replace('--depth', ' ').trim()
+        );
+        newargs[handler.args[i].name] = codeblock;
       } else {
-        newargs[handler.args[i].name] = parseArgs(args[count] ?? handler.args[i].default, handler.args[i].type);
-        if (!newargs[handler.args[i].name] && handler.args[i].required) return message.channel.send(`The argument ${handler.args[i].name} is required!`);
-        if (handler.args[i].match === 'codeblock') {
-          let codeblock = getCodeblockMatch(message.content.slice(boat.prefix.length).replace('-nf', ' ').replace('--nofile', ' ').replace('-d', ' ').replace('--depth', ' ').trim()
-          );
-          newargs[handler.args[i].name] = codeblock;
-        }
-        if (newargs[handler.args[i].name] && handler.args[i].validation && !handler.args[i].validation({arg: newargs[handler.args[i].name], message, boat: handler.boat})) return message.channel.send(`The argument ${handler.args[i].name} has failed validation.`)
+        if (handler.args[i].index) {
+          newargs[handler.args[i].name] = args.slice(count, handler.args[i].index+1).join(' ')
+        } else newargs[handler.args[i].name] = parseArgs(args[count] ?? handler.args[i].default, handler.args[i].type);
+      
+        if (!newargs[handler.args[i].name] && handler.args[i].required) return message.channel.send(handler.args[i].error ?? `The argument ${handler.args[i].name} is required!`);
+        if (newargs[handler.args[i].name] && handler.args[i].validation && !handler.args[i].validation({arg: newargs[handler.args[i].name], message, boat: handler.boat})) return message.channel.send(handler.args[i].error ?? `The argument ${handler.args[i].name} has failed validation.`)
         count++
       }
     }
@@ -116,23 +118,11 @@ function handleRaft(rafts, message) {
   });
 }
 
-function getDur(ms) {
-  var date = new Date(ms);
-  var str = [];
-  if (date.getUTCDate()-1) str.push(`${date.getUTCDate()-1} ${date.getUTCDate()-1 > 1 ? 'days': 'day'}`);
-  if (date.getUTCHours()) str.push(`${date.getUTCHours()} ${date.getUTCHours() > 1 ? 'hours': 'hour'}`);
-  if (date.getUTCMinutes()) str.push(`${date.getUTCMinutes()} ${date.getUTCMinutes() > 1 ? 'minutes': 'minute'}`);
-  if (date.getUTCSeconds()) str.push(`${date.getUTCSeconds()} ${date.getUTCSeconds() > 1 ? 'seconds': 'second'}`);
-  if (date.getUTCMilliseconds()) str.push(`${date.getUTCMilliseconds()} millis`);
-  return str.join(', ')
-}
-
 function parseArgs(thing, w) {
   let num: number;
   if (w === 'int' ||  w === 'integer') num = parseInt(thing);
   else if (w === 'float') num = parseFloat(thing);
   else if (num === NaN) return null
-  else return num
-
-  return thing;
+  
+  return num ?? thing; 
 }
