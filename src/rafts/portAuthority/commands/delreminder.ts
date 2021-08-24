@@ -16,9 +16,10 @@ class DelReminderCommand extends BaseCommand {
           name: 'rid',
           type: 'integer',
           validation: ({ arg }) => !isNaN(arg),
-          error: 'Please provide a valid number!'
-        }
-      ]
+          error: 'Please provide a valid number!',
+          required: true,
+        },
+      ],
     };
     super(boat, options);
   }
