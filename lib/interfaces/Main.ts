@@ -75,7 +75,7 @@ export interface ArgI {
   name: string;
   type: 'int' | 'integer' | 'string' | 'str' | 'flag';
   index?: number;
-  flags?: string[];
+  flags?: [string, string];
   default?: any;
   validation?: ({arg: any, message: Message, boat: BoatI}) => any;
   required?: boolean;
