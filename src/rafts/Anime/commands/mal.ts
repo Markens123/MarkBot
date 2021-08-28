@@ -204,13 +204,13 @@ class MALCommand extends BaseCommand {
 
           interaction.deferUpdate();
 
-          if (interaction.customID === 'collector:delete') {
+          if (interaction.customId === 'collector:delete') {
             await msg.delete();
             collector.stop();
             return;
           }
 
-          interaction.customID === 'collector:back' ? (currentIndex -= 1) : (currentIndex += 1);
+          interaction.customId === 'collector:back' ? (currentIndex -= 1) : (currentIndex += 1);
           if (currentIndex === 0) back.setDisabled(true);
           if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
           const e = await genEmbed(data, message, currentIndex);

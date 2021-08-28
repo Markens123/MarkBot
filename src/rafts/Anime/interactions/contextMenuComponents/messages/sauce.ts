@@ -16,7 +16,7 @@ class SauceInteraction extends BaseInteraction {
   async run(interaction: ContextMenuInteraction): Promise<any> {
     const message = interaction.options.getMessage('message') as Message;
     let url = '';
-    const a = [];
+    let a = [];
 
     if (message.attachments.size > 0) {
       message.attachments.forEach(i => {
@@ -30,6 +30,7 @@ class SauceInteraction extends BaseInteraction {
         if (i.thumbnail) a.push(i.thumbnail.url)
       })
     }
+    a = [...new Set(a)]
     
     if (a.length === 1) url = a[0];
     else if (a.length > 0) {
