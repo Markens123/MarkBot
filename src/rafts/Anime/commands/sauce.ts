@@ -3,6 +3,7 @@ import nsauce from 'node-sauce';
 import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import { Paginator } from '../../../util/Constants.js';
 let sauce = new nsauce(process.env.SAUCE_API_KEY);
 
 class SauceCommand extends BaseCommand {
@@ -23,55 +24,16 @@ class SauceCommand extends BaseCommand {
     else if (args && isImageUrl(args[0])) url = args[0]
     if (!url) return message.channel.send('Please provide a valid image url or image attachment!')
     
-    let out: any = await sauce(url)
+    let out: any = await sauce(url);
 
-    const embed = await genEmbed(out, 0)
+    const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
 
-    return message.channel.send({ embeds: [embed] }).then(async msg => {
-      let currentIndex = 0
-      let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next'); 
-      let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back'); 
+    Paginator(message, out, 0, out.length, ({ data, offset }) => genEmbed(data, offset), { filter, idle: 15000 });
 
-      if (currentIndex == 0) back.setDisabled(true) 
-      if (currentIndex + 1 >= out.length) next.setDisabled(true) 
-
-      let row = new MessageActionRow().addComponents(back, next)
-
-
-      msg.edit({ embeds: [msg.embeds[0]], components: [row] });
-
-      const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
-      const collector = msg.createMessageComponentCollector({ filter, idle: 15000 });
-
-      collector.on('collect', async (interaction) => {
-        let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next'); 
-        let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back'); 
-
-        await interaction.deferUpdate();
-        
-        interaction.customId === 'collector:back' ? currentIndex -= 1 : currentIndex += 1
-        if (currentIndex == 0) back.setDisabled(true) 
-        if (currentIndex + 1 >= out.length) next.setDisabled(true) 
-
-        let row = new MessageActionRow().addComponents(back, next);
-
-        let e = await genEmbed(out, currentIndex)
-        msg.edit({ embeds: [e], components: [row] })
-      });
-      collector.on('end', () => {
-        console.log('t')
-        let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next').setDisabled(true); 
-        let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back').setDisabled(true);
-        let row = new MessageActionRow().addComponents(back, next);
-
-        msg.edit({ embeds: [msg.embeds[0]], components: [row] });
-      });
-
-    });
   }
 }
 
-async function genEmbed(data, offset) {
+function genEmbed(data, offset) {
   let info = data[offset]
   
   const embed = new MessageEmbed();

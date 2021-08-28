@@ -69,7 +69,7 @@ export const Paginator = async (message: Message, data: any, offset = 0, length 
   
   const embed = callback({ data, offset: currentIndex, message });
 
-  const msg = await message.channel.send({ embeds: [embed] })
+  const msg = await message.channel.send({ embeds: [embed] });
 
   const collector = msg.createMessageComponentCollector(options);
 

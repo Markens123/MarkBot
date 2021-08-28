@@ -13,7 +13,7 @@ class SauceInteraction extends BaseInteraction {
     super(raft, info);
   }
 
-  async run(interaction: ContextMenuInteraction): Promise<any> {
+  async run(interaction: ContextMenuInteraction) {
     const message = interaction.options.getMessage('message') as Message;
     let url = '';
     let a = [];

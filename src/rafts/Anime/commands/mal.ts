@@ -2,6 +2,7 @@ import { MessageEmbed, MessageButton, Message, MessageActionRow, ButtonInteracti
 import axios from 'axios';
 import BaseCommand from '../../BaseCommand.js';
 import { ClientI, CommandOptions, RaftI } from '../../../../lib/interfaces/Main.js';
+import { Paginator } from '../../../util/Constants.js';
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
@@ -88,57 +89,11 @@ class MALCommand extends BaseCommand {
       }
       if (offset + 1 > data.data.length) return error(message, rmsg, `Error: You only have **${data.data.length}** items in your list`);
 
-      const embed = await genEmbed(data, message, offset);
 
-      if (rmsg.deletable) rmsg.delete();
-      return message.channel.send({ embeds: [embed] }).then(msg => {
-        const message_id = msg.id;
-        let currentIndex = offset;
-        const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-        const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-        const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
+      rmsg.delete().catch(() => {});
+      const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
 
-        if (currentIndex === 0) back.setDisabled(true);
-        if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
-
-        const row = new MessageActionRow().addComponents(back, next, del);
-
-        msg.edit({ embeds: [msg.embeds[0]], components: [row] });
-
-        const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
-        const collector = msg.createMessageComponentCollector({ filter, idle: 15000 });
-
-        collector.on('collect', async interaction => {
-          const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-          const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-          const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
-
-          interaction.deferUpdate();
-
-          if (interaction.customId === 'collector:delete') {
-            await msg.delete();
-            collector.stop();
-            return;
-          }
-
-          interaction.customId === 'collector:back' ? (currentIndex -= 1) : (currentIndex += 1);
-
-          if (currentIndex === 0) back.setDisabled(true);
-          if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
-
-          const row = new MessageActionRow().addComponents(back, next, del);
-          const e = await genEmbed(data, message, currentIndex);
-          msg.edit({ embeds: [e], components: [row] });
-        });
-        collector.on('end', () => {
-          const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next').setDisabled(true);
-          const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back').setDisabled(true);
-          const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete').setDisabled(true);
-          const row = new MessageActionRow().addComponents(back, next, del);
-
-          message.channel.messages.cache.get(message_id)?.edit({ components: [row] });
-        });
-      });
+      return Paginator(message, data, offset, data.data.length, ({ data, offset, message }) => genEmbed(data, message, offset), { filter, idle: 15000 })
     }
     if (args[0] === 'search' || args[0] === 's') {
       const offset = 0;
@@ -176,55 +131,10 @@ class MALCommand extends BaseCommand {
       }
       if (data.data.length === 0) return error(message, rmsg, 'No results found');
 
-      const embed = await genEmbed(data, message, offset);
+      rmsg.delete().catch(() => {});
+      const filter = interaction => interaction.user.id === message.author.id;
 
-      if (rmsg.deletable) rmsg.delete();
-      return message.channel.send({ embeds: [embed] }).then(msg => {
-        const message_id = msg.id;
-        let currentIndex = offset;
-        const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-        const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-        const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
-
-        if (currentIndex === 0) back.setDisabled(true);
-        if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
-
-        const row = new MessageActionRow().addComponents(back, next, del);
-
-        msg.edit({ embeds: [msg.embeds[0]], components: [row] });
-
-        const filter = interaction => interaction.user.id === message.author.id;
-        const collector = msg.createMessageComponentCollector({ filter, idle: 15000 });
-
-        collector.on('collect', async interaction => {
-          const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-          const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-          const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
-          const row = new MessageActionRow().addComponents(back, next, del);
-
-          interaction.deferUpdate();
-
-          if (interaction.customId === 'collector:delete') {
-            await msg.delete();
-            collector.stop();
-            return;
-          }
-
-          interaction.customId === 'collector:back' ? (currentIndex -= 1) : (currentIndex += 1);
-          if (currentIndex === 0) back.setDisabled(true);
-          if (currentIndex + 1 >= data.data.length) next.setDisabled(true);
-          const e = await genEmbed(data, message, currentIndex);
-          msg.edit({ embeds: [e], components: [row] });
-        });
-        collector.on('end', () => {
-          const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next').setDisabled(true);
-          const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back').setDisabled(true);
-          const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete').setDisabled(true);
-          const row = new MessageActionRow().addComponents(back, next, del);
-
-          message.channel.messages.cache.get(message_id)?.edit({ components: [row] });
-        });
-      });
+      return Paginator(message, data, offset, data.data.length, ({ data, offset, message }) => genEmbed(data, message, offset), { filter, idle: 15000 })
     }
 
     if (args[0] === 'get' || args[0] === 'g') {
@@ -248,33 +158,12 @@ class MALCommand extends BaseCommand {
       if (data.response && data.response.statusText === 'Not Found') return error(message, rmsg, 'No results found');
       data = { data: [{ node: data.data }] };
 
-      const embed = await genEmbed(data, message, offset);
 
-      if (rmsg.deletable) rmsg.delete();
-      return message.channel.send({ embeds: [embed] }).then(msg => {
-        const message_id = msg.id;
-        const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete');
-        const row = new MessageActionRow().addComponents(del);
-        msg.edit({ embeds: [msg.embeds[0]], components: [row] });
+      rmsg.delete().catch(() => {});
+      const filter = interaction => interaction.user.id === message.author.id;
 
-        const filter = interaction => interaction.user.id === message.author.id;
-        const collector = msg.createMessageComponentCollector({ filter, idle: 15000 });
+      return Paginator(message, data, offset, data.data.length, ({ data, offset, message }) => genEmbed(data, message, offset), { filter, idle: 15000 })
 
-        collector.on('collect', async interaction => {
-          interaction.deferUpdate();
-
-          if (interaction.customID === 'collector:delete') {
-            await msg.delete();
-            collector.stop();
-          }
-        });
-        collector.on('end', () => {
-          const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId('collector:delete').setDisabled(true);
-          const row = new MessageActionRow().addComponents(del);
-
-          message.channel.messages.cache.get(message_id)?.edit({ components: [row] });
-        });
-      });
     }
     const cmd = this.boat.prefix + this.name;
     const embed = new MessageEmbed()
