@@ -100,7 +100,7 @@ class EvalCommand extends BaseCommand {
       .setColor(e === true ? '#FF0000' : '#32CD32')
       .addField('📥 Input', `\`\`\`js\n${(args.replace('(async () => {return ', '').replace('})()', '')).slice(0, 1000)}\`\`\``)
 
-      if (cleaned.split(/\r\n|\r|\n/).length > 4 || cleaned.length > 1023) {
+    if (cleaned.split(/\r\n|\r|\n/).length > 4 || cleaned.length > 1023) {
       if (nf === true) {
         embed.addField('📤 Output', `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``);
         return message.channel.send({ embeds: [embed] });
