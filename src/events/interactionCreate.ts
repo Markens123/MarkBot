@@ -1,11 +1,11 @@
-import {  Interaction } from 'discord.js';
+import {  MessageComponentInteraction } from 'discord.js';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { ComponentFunctions } from '../util/Constants.js';
 import { fileURLToPath } from 'url';
 const module = fileURLToPath(import.meta.url);
 
-export default async (boat: BoatI, interaction: Interaction) => {
+export default async (boat: BoatI, interaction: MessageComponentInteraction) => {
   let handler;
   // Check for handler
   if (interaction.isCommand()) {
@@ -19,7 +19,6 @@ export default async (boat: BoatI, interaction: Interaction) => {
       case 'USER':
         handler = boat.interactions.userContextMenuComponents.get(interaction.commandName.toLowerCase());
         break;
-
     }
   }
   if (interaction.isMessageComponent()) {
@@ -38,9 +37,12 @@ export default async (boat: BoatI, interaction: Interaction) => {
     }
   }
   if (!handler) {
-    //@ts-expect-error
-    if (interaction.customId?.split(':')[0] === 'collector') return;
-    //@ts-expect-error
+    if (interaction.customId?.split(':')[0] === 'collector') {
+      if (interaction.customId?.split(':')[1] === 'delete' && interaction.customId?.split(':')[2] === interaction.user.id) {
+        interaction.channel.messages.cache.get(interaction.message.id)?.delete()
+      }
+      return;
+    }
     interaction.reply({ content: 'This command has no associated action! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
     return;
   }
