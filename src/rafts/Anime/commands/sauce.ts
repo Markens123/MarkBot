@@ -1,9 +1,9 @@
-import { MessageEmbed, MessageButton, Message, MessageActionRow, ButtonInteraction } from 'discord.js';
+import { MessageEmbed, Message, ButtonInteraction } from 'discord.js';
 import nsauce from 'node-sauce';
 import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import { Paginator } from '../../../util/Constants.js';
+import { Paginator } from '../../../util/Pagination.js';
 let sauce = new nsauce(process.env.SAUCE_API_KEY);
 
 class SauceCommand extends BaseCommand {

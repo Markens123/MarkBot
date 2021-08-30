@@ -1,4 +1,3 @@
-import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import getHTML from 'html-get';
 import { JSDOM } from 'jsdom';
 
@@ -62,69 +61,4 @@ export const getCodeblockMatch = (argument) => {
     if (content && language) return { language, content };
     else if (content) return { content };
   } else return { content: argument };
-}
-
-export const Paginator = async (message: Message, data: any, offset = 0, length = 1, callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any, options: InteractionCollectorOptions<ButtonInteraction>) => {
-  let currentIndex = offset;
-  
-  const embed = callback({ data, offset: currentIndex, message });
-
-  const msg = await message.channel.send({ embeds: [embed] });
-
-  const collector = msg.createMessageComponentCollector(options);
-
-  if (!msg.components.length) {
-    let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-    let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-    let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${message.author.id}`);
-    
-    if (currentIndex === 0) back.setDisabled(true);
-    if (currentIndex + 1 >= length) next.setDisabled(true);
-
-    if (length === 1) {
-      next = null;
-      back = null;
-    }
-
-    let row = new MessageActionRow().addComponents([back, next, del].filter(x => x))
-
-    
-    
-    msg.edit({ components: [row] }).catch(() => {});
-  }
-
-  collector.on('collect', async (interaction) => {
-    const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-    const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-    const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${message.author.id}`);
-
-    interaction.deferUpdate();
-
-    interaction.customId === 'collector:back' ? (currentIndex -= 1) : (currentIndex += 1);
-
-    if (currentIndex === 0) back.setDisabled(true);
-    if (currentIndex + 1 >= length) next.setDisabled(true);
-
-    const row = new MessageActionRow().addComponents(back, next, del);
-
-    const e = callback({ data, offset: currentIndex, message });
-
-    msg.edit({ embeds: [e], components: [row] }).catch(() => {});
-  });
-
-  collector.on('end', () => {
-    let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next').setDisabled(true);
-    let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back').setDisabled(true);
-    let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${message.author.id}`);
-    
-    if (length === 1) {
-      next = null;
-      back = null;
-    }
-
-    let row = new MessageActionRow().addComponents([back, next, del].filter(x => x));
-
-    msg.edit({ components: [row] }).catch(() => {});
-
-  });
 }

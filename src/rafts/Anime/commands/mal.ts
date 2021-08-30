@@ -1,8 +1,8 @@
-import { MessageEmbed, MessageButton, Message, MessageActionRow, ButtonInteraction } from 'discord.js';
+import { MessageEmbed, Message, ButtonInteraction } from 'discord.js';
 import axios from 'axios';
 import BaseCommand from '../../BaseCommand.js';
 import { ClientI, CommandOptions, RaftI } from '../../../../lib/interfaces/Main.js';
-import { Paginator } from '../../../util/Constants.js';
+import { Paginator } from '../../../util/Pagination.js';
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
