@@ -3,7 +3,7 @@ const { createCanvas } = pkg;
 
 import * as Discord from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import {Util as util} from '../../../util/index.js';
+import { util } from '../../../util/index.js';
 
 import BaseCommand from '../../BaseCommand.js';
 

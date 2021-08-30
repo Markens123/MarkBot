@@ -4,7 +4,7 @@ import events from './events/index.js';
 import rafts from './rafts/index.js';
 import BaseRaft from './rafts/BaseRaft.js';
 import logBuilder from './rafts/captainsLog/LogRouter.js';
-import {Util as util} from './util/index.js';
+import { util } from './util/index.js';
 import databases from './databases.js';
 import { BoatI, BoatOptions, ClientI } from '../lib/interfaces/Main.js'
 import path from 'path';
