@@ -1,6 +1,6 @@
 import { Collection } from 'discord.js';
 import { BoatI } from '../../lib/interfaces/Main.js';
-import {Util as util} from '../util/index.js';
+import { util } from '../util/index.js';
 
 /**
  * Represents a raft that handles one function

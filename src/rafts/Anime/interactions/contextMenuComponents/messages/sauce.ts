@@ -1,8 +1,9 @@
-import { MessageButton, MessageActionRow, ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake, ContextMenuInteraction } from 'discord.js';
+import { MessageActionRow, ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake, ContextMenuInteraction } from 'discord.js';
 import nsauce from 'node-sauce';
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
+import { InteractionPaginator } from '../../../../../util/Pagination.js';
 class SauceInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
@@ -51,49 +52,11 @@ class SauceInteraction extends BaseInteraction {
 
     const out: any = await sauce(url);
 
-    const embed = genEmbed(out, 0);
-
     if (!interaction.replied) await interaction.reply('Loading Data');
 
-    return interaction.editReply({ content: null, embeds: [embed] }).then(async () => {
-      const code = SnowflakeUtil.generate();
-      let currentIndex = 0;
-      const message_id = (await interaction.fetchReply()).id;
-      const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
-      const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
+    InteractionPaginator(interaction, out, 0, out.length, ({ data, offset }) => genEmbed(data, offset), { idle: 15000 }, true);
 
-      if (currentIndex === 0) back.setDisabled(true);
-      if (currentIndex + 1 >= out.length) next.setDisabled(true);
 
-      const row = new MessageActionRow().addComponents(back, next);
-      interaction.editReply({ components: [row] });
-
-      const filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
-      const collector = interaction.channel.createMessageComponentCollector({ filter, idle: 15000 });
-
-      collector.on('collect', async int => {
-        const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
-        const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
-
-        await int.deferUpdate();
-        int.customId === `collector:back:${code}` ? (currentIndex -= 1) : (currentIndex += 1);
-        if (currentIndex === 0) back.setDisabled(true);
-        if (currentIndex + 1 >= out.length) next.setDisabled(true);
-
-        const row = new MessageActionRow().addComponents(back, next);
-
-        const e = genEmbed(out, currentIndex);
-        interaction.editReply({ embeds: [e], components: [row] });
-      });
-
-      collector.on('end', () => {
-        const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`).setDisabled(true);
-        const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`).setDisabled(true);
-        const row = new MessageActionRow().addComponents(back, next);
-
-        interaction.channel.messages.cache.get(message_id)?.edit({ components: [row] });
-      });
-    });
   }
 }
 

@@ -39,7 +39,10 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
   if (!handler) {
     if (interaction.customId?.split(':')[0] === 'collector') {
       if (interaction.customId?.split(':')[1] === 'delete' && interaction.customId?.split(':')[2] === interaction.user.id) {
-        interaction.channel.messages.cache.get(interaction.message.id)?.delete()
+        //@ts-ignore
+        if (interaction.message.flags.toArray().includes('EPHEMERAL')) return interaction.reply({ content: "You can't delete an ephemeral message silly but you can dismiss it by clicking 'Dismiss Message' below", ephemeral: true })
+        
+        interaction.channel.messages.cache.get(interaction.message.id)?.delete().catch(() => {});
       }
       return;
     }

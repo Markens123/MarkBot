@@ -64,5 +64,5 @@ class Util {
   }  
 }
 
-export { Util };
+export { Util as util };
 
