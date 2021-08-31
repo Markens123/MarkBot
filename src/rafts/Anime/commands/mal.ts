@@ -61,38 +61,14 @@ class MALCommand extends BaseCommand {
 
       const rmsg = await message.channel.send('Loading data...');
 
-      // Var setup
-      // @ts-ignore
-      const url = `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=10&sort=${sort}${status ? `&status=${status}` : ''}${message.channel.nsfw ? '&nsfw=true' : '&nsfw=false'}`;
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${client.maldata.get(message.author.id, 'AToken')}`,
-        },
-      };
-
-      // Data search
-      let data = (await axios.get(url, config)) as any;
-      data = data.data;
-      if (!(data.paging && Object.keys(data.paging).length === 0 && data.paging.constructor === Object)) {
-        if (data.paging.next) {
-          let w = false;
-          while (w === false) {
-            let req = (await axios.get(data.paging.next, config)) as any;
-            req = req.data;
-            data.data = data.data.concat(req.data);
-            data.paging.next = req.paging.next;
-            if (req.paging.next) w = false;
-            else w = true;
-          }
-        }
-      }
+      //@ts-expect-error
+      let data = await this.raft.apis.list.getList(client.maldata.get(message.author.id, 'AToken'), sort, status, message.channel.nsfw)
       if (offset + 1 > data.data.length) return error(message, rmsg, `Error: You only have **${data.data.length}** items in your list`);
 
 
       rmsg.delete().catch(() => {});
       const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
-
+      console.log(data.data[0])
       return Paginator(message, data, offset, data.data.length, ({ data, offset, message }) => genEmbed(data, message, offset), { filter, idle: 15000 })
     }
     if (args[0] === 'search' || args[0] === 's') {
@@ -101,34 +77,9 @@ class MALCommand extends BaseCommand {
       const q = args.join(' ');
       if (!q) return message.channel.send('You must enter a title to search for!');
       const rmsg = await message.channel.send('Loading data...');
-      // Var setup
+
       // @ts-ignore
-      const url = `https://api.myanimelist.net/v2/anime?q=${encodeURI(q)}&limit=100&fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes${message.channel.nsfw ? '&nsfw=true' : '&nsfw=false'}`;
-      const config = {
-        headers: {
-          Authorization: `Bearer ${client.maldata.get(message.author.id, 'AToken')}`,
-        },
-      };
-
-      // Data search
-      let data = (await axios.get(url, config)) as any;
-      data = data.data;
-      if (!(data.paging && Object.keys(data.paging).length === 0 && data.paging.constructor === Object)) {
-        if (data.paging.next) {
-          let w = false;
-          let i = 0;
-          while (w === false) {
-            let req = (await axios.get(data.paging.next, config)) as any;
-            req = req.data;
-            data.data = data.data.concat(req.data);
-
-            if (req.paging.next) w = false;
-            else w = true;
-            i++;
-            if (i >= 2) w = true;
-          }
-        }
-      }
+      let data = await this.raft.apis.list.search(client.maldata.get(message.author.id, 'AToken'), q, message.channel.nsfw);
       if (data.data.length === 0) return error(message, rmsg, 'No results found');
 
       rmsg.delete().catch(() => {});
@@ -143,20 +94,10 @@ class MALCommand extends BaseCommand {
       if (!parseInt(args[1])) return message.channel.send('You must provide an anime id!');
       const rmsg = await message.channel.send('Loading data...');
 
-      // Var setup
       // @ts-ignore
-      const url = `https://api.myanimelist.net/v2/anime/${args[1]}?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes${message.channel.nsfw ? '&nsfw=true' : '&nsfw=false'}`;
-      const config = {
-        headers: {
-          Authorization: `Bearer ${client.maldata.get(message.author.id, 'AToken')}`,
-        },
-      };
-
-      // Data search
-      let data = await axios.get(url, config).catch(err => err);
-
+      let data = await this.raft.apis.list.getAnime(client.maldata.get(message.author.id, 'AToken'), args[1]);
       if (data.response && data.response.statusText === 'Not Found') return error(message, rmsg, 'No results found');
-      data = { data: [{ node: data.data }] };
+      data = { data: [{ node: data }] };
 
 
       rmsg.delete().catch(() => {});
