@@ -14,6 +14,7 @@ class ListAPI extends BaseAPI {
    * @param {string} [token] The access token
    * @param {string} [sort] The sort option
    * @param {string} [status] The status filter option
+   * @param {boolean} [nsfw] Does the channel allow nsfw content
    * @returns {Promise<Object>}
    */
   async getList(token, sort, status, nsfw = false) {
@@ -47,6 +48,7 @@ class ListAPI extends BaseAPI {
       })
       .catch(err => err);
   }
+  
   /**
    * Gets a page from the provided url
    * @param {string} [token] The access token
@@ -61,6 +63,13 @@ class ListAPI extends BaseAPI {
       .catch(err => err);
   }
 
+  /**
+   * Searches for anime using the provided query
+   * @param {string} [token] The access token
+   * @param {string} [query] The query
+   * @param {boolean} [nsfw] Does the channel allow nsfw content
+   * @returns {Promise<Object>}
+   */
   search(token, query, nsfw = false) {
 
     const url = `https://api.myanimelist.net/v2/anime?q=${encodeURI(query)}&limit=100&fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes${nsfw ? '&nsfw=true' : '&nsfw=false'}`;
@@ -93,7 +102,13 @@ class ListAPI extends BaseAPI {
       })
       .catch(err => err);
   }
-
+  
+  /**
+   * Get's an anime using it's id
+   * @param {string} [token] The access token
+   * @param {string} [id] The anime's id
+   * @returns {Promise<Object>}
+   */
   getAnime(token, id) {
     const url = `https://api.myanimelist.net/v2/anime/${id}?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&nsfw=true`;
     this.driver.defaults.baseURL = url;
