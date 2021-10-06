@@ -214,7 +214,7 @@ class Boat implements BoatI {
    * @param {string} name the name of the command to register
    * @returns {*}
    */
-  async registerInteraction(type, name) {
+  async registerInteraction(type, name: string | string[]) {
     let interaction;
     //@ts-ignore
     let path = this.client.api as any;
@@ -222,24 +222,31 @@ class Boat implements BoatI {
     let results;
     switch (type) {
       case 2:
-        interaction = this.interactions.commands.get(name);
-        if (!interaction) return 'No such interaction';
-        if (!interaction.definition) return 'This command has no definition';
-        path = path.applications(this.client.user.id);
-        if (Array.isArray(interaction.guild)) {
-          interaction.guild.forEach(guild => {
-            promises.push(path.guilds(guild).commands.post({ data: interaction.definition }));
-          });
-          results = await Promise.all(promises).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
-          return results.map(result => ({ guild: result.guild_id, id: result.id, name: result.name }));
+        let names = [];
+        if (name === 'all') names = Array.from(this.interactions.commands.keys())
+        else if (Array.isArray(name)) names = name
+        else names.push(name)
+
+        for (let i = 0; i < names.length; i++) {
+          interaction = this.interactions.commands.get(names[i]);
+          if (!interaction) return `No such interaction (${names[i]})`;
+          if (!interaction.definition) return `This command has no definition (${names[i]})`;
+          path = path.applications(this.client.user.id);
+          if (Array.isArray(interaction.guild)) {
+            interaction.guild.forEach(guild => {
+              promises.push(path.guilds(guild).commands.post({ data: interaction.definition }));
+            });
+            results = await Promise.all(promises).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
+            return results.map(result => ({ guild: result.guild_id, id: result.id, name: result.name }));
+          }
+          if (interaction.guild) {
+            path = path.guilds(interaction.guild);
+          }
+          return path.commands
+            .post({ data: interaction.definition })
+            .catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
         }
-        if (interaction.guild) {
-          path = path.guilds(interaction.guild);
-        }
-        return path.commands
-          .post({ data: interaction.definition })
-          .catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
-      default:
+        default:
     }
     return 'Invalid type';
   }
@@ -302,5 +309,6 @@ class Boat implements BoatI {
     };
   }
 }
+
 
 export default Boat;
