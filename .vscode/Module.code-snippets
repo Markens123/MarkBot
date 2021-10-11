@@ -26,6 +26,18 @@
 	"description": "Module boilerplate code;"
 },
 
+"IndexBP": {
+  "prefix": "IndexBP",
+  "body": [
+    "const _: any = {};",
+    "",
+    "_._ = (await import('./_.js')).default;",
+    "",
+    "export default _;",
+    ""
+  ],
+  "description": ""
+},
 "Command boilerplate": {
 	"prefix": "CommandBP",
 	"body": [

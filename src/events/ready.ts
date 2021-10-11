@@ -10,7 +10,8 @@ export default (boat: BoatI) => {
 
   boat.log(module, 'Connected to discord!');
   client.channels.fetch('807033695483461632');
-
+  client.channels.fetch('883882042532700190');
+  
   client.reminders.clear()
 
 };

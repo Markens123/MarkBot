@@ -33,9 +33,11 @@
     "imgur": "^0.3.1",
     "is-image-url": "^1.1.8",
     "jsdom": "^16.6.0",
+    "node-ical": "^0.13.0",
     "node-sauce": "^1.0.5",
     "parse-duration": "^1.0.0",
     "pm2": "^5.1.0",
+    "query-string": "^7.0.1",
     "sharp": "^0.28.3",
     "wait": "^0.4.2",
     "winston": "^3.3.3"

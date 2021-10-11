@@ -5,6 +5,7 @@ const databases: any = {};
 
 databases.maldata = new Enmap('MALData');
 databases.reminders = new Enmap('RData');
+databases.schoold = new Enmap('SCHOOLD');
 databases.cooldowns = new Collection();
 
 export default databases;

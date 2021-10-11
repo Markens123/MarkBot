@@ -1,16 +1,27 @@
 import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable } from 'discord.js'
 import Enmap from 'enmap'
+import { TimeZoneDef } from 'node-ical'
 
 export interface ClientI extends Client {
   cooldowns?: Collection<string, Collection<Snowflake, number>>;
   maldata?: Enmap;
   reminders?: Enmap<Snowflake, Reminder[]>;
+  schoold?: Enmap<string, Assignment>;
 }
 
 export interface Reminder {
   content: string;
   timestamp: number | string;
   id: number;
+}
+
+export interface Assignment {
+  url: string;
+  deadline: number;
+  title: string;
+  description: string;
+  id?: string;
+  class?: string;
 }
 
 export interface BoatI {
