@@ -34,7 +34,7 @@ class BannerInteraction extends BaseInteraction {
 
     let embed = new MessageEmbed()
       .setTitle(`${res.tag}'s banner'`)
-      .setColor('BLACK')
+      .setColor('NOT_QUITE_BLACK')
       .setImage(res.bannerURL({format: 'png' ,size: 256, dynamic: true}));
 
     return interaction.reply({ embeds: [embed] });
