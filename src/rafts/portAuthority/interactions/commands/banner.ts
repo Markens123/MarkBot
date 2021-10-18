@@ -30,12 +30,14 @@ class BannerInteraction extends BaseInteraction {
 
     let res = await client.users.fetch(user, {force: true}).then(myUser => myUser).catch(error => error);
 
+    if (!res.banner) return interaction.reply({ content: 'That user does not have a banner!', ephemeral: true })
+
     let embed = new MessageEmbed()
       .setTitle(`${res.tag}'s banner'`)
       .setColor('BLACK')
       .setImage(res.bannerURL({format: 'png' ,size: 256, dynamic: true}));
 
-    interaction.reply(res);
+    return interaction.reply({ embeds: [embed] });
   }
 }
 
