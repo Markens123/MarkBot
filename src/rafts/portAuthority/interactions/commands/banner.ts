@@ -33,7 +33,7 @@ class BannerInteraction extends BaseInteraction {
     if (!res.banner) return interaction.reply({ content: 'That user does not have a banner!', ephemeral: true })
 
     let embed = new MessageEmbed()
-      .setTitle(`${res.tag}'s banner'`)
+      .setTitle(`${res.tag}'s banner`)
       .setColor('NOT_QUITE_BLACK')
       .setImage(res.bannerURL({format: 'png' ,size: 2048, dynamic: true}));
 
