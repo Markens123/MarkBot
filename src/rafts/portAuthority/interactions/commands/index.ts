@@ -11,5 +11,6 @@ commands.test = (await import('./test.js')).default;
 commands.noresp = (await import('./noresp.js')).default;
 commands.onlyme = (await import('./onlyme.js')).default;
 commands.ephemeral = (await import('./ephemeral.js')).default;
+commands.schedule = (await import('./schedule.js')).default;
 
 export default commands;
