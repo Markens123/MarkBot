@@ -1,10 +1,8 @@
 import { Intents } from 'discord.js';
-import * as fs from 'fs';
 import express from 'express';
 import 'dotenv/config'
 import shipyard from './src/boat.js';
-import { BoatOptions, UpdatesFile } from './lib/interfaces/Main.js';
-let config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+import { BoatOptions  } from './lib/interfaces/Main.js';
 
 
 

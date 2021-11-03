@@ -11,7 +11,7 @@ const definition = {
         type: 6,
         required: true
     }
-    ]  
+    ]
 };
 
 class AvatarInteraction extends BaseInteraction {

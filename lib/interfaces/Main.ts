@@ -36,6 +36,7 @@ interface InteractionsI {
   selectMenuComponents: Collection<string, any>;
   userContextMenuComponents: Collection<string, any>;
   messageContextMenuComponents: Collection<string, any>;
+  autocomplete: Collection<string, any>;
 }
 
 export interface CommandOptions {

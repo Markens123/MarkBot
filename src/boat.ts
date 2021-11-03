@@ -109,6 +109,7 @@ class Boat implements BoatI {
       selectMenuComponents: new Collection(),
       userContextMenuComponents: new Collection(),
       messageContextMenuComponents: new Collection(),
+      autocomplete: new Collection(),
     };
 
     /**
