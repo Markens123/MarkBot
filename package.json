@@ -21,6 +21,7 @@
     "canvas": "^2.8.0",
     "discord-build-fetcher-js": "^1.0.7",
     "discord.js": "^13.3.0",
+
     "dotenv": "^8.2.0",
     "enmap": "^5.8.4",
     "express": "^4.17.1",
