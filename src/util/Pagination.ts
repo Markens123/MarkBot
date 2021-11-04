@@ -1,4 +1,4 @@
-import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil, Interaction } from 'discord.js';
+import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil } from 'discord.js';
 
 export const Paginator = async (message: Message, data: any, offset = 0, length = 1, callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any, options: InteractionCollectorOptions<ButtonInteraction>) => {
   let currentIndex = offset;
@@ -65,7 +65,7 @@ export const Paginator = async (message: Message, data: any, offset = 0, length 
   });
 }
 
-export const InteractionPaginator = async (interaction: Interaction, data: any, offset = 0, length = 1, callback: ({ data, offset, interaction }: { data: any, offset: number, interaction?: CommandInteraction }) => any, options: InteractionCollectorOptions<ButtonInteraction>, editreply: boolean = false) => {
+export const InteractionPaginator = async (interaction: any, data: any, offset = 0, length = 1, callback: ({ data, offset, interaction }: { data: any, offset: number, interaction?: CommandInteraction }) => any, options: InteractionCollectorOptions<ButtonInteraction>, editreply: boolean = false) => {
   let currentIndex = offset;
   const code = SnowflakeUtil.generate();
 
