@@ -17,7 +17,7 @@ const definition = {
 class BannerInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
-      name: 'avatar',
+      name: 'banner',
       enabled: true,      
       definition,
     };
