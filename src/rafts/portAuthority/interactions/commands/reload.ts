@@ -30,7 +30,6 @@ class ReloadInteraction extends BaseInteraction {
     let t: string;
     let tn: string;
 
-
     switch(type) {
       case 'command':
         t = this.boat.commands.get(thing);
