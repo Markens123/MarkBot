@@ -1,4 +1,4 @@
-import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil } from 'discord.js';
+import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil, CommandInteraction } from 'discord.js';
 
 export const Paginator = async (message: Message, data: any, offset = 0, length = 1, callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any, options: InteractionCollectorOptions<ButtonInteraction>) => {
   let currentIndex = offset;
