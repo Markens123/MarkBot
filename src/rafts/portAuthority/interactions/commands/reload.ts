@@ -1,5 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
+import { RaftI } from '../../../../lib/interfaces/Main.js';
 import glob from 'glob';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -26,8 +27,8 @@ class ReloadInteraction extends BaseInteraction {
       realpath: true
     };    
     let path: string;
-    let raft: string;
-    let t: string;
+    let raft: RaftI;
+    let t: any;
     let tn: string;
 
     switch(type) {
