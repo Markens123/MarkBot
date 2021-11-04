@@ -38,6 +38,12 @@ class ReloadInteraction extends BaseInteraction {
         raft = t.raft;
         path = glob.sync(`**/commands/${tn}.js`, options)[0];
         break;
+      case 'interaction.command':
+        t = this.boat.interactions.commands.get(thing)
+        tn = t.name;
+        raft = t.raft;
+        path = glob.sync(`**/interactions/commands/${tn}.js`, options)[0];
+        break;
     } 
 
 
@@ -54,21 +60,28 @@ class ReloadInteraction extends BaseInteraction {
         this.boat.log.error(__filename ,error);
         interaction.reply({ content: 'There was an error while reloading the command', ephemeral: true });
       }
+    }
 
-    } 
+    if (type === 'interaction.command') {
+      try {
+        const command = (await import(`file:///${path}?id=${Math.random().toString(36).substring(3)}`)).default;
+         
+        raft.interactions.commands.set(cmdn, new command(raft));
+        
+        this.boat.interactions.commands.set(tn, raft.interactions.commands.get(tn));
+        
+        interaction.reply({ content: `You have succesfully reloaded the slash command ${tn}`, ephemeral: true })
+      } catch(error) {
+        this.boat.log.error(__filename ,error);
+        interaction.reply({ content: 'There was an error while reloading the command', ephemeral: true });
+      }
+    }
   }
-}
-
-const rafts = {
-  PortAuthority: 'portAuthority',
-  Lighthouse: 'lighthouse',
-  CaptainsLog: 'captainsLog',
-  Anime: 'Anime',
 }
 
 function getDefinition() {
   const choices = [];
-  const types = ['Raft', 'Interaction', 'Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select', 'Apis', 'Event']
+  const types = ['Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select', 'Api', 'Event']
   
   for (let i = 0; i < types.length; i++) {
     choices.push({
