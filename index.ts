@@ -1,14 +1,8 @@
-import { Intents, MessageEmbed, Snowflake, TextChannel } from 'discord.js';
-import * as fs from 'fs';
+import { Intents } from 'discord.js';
 import express from 'express';
 import 'dotenv/config'
-import { checkTF } from './src/util/Constants.js';
-import gplay from 'google-play-scraper';
-import store from 'app-store-scraper';
-import editJsonFile from 'edit-json-file';
 import shipyard from './src/boat.js';
-import { BoatOptions, UpdatesFile } from './lib/interfaces/Main.js';
-let config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+import { BoatOptions  } from './lib/interfaces/Main.js';
 
 
 
@@ -39,12 +33,6 @@ const client = markBot.client;
 
 let app = express();
 
-client.on('ready', () =>{
-  if (process.env.UPDATE == 'true') {
-    setInterval(Updates, 60000);
-  }
-});
-
 app.get('/callback', async ({ query }, response) => {
 	const { code, state } = query;
 
@@ -66,116 +54,3 @@ app.get('/callback', async ({ query }, response) => {
 });
 
 app.listen(process.env.PORT, () => markBot.log('#', `App listening at http://localhost:${process.env.PORT}`));
-
-/*client.on('guildMemberAdd', async member => {
-    //console.log(member.guild)
-    if(member.guild.id !== "816098833054302208") return
-    c = member.guild.channels.cache.get("817152710439993385");
-    
-    const messages = await c.messages.fetch()
-    var lm = messages.last()
-    if(lm.content == "on") {
-        member.kick("Testing is in place")
-    }
-})*/
-
-  
-
-async function Updates() {
-  var data = await JSON.parse(fs.readFileSync('./test.json', 'utf8')) as UpdatesFile[];
-  let file = editJsonFile(`${markBot.options.basepath}/../../test.json`);
-  const Types = {
-    TF: 1,
-    ANDROID: 2,
-    IOS: 3,
-  };
-  for (var i in data) {
-    let channel = client.channels.cache.get(config.notchannel) as TextChannel;	  
-    if (data[i].channel) {
-      client.channels.fetch(data[i].channel);
-      channel = client.channels.cache.get(data[i].channel) as TextChannel;
-    }    
-    switch (data[i].type) {
-      case Types.TF: {
-        const d = await checkTF(data[i].url);
-        if (d.full) {
-          if (data[i].status === 'open') {
-            const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-            channel.send({ content, embeds: [tfEmbed(d.full, data[i].url, d.title)] });
-            file.set(`${i}.status`, 'closed');
-          }
-        } else {
-          if (data[i].status === 'closed') {
-            const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-            channel.send({ content, embeds: [tfEmbed(d.full, data[i].url, d.title)] });
-            file.set(`${i}.status`, 'open');
-          }
-        }
-        break;
-      }
-      case Types.ANDROID: {
-        let app = await gplay.app({appId: data[i].id});
-        if (app.version !== data[i].version && app.updated > data[i].updated) {
-          const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-          channel.send({ content, embeds: [aEmbed(app, data[i])] });
-          file.set(`${i}.version`, app.version);
-	        file.set(`${i}.updated`, app.updated);	
-        }
-        break;
-      }
-      case Types.IOS: {
-        let app = await store.app({id: data[i].id});
-        if (app.version !== data[i].version && new Date(app.updated).getTime() > data[i].updated) {
-          const content = data[i].mention ? `<@${data[i].mention.join("> <@")}>`: null;
-          channel.send({ content, embeds: [iEmbed(app, data[i])] });
-          file.set(`${i}.version`, app.version);
-	  file.set(`${i}.updated`, new Date(app.updated).getTime());
-        }
-        break;
-      }
-    }
-    file.save();
-  }
-  console.log('Done');
-}
-
-function tfEmbed(status: boolean, url: string, title: string) {
-  if (status) {
-    return new MessageEmbed()
-    .setTitle(`${title} - TestFlight Status Update`)
-    .setURL(url)
-    .setDescription('This beta is now full!')
-    .setColor("#FF0000")
-    .setTimestamp();
-  } else {
-    return new MessageEmbed()
-    .setTitle(`${title} - TestFlight Status Update`)
-    .setURL(url)
-    .setDescription('This beta now has slots avalible!')
-    .setColor('#7fff01')
-    .setTimestamp();     
-  }
-}
-
-function aEmbed(app: gplay.IAppItemFullDetail, data) {
-  return new MessageEmbed()
-  .setTitle(`${data.title ?? app.title} - Android update`)
-  .setURL(app.url)
-  .addField('Version', `${data.version} ➝ ${app.version}`)
-  .addField('Android Version', app.androidVersionText ?? app.androidVersion)
-  .addField('Updated', `<t:${app.updated/1000}:R>`)
-  .setColor('#a4c639')
-  .setTimestamp();
-}
-
-function iEmbed(app, data) {
-  let date = new Date(app.updated)
-  return new MessageEmbed()
-  .setTitle(`${data.title ?? app.title} - iOS update`)
-  .setURL(app.url)
-  .addField('Version', `${data.version} ➝ ${app.version}`)
-  .addField('iOS Version', `${app.requiredOsVersion}+`)
-  .addField('Updated', `<t:${date.getTime()/1000}:R>`)
-  .setColor('#c0c0c0')
-  .setTimestamp();
-}

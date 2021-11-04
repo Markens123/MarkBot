@@ -11,6 +11,11 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
   if (interaction.isCommand()) {
     handler = boat.interactions.commands.get(interaction.commandName);
   }
+
+  if (interaction.isAutocomplete()) {
+    handler = boat.interactions.autocomplete.get(interaction.commandName)
+  }
+
   if (interaction.isContextMenu()) {
     switch (interaction.targetType) {
       case 'MESSAGE':

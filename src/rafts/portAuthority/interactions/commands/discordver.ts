@@ -2,7 +2,7 @@ import BaseInteraction from '../../../BaseInteraction.js';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 import fetcher from 'discord-build-fetcher-js';
-import gplay from 'google-play-scraper';
+//import gplay from 'google-play-scraper';
 import store from 'app-store-scraper';
 
 const definition = {
@@ -34,9 +34,9 @@ class DiscordVerInteraction extends BaseInteraction {
       return "Canary " + data.buildNum + " (" + data.buildID + ")"
     });
 
-    const astable = await gplay.app({appId: 'com.discord'}).then(data => {
+/*    const astable = await gplay.app({appId: 'com.discord'}).then(data => {
         return "Stable " + data.version 
-    });
+    });*/
 
     const istable = await store.app({id: 985746746}).then(data => {
       return "Stable " + data.version
@@ -46,8 +46,8 @@ class DiscordVerInteraction extends BaseInteraction {
     .setColor('#00FF00')
     .addField("Desktop", `${stable}\n${ptb}\n${canary}`)
     .addField("iOS", istable)
-    .addField("Android", astable)
-    .setTimestamp();
+    .setTimestamp()
+    //.addField("Android", astable);
     
       
     interaction.editReply({ content: null, embeds: [embed] });
