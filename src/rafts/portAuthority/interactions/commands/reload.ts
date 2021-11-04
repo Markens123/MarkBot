@@ -1,6 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
-import { RaftI } from '../../../../lib/interfaces/Main.js';
+import { RaftI } from '../../../../../lib/interfaces/Main.js';
 import glob from 'glob';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -51,7 +51,7 @@ class ReloadInteraction extends BaseInteraction {
       try {
         const command = (await import(`file:///${path}?id=${Math.random().toString(36).substring(3)}`)).default;
          
-        raft.commands.set(cmdn, new command(raft));
+        raft.commands.set(tn, new command(raft));
         
         this.boat.commands.set(tn, raft.commands.get(tn));
         
@@ -66,7 +66,7 @@ class ReloadInteraction extends BaseInteraction {
       try {
         const command = (await import(`file:///${path}?id=${Math.random().toString(36).substring(3)}`)).default;
          
-        raft.interactions.commands.set(cmdn, new command(raft));
+        raft.interactions.commands.set(tn, new command(raft));
         
         this.boat.interactions.commands.set(tn, raft.interactions.commands.get(tn));
         
