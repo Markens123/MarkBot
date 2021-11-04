@@ -21,29 +21,37 @@ class ReloadInteraction extends BaseInteraction {
     const client = this.boat.client;
     const type = interaction.options.getString('type').toLowerCase();
     const thing = interaction.options.getString('thing').toLowerCase();
-    
+    const options = {
+      cwd: `${__dirname}../../../`,
+      realpath: true
+    };    
+    let path: string;
+    let raft: string;
+    let t: string;
+    let tn: string;
+
+
+    switch(type) {
+      case 'command':
+        t = this.boat.commands.get(thing);
+        tn = t.name;
+        raft = t.raft;
+        path = glob.sync(`**/commands/${tn}.js`, options)[0];
+        break;
+    } 
+
+
     if (type === 'command') {
-      const cmd = this.boat.commands.get(thing);
-      const cmdn = cmd.name;
-      const raftn = rafts[cmd.raft.constructor.name];
-      const raft = this.boat.rafts[raftn]
-
-      const options = {
-        cwd: `${__dirname}../../../`,
-        realpath: true
-      }
-      let path = glob.sync(`**/commands/${cmdn}.js`, options)[0];
-
       try {
         const command = (await import(`file:///${path}?id=${Math.random().toString(36).substring(3)}`)).default;
          
         raft.commands.set(cmdn, new command(raft));
         
-        this.boat.commands.set(cmdn, raft.commands.get(cmdn));
+        this.boat.commands.set(tn, raft.commands.get(tn));
         
-        interaction.reply({ content: `You have succesfully reloaded the command ${cmdn}`, ephemeral: true })
+        interaction.reply({ content: `You have succesfully reloaded the command ${tn}`, ephemeral: true })
       } catch(error) {
-        console.error(error);
+        this.boat.log.error(__filename ,error);
         interaction.reply({ content: 'There was an error while reloading the command', ephemeral: true });
       }
 
