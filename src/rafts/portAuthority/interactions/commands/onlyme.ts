@@ -17,7 +17,7 @@ class OnlyMeInteraction extends BaseInteraction {
   }
 
   async run(interaction: CommandInteraction) {
-    interaction.reply({ content: 'Only you can see this\\😄', ephemeral: true});
+    interaction.reply({ content: 'Only you can see this\\😄.', ephemeral: true});
   }
 }
 
