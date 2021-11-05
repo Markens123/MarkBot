@@ -23,7 +23,7 @@ class ReloadInteraction extends BaseInteraction {
     const type = interaction.options.getString('type').toLowerCase();
     const thing = interaction.options.getString('thing').toLowerCase();
     const options = {
-      cwd: `${__dirname}../../../`,
+      cwd: `${__dirname}../../`,
       realpath: true
     };    
     let path: string;
