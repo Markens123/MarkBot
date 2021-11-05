@@ -135,7 +135,7 @@ class ReloadInteraction extends BaseInteraction {
     if (type === 'raft') {
       try {
         const raft = (await import(`${this.boat.options.basepath}/rafts/index.js`)).default[tn];
-        this.boat.launchRaft(raft, tn).bind(this.boat)
+        this.boat.launchRaft(raft, tn)
       } catch(error) {
         this.boat.log.error(__filename, error);
         return interaction.reply({ content: 'An error has occured!', ephemeral: true });
