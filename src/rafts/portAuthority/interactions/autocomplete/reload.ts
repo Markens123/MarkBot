@@ -20,15 +20,18 @@ class aReloadInteraction extends BaseInteraction {
       case 'command':
         arr = Array.from(this.boat.commands.keys());
         break;
-      case 'apis':
+      case 'api':
         let a = [];
         const keys = Object.keys(this.boat.rafts);
         keys.forEach(x => {
           if (this.boat.rafts[x].apis) Object.keys(this.boat.rafts[x].apis).forEach(x => a.push(x)) 
-        }); 
+        });
         arr = a;
       case 'raft': 
         arr = Object.keys(this.boat.rafts);
+        break;
+      case 'event':
+        arr = Object.keys(this.boat.events)
         break;
       case 'interaction.command':
         arr = Array.from(this.boat.interactions.commands.keys());
@@ -36,7 +39,18 @@ class aReloadInteraction extends BaseInteraction {
       case 'interaction.autocomplete':
         arr = Array.from(this.boat.interactions.autocomplete.keys());
         break;
-
+      case 'interaction.message':
+        arr = Array.from(this.boat.interactions.messageContextMenuComponents.keys());
+        break;
+      case 'interaction.user':
+        arr = Array.from(this.boat.interactions.userContextMenuComponents.keys());
+        break;
+      case 'interaction.button':
+        arr = Array.from(this.boat.interactions.buttonComponents.keys());
+        break;
+      case 'interaction.select':
+        arr = Array.from(this.boat.interactions.selectMenuComponents.keys());
+        break;
     }
 
     if (!cv) {
@@ -63,13 +77,5 @@ function AtoResp(arr: any[], count = 0) {
   });
   return ret;
 }
-
-function getraftfromcmd(boat: BoatI, cmd: string) {
-  const keys = Object.keys(boat.rafts);
-  keys.forEach(x => {
-    boat.rafts[x].commands.some(x => x.name == cmd)
-  });
-}
-
 
 export default aReloadInteraction;

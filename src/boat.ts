@@ -158,7 +158,7 @@ class Boat implements BoatI {
   }
 
   /**
-   * Register a raft tpo this boat
+   * Register a raft to this boat
    * @param {BaseRaft} raft the raft to register
    * @param {string} name the name of the raft
    * @private

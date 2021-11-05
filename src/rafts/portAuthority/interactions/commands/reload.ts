@@ -30,6 +30,9 @@ class ReloadInteraction extends BaseInteraction {
     let raft: RaftI;
     let t: any;
     let tn: string;
+    let loc: any;
+    let bloc: any;
+    let reply: string;
 
     switch(type) {
       case 'command':
@@ -37,45 +40,136 @@ class ReloadInteraction extends BaseInteraction {
         tn = t.name;
         raft = t.raft;
         path = glob.sync(`**/commands/${tn}.js`, options)[0];
+        loc = raft.commands;
+        bloc = this.boat.commands;
+        reply = `You have succesfully reloaded the command ${tn}`
         break;
+
       case 'interaction.command':
         t = this.boat.interactions.commands.get(thing)
         tn = t.name;
         raft = t.raft;
         path = glob.sync(`**/interactions/commands/${tn}.js`, options)[0];
+        loc = raft.interactions.commands;
+        bloc = this.boat.interactions.commands;
+        reply = `You have succesfully reloaded the slash command ${tn}`
         break;
+
+      case 'interaction.autocomplete':
+        t = this.boat.interactions.autocomplete.get(thing);
+        tn = t.name;
+        raft = t.raft;
+        path = glob.sync(`**/interactions/autocomplete/${tn}.js`, options)[0];
+        loc = raft.interactions.autocomplete;
+        bloc = this.boat.interactions.autocomplete;
+        reply = `You have succesfully reloaded the autocomplete interaction ${tn}`
+        break;
+
+      case 'interaction.message':
+        t = this.boat.interactions.messageContextMenuComponents.get(thing);
+        tn = t.name;
+        raft = t.raft;
+        path = glob.sync(`**/interactions/contextMenuComponents/messages/${tn}.js`, options)[0];
+        loc = raft.interactions.messageContextMenuComponents;
+        bloc = this.boat.interactions.messageContextMenuComponents;
+        reply = `You have succesfully reloaded the message interaction ${tn}`
+        break;
+
+      case 'interaction.user':
+        t = this.boat.interactions.userContextMenuComponents.get(thing);
+        tn = t.name;
+        raft = t.raft;
+        path = glob.sync(`**/interactions/contextMenuComponents/users/${tn}.js`, options)[0];
+        loc = raft.interactions.userContextMenuComponents;
+        bloc = this.boat.interactions.userContextMenuComponents;
+        reply = `You have succesfully reloaded the user interaction ${tn}`
+        break;
+
+      case 'interaction.button':
+        t = this.boat.interactions.buttonComponents.get(thing);
+        tn = t.name;
+        raft = t.raft;
+        path = glob.sync(`**/interactions/buttonComponents/${tn}.js`, options)[0];
+        loc = raft.interactions.buttonComponents;
+        bloc = this.boat.interactions.buttonComponents;
+        reply = `You have succesfully reloaded the button interaction ${tn}`
+        break;
+
+      case 'interaction.select':
+        t = this.boat.interactions.selectMenuComponents.get(thing);
+        tn = t.name;
+        raft = t.raft;
+        path = glob.sync(`**/interactions/selectMenuComponents/${tn}.js`, options)[0];
+        loc = raft.interactions.selectMenuComponents;
+        bloc = this.boat.interactions.selectMenuComponents;
+        reply = `You have succesfully reloaded the select interaction ${tn}`
+        break;
+
+      case 'api':
+        const keys = Object.keys(this.boat.rafts);
+        keys.forEach(x => {
+          if (this.boat.rafts[x].apis) {
+            if (Object.keys(this.boat.rafts[x].apis).includes('oauth')) raft = this.boat.rafts[x]
+          }
+        }); 
+        tn = thing;
+        path = glob.sync(`**/apis/${tn}.js`, options)[0];
+        loc = raft.apis;
+        bloc = null;
+        reply = `You have succesfully reloaded the ${tn} api`
+        break;
+
+      case 'event':
+        tn = thing;
+        bloc = this.boat.events;
+        break;
+
+      case 'raft':
+        tn = thing;
+        bloc = this.boat.rafts;
+        break;
+      default:
+        return interaction.reply({ content: 'Invalid type!', ephemeral: true })
     } 
 
-
-    if (type === 'command') {
+    if (type === 'raft') {
       try {
-        const command = (await import(`file:///${path}?id=${Math.random().toString(36).substring(3)}`)).default;
-         
-        raft.commands.set(tn, new command(raft));
-        
-        this.boat.commands.set(tn, raft.commands.get(tn));
-        
-        interaction.reply({ content: `You have succesfully reloaded the command ${tn}`, ephemeral: true })
+        const raft = (await import(`${this.boat.options.basepath}/rafts/index.js`)).default[tn];
+        this.boat.launchRaft(raft, tn).bind(this.boat)
       } catch(error) {
-        this.boat.log.error(__filename ,error);
-        interaction.reply({ content: 'There was an error while reloading the command', ephemeral: true });
+        this.boat.log.error(__filename, error);
+        return interaction.reply({ content: 'An error has occured!', ephemeral: true });
       }
     }
 
-    if (type === 'interaction.command') {
+    if (type === 'event') {
       try {
-        const command = (await import(`file:///${path}?id=${Math.random().toString(36).substring(3)}`)).default;
-         
-        raft.interactions.commands.set(tn, new command(raft));
-        
-        this.boat.interactions.commands.set(tn, raft.interactions.commands.get(tn));
-        
-        interaction.reply({ content: `You have succesfully reloaded the slash command ${tn}`, ephemeral: true })
+        client.removeAllListeners(tn)
+        const event = (await import(`${this.boat.options.basepath}/events/index.js`)).default[tn];
+        this.boat.events[tn] = event;
+
+        this.boat.listen(tn, event)
+
+        return interaction.reply({ content: `You have succesfully reloaded the ${tn} event.`, ephemeral: true })
       } catch(error) {
-        this.boat.log.error(__filename ,error);
-        interaction.reply({ content: 'There was an error while reloading the command', ephemeral: true });
+        this.boat.log.error(__filename, error);
+        return interaction.reply({ content: 'An error has occured!', ephemeral: true });
       }
     }
+
+    try {
+      const command = (await import(`file:///${path}?id=${Math.random().toString(36).substring(3)}`)).default;
+        
+      loc.set(tn, new command(raft));
+      
+      !bloc ? null : bloc.set(tn, loc.get(tn));
+      
+      interaction.reply({ content: reply, ephemeral: true });
+    } catch(error) {
+      this.boat.log.error(__filename, error);
+      interaction.reply({ content: 'An error has occured!', ephemeral: true });
+    }
+    
   }
 }
 
