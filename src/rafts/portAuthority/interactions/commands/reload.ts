@@ -19,6 +19,10 @@ class ReloadInteraction extends BaseInteraction {
   }
 
   async run(interaction: CommandInteraction) {
+    if (!this.boat.owners.includes(interaction.user.id)) {
+      this.boat.log.warn('#', `Non owner used reload command. Id: \`${interaction.user.id}\``)
+      return interaction.reply({ content: 'no', ephemeral: true })
+    }
     const client = this.boat.client;
     const type = interaction.options.getString('type').toLowerCase();
     const thing = interaction.options.getString('thing').toLowerCase();
