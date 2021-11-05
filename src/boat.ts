@@ -28,6 +28,8 @@ class Boat implements BoatI {
   token: string;
   debug: boolean;
   ending: boolean;
+  launchRaft: any;
+  listen: any;
 
   /**
    * The logging options

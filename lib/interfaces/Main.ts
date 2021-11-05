@@ -28,6 +28,8 @@ export interface BoatI {
     log: any;
     end(code: any): Promise<void>;
     readonly toJSON: any;
+    launchRaft: any;
+    listen: any;
 }
 
 interface InteractionsI {
