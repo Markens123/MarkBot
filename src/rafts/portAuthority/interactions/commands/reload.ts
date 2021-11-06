@@ -181,7 +181,7 @@ class ReloadInteraction extends BaseInteraction {
 
 function getDefinition() {
   const choices = [];
-  const types = ['Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select', 'Api', 'Event']
+  const types = ['Raft', 'Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select', 'Api', 'Event']
   
   for (let i = 0; i < types.length; i++) {
     choices.push({
