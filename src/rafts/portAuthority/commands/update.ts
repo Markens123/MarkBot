@@ -2,6 +2,7 @@ import { exec } from 'child_process';
 import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
+import { fileURLToPath } from 'url';
 var module = fileURLToPath(import.meta.url);
 
 class UpdateCommand extends BaseCommand {
@@ -58,7 +59,7 @@ class UpdateCommand extends BaseCommand {
     stderr = clean(stderr);
     embed.setTitle('Packages Updated').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
     await message.channel.send({embeds: [embed]});
-    
+
     ({ stdout, stderr } = await promiseExec('npm run build').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
