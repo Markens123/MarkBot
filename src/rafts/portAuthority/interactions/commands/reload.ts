@@ -25,7 +25,7 @@ class ReloadInteraction extends BaseInteraction {
     }
     const client = this.boat.client;
     const type = interaction.options.getString('type').toLowerCase();
-    const thing = interaction.options.getString('thing').toLowerCase();
+    const thing = interaction.options.getString('thing');
     const options = {
       cwd: `${this.boat.options.basepath}/rafts`,
       realpath: true
