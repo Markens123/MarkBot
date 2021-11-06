@@ -2,6 +2,7 @@ import { exec } from 'child_process';
 import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
+var module = fileURLToPath(import.meta.url);
 
 class UpdateCommand extends BaseCommand {
   constructor(raft) {
@@ -10,26 +11,40 @@ class UpdateCommand extends BaseCommand {
       description: 'Updates to the latest master (make sure .env is still good!)',
       owner: true,
       enabled: true,
+      args: [
+        {
+          name: 'branch',
+          type: 'flag',
+          index: 1,
+          flags: ['--branch', '-b'],
+          default: false
+        },
+        {
+          name: 'reboot',
+          type: 'flag',
+          index: 0,
+          flags: ['--reboot', '-r'],
+          default: false
+
+        }
+      ]
     };
     super(raft, options);
   }
 
-  async run(message: Message, args: string[]) {
-    let branch = false;
-    if (args.includes('--branch') || args.includes('-b')) {
-      if (message.author.id !== '396726969544343554') message.channel.send('Only Markens can change the branch for reasons™️');
-      const index = args.indexOf('--branch') > -1 ? args.indexOf('--branch') : args.indexOf('-b');
-      branch = args[index + 1] as any;
-      args.splice(index, 2);
-      if (message.author.id !== '396726969544343554') branch = false;
-    }
+  async run(message: Message, args: any) {
+    let branch = args.branch;
+    let reboot = args.reboot;
+
     let embed = new MessageEmbed().setColor('BLURPLE');
-    if (branch !== false) {
+
+    if (branch) {
       let { stdout, stderr } = await promiseExec(`git checkout ${branch}`).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
       if (!stdout && !stderr) return;
       embed.setTitle('Branch switched').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
       await message.channel.send({embeds: [embed]});
     }
+
     let { stdout, stderr } = await promiseExec('git pull').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
@@ -43,12 +58,23 @@ class UpdateCommand extends BaseCommand {
     stderr = clean(stderr);
     embed.setTitle('Packages Updated').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
     await message.channel.send({embeds: [embed]});
+    
     ({ stdout, stderr } = await promiseExec('npm run build').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
     let attachment = new MessageAttachment(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), 'transpiled.bash')
     await message.channel.send({files: [attachment]});
+
+    if (reboot) {
+      this.boat.log(module, 'Reboot instruct received');
+
+      await message.channel.send('Rebooting now!').catch(err => {
+        this.boat.log.warn(module, err);
+      });
+
+      this.boat.end(0);
+    }
 
   }
 }
