@@ -27,6 +27,7 @@ class aReloadInteraction extends BaseInteraction {
           if (this.boat.rafts[x].apis) Object.keys(this.boat.rafts[x].apis).forEach(x => a.push(x)) 
         });
         arr = a;
+        break;
       case 'raft': 
         arr = Object.keys(this.boat.rafts);
         break;
