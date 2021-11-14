@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import ffmpegPath from ('@ffmpeg-installer/ffmpeg')
-import ffmpeg from 'fluent-ffmpeg'
+import ffmpegPath from '@ffmpeg-installer/ffmpeg';
+import ffmpeg from 'fluent-ffmpeg';
 import https from 'https';
 import fs from 'fs';
 import { DownloaderHelper } from 'node-downloader-helper';
