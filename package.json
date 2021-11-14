@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@types/node": "^16.4.3",
     "8ball.js": "^1.1.2",
     "app-store-scraper": "^0.16.3",
@@ -21,10 +22,10 @@
     "canvas": "^2.8.0",
     "discord-build-fetcher-js": "^1.0.7",
     "discord.js": "^13.3.0",
-
     "dotenv": "^8.2.0",
     "enmap": "^5.8.4",
     "express": "^4.17.1",
+    "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
     "glob": "^7.1.7",
     "got": "^11.8.1",
@@ -32,6 +33,7 @@
     "imgur": "^0.3.1",
     "is-image-url": "^1.1.8",
     "jsdom": "^16.6.0",
+    "node-downloader-helper": "^1.0.19",
     "node-sauce": "^1.0.5",
     "parse-duration": "^1.0.0",
     "pm2": "^5.1.0",
