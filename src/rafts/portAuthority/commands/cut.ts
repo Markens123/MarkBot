@@ -26,8 +26,14 @@ class CutCommand extends BaseCommand {
           index: 1,
           flags: ['--name', '-n'],
           default: 'video_out.mp4'
-
         },
+        {
+          name: 'url',
+          type: 'flag',
+          index: 1,
+          flags: ['--url', '-u'],
+          default: undefined
+        },        
         {
           name: 'st',
           type: 'string',
@@ -44,8 +50,10 @@ class CutCommand extends BaseCommand {
   }
 
   async run(message: Message, args: any) {
-    if (!message.attachments.first()?.contentType.includes('video')) return message.channel.send('Please use a video attachment!')
-    const url = message.attachments.first().url;
+    if (!message.attachments.first()?.contentType.includes('video') && !args.url) return message.channel.send('Please use a video attachment!')
+    const url = args.url || message.attachments.first().url;
+
+    if (path.extname(url) !== '.mp4') return message.channel.send('Please use a video url!')
 
     const dl = new DownloaderHelper(url , __dirname, { fileName: 'out.mp4' });
   
