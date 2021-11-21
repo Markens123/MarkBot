@@ -53,9 +53,17 @@ class SauceInteraction extends BaseInteraction {
     const out: any = await sauce(url);
 
     if (!interaction.replied) await interaction.reply('Loading Data');
+    
+    const o = {
+      interaction,
+      data,
+      length: out.length,
+      callback: ({ data, offset }) => genEmbed(data, offset),
+      options: { filter, idle: 15000 },
+      editreply: true
+    }
 
-    InteractionPaginator(interaction, out, 0, out.length, ({ data, offset }) => genEmbed(data, offset), { idle: 15000 }, true);
-
+    return Paginator(o)
 
   }
 }

@@ -68,8 +68,17 @@ class MALCommand extends BaseCommand {
 
       rmsg.delete().catch(() => {});
       const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
-      console.log(data.data[0])
-      return Paginator(message, data, offset, data.data.length, ({ data, offset, message }) => genEmbed(data, message, offset), { filter, idle: 15000 })
+
+      const o = {
+        message,
+        data,
+        offset,
+        length: data.data.length,
+        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        options: { filter, idle: 15000 }
+      }
+
+      return Paginator(o)
     }
     if (args[0] === 'search' || args[0] === 's') {
       const offset = 0;
@@ -85,7 +94,16 @@ class MALCommand extends BaseCommand {
       rmsg.delete().catch(() => {});
       const filter = interaction => interaction.user.id === message.author.id;
 
-      return Paginator(message, data, offset, data.data.length, ({ data, offset, message }) => genEmbed(data, message, offset), { filter, idle: 15000 })
+      const o = {
+        message,
+        data,
+        offset,
+        length: data.data.length,
+        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        options: { filter, idle: 15000 }
+      }
+
+      return Paginator(o)
     }
 
     if (args[0] === 'get' || args[0] === 'g') {
@@ -103,7 +121,16 @@ class MALCommand extends BaseCommand {
       rmsg.delete().catch(() => {});
       const filter = interaction => interaction.user.id === message.author.id;
 
-      return Paginator(message, data, offset, data.data.length, ({ data, offset, message }) => genEmbed(data, message, offset), { filter, idle: 15000 })
+      const o = {
+        message,
+        data,
+        offset,
+        length: data.data.length,
+        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        options: { filter, idle: 15000 }
+      }
+
+      return Paginator(o)
 
     }
     const cmd = this.boat.prefix + this.name;

@@ -27,9 +27,16 @@ class SauceCommand extends BaseCommand {
     let out: any = await sauce(url);
 
     const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
+    
+    const o = {
+      message,
+      data,
+      length: out.length,
+      callback: ({ data, offset }) => genEmbed(data, offset),
+      options: { filter, idle: 15000 }
+    }
 
-    Paginator(message, out, 0, out.length, ({ data, offset }) => genEmbed(data, offset), { filter, idle: 15000 });
-
+    return Paginator(o)
   }
 }
 

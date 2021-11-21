@@ -26,8 +26,15 @@ class RemindersCommand extends BaseCommand {
     a = chunckarr(a, 2);
 
     const filter = (interaction) => interaction.user.id === message.author.id;
+    const o = {
+      message,
+      data: a,
+      length: a.length,
+      callback: ({ data, offset }) => genEmbed(data, offset),
+      options: { filter, idle: 15000 }
+    }
 
-    Paginator(message, a, 0, a.length, ({ data, offset }) => genEmbed(data, offset), { filter, idle: 15000 });
+    return Paginator(o)
   }
 
 }
