@@ -56,14 +56,14 @@ class SauceInteraction extends BaseInteraction {
     
     const o = {
       interaction,
-      data,
+      out,
       length: out.length,
       callback: ({ data, offset }) => genEmbed(data, offset),
-      options: { filter, idle: 15000 },
+      options: { idle: 15000 },
       editreply: true
     }
 
-    return Paginator(o)
+    return InteractionPaginator(o)
 
   }
 }
