@@ -56,7 +56,7 @@ class SauceInteraction extends BaseInteraction {
     
     const o = {
       interaction,
-      out,
+      data: out,
       length: out.length,
       callback: ({ data, offset }) => genEmbed(data, offset),
       options: { idle: 15000 },
