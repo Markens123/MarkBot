@@ -1,4 +1,4 @@
-import { ButtonInteraction, MessageActionRow, Snowflake, MessageButton } from 'discord.js';
+import { ButtonInteraction, Snowflake, MessageButton } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 class DeleteInteraction extends BaseInteraction {
@@ -29,16 +29,12 @@ class DeleteInteraction extends BaseInteraction {
 
   generateDefinition(messagea) {
     const customId = `${ComponentFunctions[this.name]}:${messagea}`;
-    return new MessageActionRow({
-      components: [
-        new MessageButton({
-          customId,
-          label: '🗑️',
-          style: 'DANGER',
-        }),
-      ],
-    });
-  }  
+    return new MessageButton({
+      customId,
+      label: '🗑️',
+      style: 'DANGER',
+    })  
+  } 
 }
 
 export default DeleteInteraction;
