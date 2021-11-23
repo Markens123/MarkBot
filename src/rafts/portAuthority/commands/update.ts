@@ -26,16 +26,23 @@ class UpdateCommand extends BaseCommand {
           index: 0,
           flags: ['--reboot', '-r'],
           default: false
-
-        }
+        },
+        {
+          name: 'python',
+          type: 'flag',
+          index: 0,
+          flags: ['--python', '-p'],
+          default: false
+        }        
       ]
     };
     super(raft, options);
   }
 
   async run(message: Message, args: any) {
-    let branch = args.branch;
-    let reboot = args.reboot;
+    const branch = args.branch;
+    const reboot = args.reboot;
+    const python = args.python;
 
     let embed = new MessageEmbed().setColor('BLURPLE');
 
@@ -59,6 +66,15 @@ class UpdateCommand extends BaseCommand {
     stderr = clean(stderr);
     embed.setTitle('Packages Updated').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
     await message.channel.send({embeds: [embed]});
+    
+    if (python) {
+      ({ stdout, stderr } = await promiseExec('npm run i').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
+      if (!stdout && !stderr) return;
+      stdout = clean(stdout);
+      stderr = clean(stderr);
+      let attachment2 = new MessageAttachment(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), 'transpiled.bash')
+      await message.channel.send({files: [attachment2]});    
+    }
 
     ({ stdout, stderr } = await promiseExec('npm run build').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;

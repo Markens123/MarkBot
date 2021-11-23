@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "i": "pip3 install pillow py-cpuinfo validators requests --user && pip3 install torch torchvision --user",
     "start": "node ./build"
   },
   "keywords": [],
