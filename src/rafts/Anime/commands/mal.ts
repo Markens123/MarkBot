@@ -70,6 +70,7 @@ class MALCommand extends BaseCommand {
       const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
 
       const o = {
+        boat: this.boat,
         message,
         data,
         offset,
@@ -95,6 +96,7 @@ class MALCommand extends BaseCommand {
       const filter = interaction => interaction.user.id === message.author.id;
 
       const o = {
+        boat: this.boat,
         message,
         data,
         offset,
@@ -122,6 +124,7 @@ class MALCommand extends BaseCommand {
       const filter = interaction => interaction.user.id === message.author.id;
 
       const o = {
+        boat: this.boat,
         message,
         data,
         offset,

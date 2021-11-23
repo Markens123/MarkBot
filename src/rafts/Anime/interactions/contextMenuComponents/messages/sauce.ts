@@ -55,6 +55,7 @@ class SauceInteraction extends BaseInteraction {
     if (!interaction.replied) await interaction.reply('Loading Data');
     
     const o = {
+      boat: this.boat,
       interaction,
       data: out,
       length: out.length,

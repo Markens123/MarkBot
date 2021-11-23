@@ -1,7 +1,11 @@
-import { ButtonInteraction, MessageActionRow, } from 'discord.js';
-import BaseInteraction from '../../../../BaseInteraction.js';
+import { ButtonInteraction, MessageActionRow, Snowflake, MessageButton } from 'discord.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class DeleteInteraction extends BaseInteraction {
+  
+  definition: (user: Snowflake) => MessageActionRow;
+  name: string;
+
   constructor(raft) {
     const info = {
       name: 'DELETE',
@@ -12,7 +16,7 @@ class DeleteInteraction extends BaseInteraction {
   }
 
   async run(interaction: ButtonInteraction) {
-    const author = interaction.customId.split(':').slice(1);
+    const author = interaction.customId.split(':').slice(1)[0];
 
     if (author == interaction.user.id) {
       if (interaction.message.flags.toArray().includes('EPHEMERAL')) return interaction.reply({ content: "You can't delete an ephemeral message silly but you can dismiss it by clicking 'Dismiss Message' below", ephemeral: true })

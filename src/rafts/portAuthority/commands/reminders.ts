@@ -27,6 +27,7 @@ class RemindersCommand extends BaseCommand {
 
     const filter = (interaction) => interaction.user.id === message.author.id;
     const o = {
+      boat: this.boat,
       message,
       data: a,
       length: a.length,

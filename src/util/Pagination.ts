@@ -1,6 +1,8 @@
 import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil, CommandInteraction } from 'discord.js';
+import { BoatI } from '../../lib/interfaces/Main.js';
 
-export const Paginator = async ({message, data, offset = 0, length = 1, callback, options}: {
+export const Paginator = async ({boat, message, data, offset = 0, length = 1, callback, options}: {
+  boat: BoatI,
   message: Message,
   data: any,
   offset?: number,
@@ -19,7 +21,7 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
     if (!msg.components.length) {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
+      let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
       
       if (currentIndex === 0) back.setDisabled(true)
       if (currentIndex + 1 >= length) next.setDisabled(true)
@@ -39,7 +41,7 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
     collector.on('collect', async (interaction) => {
       const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
       const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-      const del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
+      const del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
 
       interaction.deferUpdate();
 
@@ -58,7 +60,7 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
     collector.on('end', () => {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next').setDisabled(true);
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back').setDisabled(true);
-      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
+      let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
       
       if (length === 1) {
         next = null;
@@ -72,7 +74,8 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
     });
 }
 
-export const InteractionPaginator = async ({interaction, data, offset = 0, length = 1, callback, options, editreply = false}: {
+export const InteractionPaginator = async ({boat, interaction, data, offset = 0, length = 1, callback, options, editreply = false}: {
+  boat: BoatI,
   interaction: any, 
   data: any, 
   offset?: number, 
@@ -98,7 +101,7 @@ export const InteractionPaginator = async ({interaction, data, offset = 0, lengt
     if (!msg.components.length) {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
-      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
+      let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
       
       if (currentIndex === 0) back.setDisabled(true)
       if (currentIndex + 1 >= length) next.setDisabled(true)
@@ -118,7 +121,7 @@ export const InteractionPaginator = async ({interaction, data, offset = 0, lengt
     collector.on('collect', async (int) => {
       const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
       const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
-      const del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
+      const del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
 
       int.deferUpdate();
 
@@ -139,7 +142,7 @@ export const InteractionPaginator = async ({interaction, data, offset = 0, lengt
     collector.on('end', () => {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`).setDisabled(true);
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`).setDisabled(true);
-      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
+      let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
       
       if (length === 1) {
         next = null;
