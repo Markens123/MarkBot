@@ -1,6 +1,7 @@
-import { ContextMenuInteraction } from 'discord.js';
+import { ContextMenuInteraction, MessageActionRow, MessageEmbed, Snowflake, Message, SnowflakeUtil, ButtonInteraction } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
-
+import Identify from '../../../../../util/Identify.js';
+import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 class GuessInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
@@ -75,22 +76,15 @@ function genButtons(num: number, boat: BoatI, code: Snowflake) {
     });
   }
   // @ts-expect-error chunk isn't defined so ye
-  return a.chunk(5);
+  return a.chunkc(5);
 }
-
-Object.defineProperty(Array.prototype, 'chunk', {
-  value: function (chunkSize) {
-    const array = this;
-    return [].concat(...array.map((elem, i) => (i % chunkSize ? [] : new MessageActionRow().addComponents(array.slice(i, i + chunkSize)))));
-  },
-});
 
 function testImage(url) {
   return(url?.match(/\.(jpeg|jpg|webp|png)$/) != null);
 }
 
 function processImage(interaction, url, boat) {
-  identify(url, (output) => {
+  Identify(boat, url, (output) => {
     if (!output.toString().includes("|")) {
       interaction.reply({ content: 'An internal error occurred', ephemeral: true });
       return boat.log.error('Image processing (guess.ts)', output)
@@ -102,12 +96,13 @@ function processImage(interaction, url, boat) {
 
     let embed = new MessageEmbed()
       .setTitle('Neural Network Guess')
+      .setURL('https://github.com/Pabszito/NNTwitterBot')
       .setDescription(`My best guess for the following image is \`${guess}\`, with a confidence of about \`${confidence}\`.`)
       .setImage(url)
       .setColor('RANDOM') 
       .setFooter('Original twitter bot by riscmkv, code by Pabszito#1158, stolen by Markens')
 
-    interaction.editReply({ content: null, embeds: [embed] })
+    interaction.editReply({ content: null, embeds: [embed], components: [] })
   });
 }
 

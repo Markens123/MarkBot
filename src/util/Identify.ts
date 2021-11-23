@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 
-export default identify = (url, callback, boat) => {
-    let proc = exec(`python3 src/scripts/resnext.py ${url}`, { timeout: 20000 }, (error, stdout, stderr) => {
+export default (boat, url, callback) => {
+    let proc = exec(`python src/scripts/resnext.py ${url}`, { timeout: 20000 }, (error, stdout, stderr) => {
         if (!stdout) {
             exec(`kill ${proc.pid}`, (killError, killStdout, killStderr) => {
 
