@@ -1,0 +1,39 @@
+import { ButtonInteraction, MessageActionRow, } from 'discord.js';
+import BaseInteraction from '../../../../BaseInteraction.js';
+
+class DeleteInteraction extends BaseInteraction {
+  constructor(raft) {
+    const info = {
+      name: 'DELETE',
+      enabled: true,
+    };
+    super(raft, info);
+    this.definition = this.generateDefinition.bind(this);
+  }
+
+  async run(interaction: ButtonInteraction) {
+    const author = interaction.customId.split(':').slice(1);
+
+    if (author == interaction.user.id) {
+      if (interaction.message.flags.toArray().includes('EPHEMERAL')) return interaction.reply({ content: "You can't delete an ephemeral message silly but you can dismiss it by clicking 'Dismiss Message' below", ephemeral: true })
+    
+      return interaction.channel.messages.cache.get(interaction.message.id)?.delete().catch(() => {});
+    }
+
+  }
+
+  generateDefinition(messagea) {
+    const customId = `${ComponentFunctions[this.name]}:${messagea}`;
+    return new MessageActionRow({
+      components: [
+        new MessageButton({
+          customId,
+          label: '🗑️',
+          style: 'DANGER',
+        }),
+      ],
+    });
+  }  
+}
+
+export default DeleteInteraction;

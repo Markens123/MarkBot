@@ -19,7 +19,7 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
     if (!msg.components.length) {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-      let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${message.author.id}`);
+      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
       
       if (currentIndex === 0) back.setDisabled(true)
       if (currentIndex + 1 >= length) next.setDisabled(true)
@@ -39,7 +39,7 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
     collector.on('collect', async (interaction) => {
       const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
       const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
-      const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${message.author.id}`);
+      const del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
 
       interaction.deferUpdate();
 
@@ -58,7 +58,7 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
     collector.on('end', () => {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next').setDisabled(true);
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back').setDisabled(true);
-      let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${message.author.id}`);
+      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
       
       if (length === 1) {
         next = null;
@@ -98,7 +98,7 @@ export const InteractionPaginator = async ({interaction, data, offset = 0, lengt
     if (!msg.components.length) {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
-      let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${interaction.user.id}`);
+      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
       
       if (currentIndex === 0) back.setDisabled(true)
       if (currentIndex + 1 >= length) next.setDisabled(true)
@@ -118,7 +118,7 @@ export const InteractionPaginator = async ({interaction, data, offset = 0, lengt
     collector.on('collect', async (int) => {
       const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
       const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
-      const del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${interaction.user.id}`);
+      const del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
 
       int.deferUpdate();
 
@@ -139,7 +139,7 @@ export const InteractionPaginator = async ({interaction, data, offset = 0, lengt
     collector.on('end', () => {
       let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`).setDisabled(true);
       let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`).setDisabled(true);
-      let del = new MessageButton().setLabel('🗑️').setStyle('DANGER').setCustomId(`collector:delete:${interaction.user.id}`);
+      let del = this.boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
       
       if (length === 1) {
         next = null;

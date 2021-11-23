@@ -39,7 +39,7 @@ export const DiscordColors = {
   DEEP_GOLD: 0xffab32,
 };
 
-export const ComponentFunctions = createEnum([]);
+export const ComponentFunctions = createEnum(['DELETE']);
 
 function createEnum(keys) {
   const obj = {};
