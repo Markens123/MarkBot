@@ -3,8 +3,8 @@ import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionR
 export const Paginator = async ({message, data, offset = 0, length = 1, callback, options}: {
   message: Message,
   data: any,
-  offset: number,
-  length: number,
+  offset?: number,
+  length?: number,
   callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any,
   options: InteractionCollectorOptions<ButtonInteraction>
   }) => {
@@ -75,11 +75,11 @@ export const Paginator = async ({message, data, offset = 0, length = 1, callback
 export const InteractionPaginator = async ({interaction, data, offset = 0, length = 1, callback, options, editreply = false}: {
   interaction: any, 
   data: any, 
-  offset: number, 
-  length: number, 
+  offset?: number, 
+  length?: number, 
   callback: ({ data, offset, interaction }: { data: any, offset: number, interaction?: CommandInteraction }) => any, 
   options: InteractionCollectorOptions<ButtonInteraction>, 
-  editreply: boolean = false
+  editreply?: boolean
   }) => {
     let currentIndex = offset;
     const code = SnowflakeUtil.generate();

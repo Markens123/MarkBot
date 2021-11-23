@@ -30,7 +30,7 @@ class SauceCommand extends BaseCommand {
     
     const o = {
       message,
-      data,
+      data: out,
       length: out.length,
       callback: ({ data, offset }) => genEmbed(data, offset),
       options: { filter, idle: 15000 }
