@@ -1,9 +1,10 @@
 import { ButtonInteraction, Snowflake, MessageButton } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
+
 class DeleteInteraction extends BaseInteraction {
   
-  definition: (user: Snowflake) => MessageActionRow;
+  definition: (user: Snowflake) => MessageButton;
   name: string;
 
   constructor(raft) {
