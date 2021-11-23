@@ -42,13 +42,13 @@ class GuessInteraction extends BaseInteraction {
       if (!(col instanceof Error)) {
         url = a[col.customId.split(':')[1]];
         col.deferUpdate();
-        message.channel.messages.cache.get(col.message.id)?.edit({ content: 'Loading Data', components: [] })
+        message.channel.messages.cache.get(col.message.id)?.edit({ content: 'Loading Data <a:Loading:400844245105246230>', components: [] })
       } else return;
     }
 
     if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true });
 
-    if (!interaction.replied) await interaction.reply('Loading Data');
+    if (!interaction.replied) await interaction.reply('Loading Data <a:Loading:400844245105246230>');
 
     return processImage(interaction, url, this.boat)
 
