@@ -1,6 +1,6 @@
 const buttons: any = {};
 
-buttons.delete = (await import('./delete.js')).default;
+buttons.DELETE = (await import('./delete.js')).default;
 
 
 export default buttons;
