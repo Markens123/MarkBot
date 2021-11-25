@@ -42,15 +42,8 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
     }
   }
   if (!handler) {
-    if (interaction.customId?.split(':')[0] === 'collector') {
-      if (interaction.customId?.split(':')[1] === 'delete' && interaction.customId?.split(':')[2] === interaction.user.id) {
-        //@ts-ignore
-        if (interaction.message.flags.toArray().includes('EPHEMERAL')) return interaction.reply({ content: "You can't delete an ephemeral message silly but you can dismiss it by clicking 'Dismiss Message' below", ephemeral: true })
-        
-        interaction.channel.messages.cache.get(interaction.message.id)?.delete().catch(() => {});
-      }
-      return;
-    }
+    if (interaction.customId?.split(':')[0] === 'collector') return;
+    
     interaction.reply({ content: 'This command has no associated action! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
     return;
   }
