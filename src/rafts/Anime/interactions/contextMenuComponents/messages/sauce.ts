@@ -55,6 +55,8 @@ class SauceInteraction extends BaseInteraction {
     const out: any = await sauce(url);
 
     if (!interaction.replied) await interaction.reply('Loading Data');
+
+    if (!out.length) return interaction.editReply('No sauce found for that image')
     
     const o = {
       boat: this.boat,

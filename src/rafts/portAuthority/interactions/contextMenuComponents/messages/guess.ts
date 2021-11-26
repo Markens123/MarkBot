@@ -86,7 +86,7 @@ function testImage(url) {
 function processImage(interaction, url, boat) {
   Identify(boat, url, (output) => {
     if (!output.toString().includes("|")) {
-      interaction.reply({ content: 'An internal error occurred', ephemeral: true });
+      interaction.editReply({ content: 'An internal error occurred', ephemeral: true });
       return boat.log.error('Image processing (guess.ts)', output)
     }
 
