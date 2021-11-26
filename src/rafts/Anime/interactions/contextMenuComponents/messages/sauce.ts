@@ -4,6 +4,8 @@ const sauce = new nsauce(process.env.SAUCE_API_KEY);
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import { InteractionPaginator } from '../../../../../util/Pagination.js';
+import getHTML from 'html-get';
+
 class SauceInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
@@ -75,12 +77,38 @@ function genEmbed(data, offset) {
   const embed = new MessageEmbed();
 
   if (info.source) embed.addField('Title', info.source);
+  
   embed
     .setTitle('Sauce found')
     .setImage(info.thumbnail)
     .addField('Similarity', info.similarity)
     .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
 
+  if (info.ext_urls) {
+    for (let i = 0; i < info.ext_urls.length; i++) {
+
+      if (info.ext_urls[i].contains('https://anidb.net/anime')) {
+
+        let { html } = await getHTML(info.ext_urls[i]);
+        let start = html.indexOf('https://myanimelist.net/anime/');
+        
+        if (start >= 0) {
+          let link = '';
+
+          let check = true;
+
+          for (let j = 0; check; j++) {
+            if (html[start+j] == '"' || j > 20) t = false;
+            else link += html[start+j];
+          }
+
+          info.ext_urls.push(link)
+
+        }
+      }
+      
+    }
+  }
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
 
