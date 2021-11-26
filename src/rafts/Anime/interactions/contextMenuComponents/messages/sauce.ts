@@ -61,7 +61,7 @@ class SauceInteraction extends BaseInteraction {
       interaction,
       data: out,
       length: out.length,
-      callback: async ({ data, offset }) => await genEmbed(data, offset),
+      callback: async ({ data, offset }) => {await genEmbed(data, offset)},
       options: { idle: 15000 },
       editreply: true
     }
@@ -109,6 +109,7 @@ async function genEmbed(data, offset) {
       
     }
   }
+
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
 
