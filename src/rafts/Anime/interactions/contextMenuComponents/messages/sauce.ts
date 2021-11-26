@@ -61,7 +61,7 @@ class SauceInteraction extends BaseInteraction {
       interaction,
       data: out,
       length: out.length,
-      callback: async ({ data, offset }) => {await genEmbed(data, offset)},
+      callback: async ({ data, offset }) => await genEmbed(data, offset),
       options: { idle: 15000 },
       editreply: true
     }

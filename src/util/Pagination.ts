@@ -52,7 +52,7 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
 
       const row = new MessageActionRow().addComponents(back, next, del);
 
-      const e = callback({ data, offset: currentIndex, message });
+      const e = await callback({ data, offset: currentIndex, message });
 
       msg.edit({ embeds: [e], components: [row] }).catch(() => {});
     });
@@ -132,7 +132,7 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
 
       const row = new MessageActionRow().addComponents(back, next, del);
 
-      const e = callback({ data, offset: currentIndex, interaction });
+      const e = await callback({ data, offset: currentIndex, interaction });
 
 
       if (editreply) interaction.editReply({ embeds: [e], components: [row] }).catch(() => {})
