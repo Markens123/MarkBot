@@ -96,10 +96,11 @@ async function genEmbed(data, offset) {
           let link = '';
 
           let check = true;
-
-          for (let j = 0; check; j++) {
+          let j = 0
+          while (check) {
             if (html[start+j] == '"' || j > 20) check = false;
             else link += html[start+j];
+            j++
           }
 
           info.ext_urls.push(link)
