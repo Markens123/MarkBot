@@ -86,11 +86,10 @@ async function genEmbed(data, offset) {
 
   if (info.ext_urls) {
     for (let i = 0; i < info.ext_urls.length; i++) {
-      console.log(info.ext_urls)
-      if (info.ext_urls[i].contains('https://anidb.net/anime')) {
+
+      if (info.ext_urls[i].includes('https://anidb.net/anime')) {
 
         let { html } = await getHTML(info.ext_urls[i], { getBrowserless: import('browserless') });
-        console.log(html)
         let start = html.indexOf('https://myanimelist.net/anime/');
 
         if (start >= 0) {
