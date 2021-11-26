@@ -61,7 +61,7 @@ class SauceInteraction extends BaseInteraction {
       interaction,
       data: out,
       length: out.length,
-      callback: async ({ data, offset }) => await genEmbed(data, offset),
+      callback: ({ data, offset }) => genEmbed(data, offset),
       options: { idle: 15000 },
       editreply: true
     }
@@ -71,7 +71,7 @@ class SauceInteraction extends BaseInteraction {
   }
 }
 
-async function genEmbed(data, offset) {
+function genEmbed(data, offset) {
   const info = data[offset];
 
   const embed = new MessageEmbed();
@@ -83,33 +83,6 @@ async function genEmbed(data, offset) {
     .setImage(info.thumbnail)
     .addField('Similarity', info.similarity)
     .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
-
-  if (info.ext_urls) {
-    for (let i = 0; i < info.ext_urls.length; i++) {
-
-      if (info.ext_urls[i].includes('https://anidb.net/anime')) {
-
-        let { html } = await getHTML(info.ext_urls[i], { getBrowserless: import('browserless') });
-        let start = html.indexOf('https://myanimelist.net/anime/');
-
-        if (start >= 0) {
-          let link = '';
-
-          let check = true;
-          let j = 0
-          while (check) {
-            if (html[start+j] == '"' || j > 20) check = false;
-            else link += html[start+j];
-            j++
-          }
-
-          info.ext_urls.push(link)
-
-        }
-      }
-      
-    }
-  }
 
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
