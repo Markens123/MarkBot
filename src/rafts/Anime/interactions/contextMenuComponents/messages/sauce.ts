@@ -89,7 +89,7 @@ async function genEmbed(data, offset) {
 
       if (info.ext_urls[i].contains('https://anidb.net/anime')) {
 
-        let { html } = await getHTML(info.ext_urls[i]);
+        let { html } = await getHTML(info.ext_urls[i], { getBrowserless: import('browserless') });
         let start = html.indexOf('https://myanimelist.net/anime/');
 
         if (start >= 0) {
