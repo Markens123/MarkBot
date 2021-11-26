@@ -61,7 +61,7 @@ class SauceInteraction extends BaseInteraction {
       interaction,
       data: out,
       length: out.length,
-      callback: ({ data, offset }) => genEmbed(data, offset),
+      callback: async ({ data, offset }) => await genEmbed(data, offset),
       options: { idle: 15000 },
       editreply: true
     }
@@ -71,7 +71,7 @@ class SauceInteraction extends BaseInteraction {
   }
 }
 
-function genEmbed(data, offset) {
+async function genEmbed(data, offset) {
   const info = data[offset];
 
   const embed = new MessageEmbed();
@@ -91,14 +91,14 @@ function genEmbed(data, offset) {
 
         let { html } = await getHTML(info.ext_urls[i]);
         let start = html.indexOf('https://myanimelist.net/anime/');
-        
+
         if (start >= 0) {
           let link = '';
 
           let check = true;
 
           for (let j = 0; check; j++) {
-            if (html[start+j] == '"' || j > 20) t = false;
+            if (html[start+j] == '"' || j > 20) check = false;
             else link += html[start+j];
           }
 
