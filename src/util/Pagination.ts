@@ -12,7 +12,7 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
   }) => {
     let currentIndex = offset;
     
-    const embed = callback({ data, offset: currentIndex, message });
+    const embed = await callback({ data, offset: currentIndex, message });
 
     const msg = await message.channel.send({ embeds: [embed] });
 
@@ -87,7 +87,7 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
     let currentIndex = offset;
     const code = SnowflakeUtil.generate();
 
-    const embed = callback({ data, offset: currentIndex, interaction });
+    const embed = await callback({ data, offset: currentIndex, interaction });
     let msg: Message;
 
 

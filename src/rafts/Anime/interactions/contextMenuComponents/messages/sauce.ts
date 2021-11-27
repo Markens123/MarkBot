@@ -1,11 +1,10 @@
-import { MessageActionRow, ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake, ContextMenuInteraction } from 'discord.js';
+import { ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake, ContextMenuInteraction } from 'discord.js';
 import nsauce from 'node-sauce';
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import { InteractionPaginator } from '../../../../../util/Pagination.js';
-import getHTML from 'html-get';
-
+import got from 'got' 
 class SauceInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
@@ -63,7 +62,7 @@ class SauceInteraction extends BaseInteraction {
       interaction,
       data: out,
       length: out.length,
-      callback: ({ data, offset }) => genEmbed(data, offset),
+      callback: async ({ data, offset }) => await genEmbed(data, offset),
       options: { idle: 15000 },
       editreply: true
     }
@@ -73,7 +72,7 @@ class SauceInteraction extends BaseInteraction {
   }
 }
 
-function genEmbed(data, offset) {
+async function genEmbed(data, offset) {
   const info = data[offset];
 
   const embed = new MessageEmbed();
@@ -85,6 +84,18 @@ function genEmbed(data, offset) {
     .setImage(info.thumbnail)
     .addField('Similarity', info.similarity)
     .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
+
+  if (info.ext_urls.length) {
+    for (let i = 0; i < info.ext_urls.length; i++) {
+      if (info.ext_urls[i].includes('https://anidb.net/anime/')) {
+      
+        let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=anidb&id=${info.ext_urls[i].replace('https://anidb.net/anime/', '')}`);
+        body = JSON.parse(body);
+        
+        info.ext_urls.push(`https://myanimelist.net/anime/${body.myanimelist}`)
+      }
+    }
+  }
 
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));

@@ -1,9 +1,10 @@
-import { MessageEmbed, Message, ButtonInteraction } from 'discord.js';
+import { MessageEmbed, Message, ButtonInteraction, SnowflakeUtil, Snowflake } from 'discord.js';
 import nsauce from 'node-sauce';
 import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
-import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import { BoatI, CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Pagination.js';
+import got from 'got';
 let sauce = new nsauce(process.env.SAUCE_API_KEY);
 
 class SauceCommand extends BaseCommand {
@@ -19,10 +20,41 @@ class SauceCommand extends BaseCommand {
 
   async run(message: Message, args: any) {
     let url = '';    
-    if (message.attachments.size > 0) url = message.attachments.first().url
-    else if (message.embeds.length > 0 && message.embeds[0].type == 'image') url = message.embeds[0].thumbnail.url
-    else if (args && isImageUrl(args[0])) url = args[0]
-    if (!url) return message.channel.send('Please provide a valid image url or image attachment!')
+    let a = [];
+
+    if (isImageUrl(args[0])) a.push(args[0]);
+    
+    if (message.attachments.size > 0) {
+      message.attachments.forEach(i => {
+        if (i.contentType?.includes('image')) a.push(i.url);
+      });
+    }
+    if (message.embeds.length > 0) {
+      message.embeds.forEach(async i => {
+        if (isImageUrl(i.url)) a.push(i.url)
+        if (i.image) a.push(i.image.url)
+        if (i.thumbnail) a.push(i.thumbnail.url)
+      })
+    }
+    a = [...new Set(a)]
+    
+    if (a.length === 1) url = a[0];
+    else if (a.length > 0) {
+      const code = SnowflakeUtil.generate();
+      const components = genButtons(a.length, this.boat, code);
+      const filter = i => i.user.id === message.author.id && i.customId.split(':')[2] === code;
+
+      await message.channel.send({ content: `There are ${a.length} images on that message which image would you like to get sauce for?`, components });
+      
+      const col = await message.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 5000 }).catch(err => err) as ButtonInteraction;
+      if (!(col instanceof Error)) {
+        url = a[col.customId.split(':')[1]];
+        col.deferUpdate();
+        message.channel.messages.cache.get(col.message.id)?.delete().catch(err => err)
+      } else return;
+    }
+
+    if (!url) return message.channel.send('Please provide a valid image url or image attachment!');    
     
     let out: any = await sauce(url);
 
@@ -33,7 +65,7 @@ class SauceCommand extends BaseCommand {
       message,
       data: out,
       length: out.length,
-      callback: ({ data, offset }) => genEmbed(data, offset),
+      callback: async ({ data, offset }) => await genEmbed(data, offset),
       options: { filter, idle: 15000 }
     }
 
@@ -41,16 +73,30 @@ class SauceCommand extends BaseCommand {
   }
 }
 
-function genEmbed(data, offset) {
-  let info = data[offset]
-  
+async function genEmbed(data, offset) {
+  const info = data[offset];
+
   const embed = new MessageEmbed();
 
   if (info.source) embed.addField('Title', info.source);
-  embed.setTitle('Sauce found')
-  .setImage(info.thumbnail)
-  .addField('Similarity', info.similarity)
-  .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
+  
+  embed
+    .setTitle('Sauce found')
+    .setImage(info.thumbnail)
+    .addField('Similarity', info.similarity)
+    .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
+
+  if (info.ext_urls.length) {
+    for (let i = 0; i < info.ext_urls.length; i++) {
+      if (info.ext_urls[i].includes('https://anidb.net/anime/')) {
+      
+        let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=anidb&id=${info.ext_urls[i].replace('https://anidb.net/anime/', '')}`);
+        body = JSON.parse(body);
+        
+        info.ext_urls.push(`https://myanimelist.net/anime/${body.myanimelist}`)
+      }
+    }
+  }
 
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
@@ -58,6 +104,28 @@ function genEmbed(data, offset) {
   return embed;
 }
 
+function genButtons(num: number, boat: BoatI, code: Snowflake) {
+  if (num > 10) {
+    boat.log.warn('Sauce interaction/Gen Buttons function', 'The provided number was over 10');
+    num = 10;
+  }
+
+  const a = [];
+
+  for (let i = 0; i < num; i++) {
+    a.push({
+      type: 'BUTTON',
+      label: i + 1,
+      customId: `collector:${i}:${code}`,
+      style: 'PRIMARY',
+      emoji: null,
+      url: null,
+      disabled: false,
+    });
+  }
+  // @ts-expect-error chunk isn't defined so ye
+  return a.chunkc(5);
+}
 
 
 export default SauceCommand;
