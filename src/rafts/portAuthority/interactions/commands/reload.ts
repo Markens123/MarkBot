@@ -113,7 +113,7 @@ class ReloadInteraction extends BaseInteraction {
         const keys = Object.keys(this.boat.rafts);
         keys.forEach(x => {
           if (this.boat.rafts[x].apis) {
-            if (Object.keys(this.boat.rafts[x].apis).includes('oauth')) raft = this.boat.rafts[x]
+            if (Object.keys(this.boat.rafts[x].apis).includes(thing)) raft = this.boat.rafts[x]
           }
         }); 
         tn = thing;
@@ -137,7 +137,7 @@ class ReloadInteraction extends BaseInteraction {
 
     if (type === 'raft') {
       try {
-        const raft = (await import(`${this.boat.options.basepath}/rafts/index.js`)).default[tn];
+        const raft = (await import(`${this.boat.options.basepath}/rafts/index.js?id=${Math.random().toString(36).substring(3)}`)).default[tn];
         this.boat.launchRaft(raft, tn);
 
         return interaction.reply({ content: `You have succesfully reloaded the raft ${tn}.`, ephemeral: true })
@@ -151,7 +151,7 @@ class ReloadInteraction extends BaseInteraction {
     if (type === 'event') {
       try {
         client.removeAllListeners(tn)
-        const event = (await import(`${this.boat.options.basepath}/events/index.js`)).default[tn];
+        const event = (await import(`${this.boat.options.basepath}/events/index.js?id=${Math.random().toString(36).substring(3)}`)).default[tn];
         this.boat.events[tn] = event;
 
         this.boat.listen(tn, event)
