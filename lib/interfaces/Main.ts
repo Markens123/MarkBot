@@ -50,20 +50,21 @@ export interface CommandOptions {
   threads?: boolean | 'only';
   args?: ArgI[] | false;
   channels?: Snowflake[] | false;
+  guilds?: Snowflake[] | false;
   aliases?: string[] | false;
   cooldown?: number | false;
   permissions?: PermissionResolvable | false;
 }
 
 export interface BoatOptions {
-    debug: boolean;
-    token: string;
-    clientOpts: ClientOptions;
-    owners: Snowflake[];
-    commandPrefix?: string;
-    log?: LogOptions;
-    basepath?: any;
-    tokens?: any;
+  debug: boolean;
+  token: string;
+  clientOpts: ClientOptions;
+  owners: Snowflake[];
+  commandPrefix?: string;
+  log?: LogOptions;
+  basepath?: any;
+  tokens?: any;
 }
 
 export interface RaftI {
@@ -87,25 +88,25 @@ export interface ArgI {
 }
 
 export interface LogOptions {
-    maxLevel?: LogLevel;
-    outputFile: string;
-    verbose: boolean;
-    webhookToken: string;
+  maxLevel?: LogLevel;
+  outputFile: string;
+  verbose: boolean;
+  webhookToken: string;
 }
 
 export type LogLevel = {
-    console: {
-        critical: 0,
-        error: 1,
-        warn: 2,
-        info: 3,
-        debug: 4,
-        verbose: 5,
-      },
-      webhook: {
-        error: 'BRIGHT_RED',
-        warn: 'DEEP_GOLD',
-      }
+  console: {
+      critical: 0,
+      error: 1,
+      warn: 2,
+      info: 3,
+      debug: 4,
+      verbose: 5,
+    },
+    webhook: {
+      error: 'BRIGHT_RED',
+      warn: 'DEEP_GOLD',
+    }
 }
 
 export interface UpdatesFile {

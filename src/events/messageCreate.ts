@@ -48,7 +48,14 @@ export default async (boat: BoatI, message: Message) => {
     if (!authorPerms || !authorPerms.has(handler.permissions)) {
         return message.reply("You don't have the required permissions for this command!");
     }
-  }  
+  }
+
+  if (handler.owner && !boat.owners.includes(message.author.id)) return;
+
+  if (handler.channels && !handler.channels.includes(message.channel.id)) return;
+
+  if (handler.guilds && !handler.guilds.includes(message.guild.id)) return;
+
   // Cooldown stuff
   const { cooldowns } = boat.client;
 
@@ -70,9 +77,7 @@ export default async (boat: BoatI, message: Message) => {
   setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
   // End cooldown stuff 
 
-  if (handler.owner && !boat.owners.includes(message.author.id)) return;
 
-  if (handler.channels && !handler.channels.includes(message.channel.id)) return;
   if (handler.args) {
     let newargs = {};
     let count = 0

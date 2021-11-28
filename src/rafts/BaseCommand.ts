@@ -12,6 +12,7 @@ class BaseCommand {
   threads: boolean | 'only';
   args: ArgI[] | false;
   channels: Snowflake[] | false;
+  guilds: Snowflake[] | false;
   aliases: string[] | false;
   cooldown: number | false;
   permissions: PermissionResolvable | false;
@@ -97,6 +98,13 @@ class BaseCommand {
      * @type {Snowflake[]}
      */
     this.channels = options.channels ?? false;
+
+    /**
+     * Which guilds can use this command
+     * @type {Snowflake[]}
+     */
+     this.guilds = options.guilds ?? false;
+
 
     /**
      * The aliases for this command
