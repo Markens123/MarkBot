@@ -41,10 +41,10 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
         break;
     }
   }
-  if (!handler) {
+  if (!handler || !handler.enabled) {
     if (interaction.customId?.split(':')[0] === 'collector') return;
     
-    interaction.reply({ content: 'This command has no associated action! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
+    interaction.reply({ content: 'This command has no associated action (or is disabled)! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
     return;
   }
 
