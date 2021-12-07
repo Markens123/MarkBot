@@ -14,6 +14,7 @@ commands.ephemeral = (await import('./ephemeral.js')).default;
 commands.schedule = (await import('./schedule.js')).default;
 commands.reload = (await import('./reload.js')).default;
 commands.banner = (await import('./banner.js')).default;
-
+commands.enable = (await import('./enable.js')).default;
+commands.disable = (await import('./disable.js')).default;
 
 export default commands;
