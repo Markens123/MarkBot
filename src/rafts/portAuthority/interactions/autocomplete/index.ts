@@ -1,5 +1,5 @@
 const interactions: any = {};
 
-interactions.reload = (await import('./reload.js')).default;
+interactions.things = (await import('./things.js')).default;
 
 export default interactions;

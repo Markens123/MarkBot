@@ -70,7 +70,6 @@ class BaseRaft {
       ((command, name) => {
         if (!(this.commands instanceof Collection)) this.commands = new Collection();
         const instance = new command(this);
-        if (!instance.enabled) return;
         this.commands.set(name, instance);
       }).bind(this),
     );
@@ -83,7 +82,6 @@ class BaseRaft {
         ((interaction, name) => {
           if (!(this.interactions[catName] instanceof Collection)) this.interactions[catName] = new Collection();
           const instance = new interaction(this);
-          if (!instance.enabled) return;
           this.interactions[catName].set(name, instance);
         }).bind(this),
       );

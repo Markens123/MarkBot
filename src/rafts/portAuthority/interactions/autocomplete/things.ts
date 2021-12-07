@@ -1,12 +1,11 @@
 import { AutocompleteInteraction } from 'discord.js';
-import { BoatI } from '../../../../../lib/interfaces/Main.js';
-import messageCreate from '../../../../events/messageCreate.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
-class aReloadInteraction extends BaseInteraction {
+class ThingsInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
-      name: 'reload',
+      name: 'things',
+      commands: ['reload', 'enable', 'disable']
     };
     super(raft, info);
   }
@@ -79,4 +78,4 @@ function AtoResp(arr: any[], count = 0) {
   return ret;
 }
 
-export default aReloadInteraction;
+export default ThingsInteraction;

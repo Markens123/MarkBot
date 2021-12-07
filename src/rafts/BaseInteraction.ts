@@ -4,6 +4,7 @@ import BaseCommand from './BaseCommand.js';
 class BaseInteraction extends BaseCommand {
   guild?: Snowflake | Snowflake[];
   definition: any;
+  commands: string[];
 
   constructor(boat, options) {
     super(boat, options);
@@ -21,6 +22,12 @@ class BaseInteraction extends BaseCommand {
      * @type {Object|Function?}
      */
     this.definition = options.definition;
+
+    /**
+     * The definition for this interaction that gets passed to discord to register / send it
+     * @type {string[]}
+     */
+     this.commands = options.commands;    
   }
 
   /**

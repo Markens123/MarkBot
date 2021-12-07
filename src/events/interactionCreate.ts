@@ -7,13 +7,15 @@ const module = fileURLToPath(import.meta.url);
 
 export default async (boat: BoatI, interaction: MessageComponentInteraction) => {
   let handler;
+  let name;
   // Check for handler
   if (interaction.isCommand()) {
     handler = boat.interactions.commands.get(interaction.commandName);
   }
 
   if (interaction.isAutocomplete()) {
-    handler = boat.interactions.autocomplete.get(interaction.commandName)
+    name = boat.interactions.autocomplete.map(i => i.commands.includes(interaction.commandName) ? i.name : null)[0];
+    handler = boat.interactions.autocomplete.get(name);
   }
 
   if (interaction.isContextMenu()) {
@@ -31,7 +33,7 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
       interaction.reply({content: 'You think you are sneaky huh, well, no such luck here!', ephemeral: true });
       return;
     }
-    const name = ComponentFunctions[Number(interaction.customId.split(':')[0])];
+    name = ComponentFunctions[Number(interaction.customId.split(':')[0])];
     switch (interaction.componentType) {
       case 'BUTTON':
         handler = boat.interactions.buttonComponents.get(name);
@@ -41,10 +43,11 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
         break;
     }
   }
-  if (!handler) {
+  if (!handler || !handler.enabled) {
     if (interaction.customId?.split(':')[0] === 'collector') return;
-    
-    interaction.reply({ content: 'This command has no associated action! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
+    if (interaction.isAutocomplete()) return;
+
+    interaction.reply({ content: 'This command has no associated action (or is disabled)! Please contact the developer if it is supposed to be doing something!', ephemeral: true });
     return;
   }
 

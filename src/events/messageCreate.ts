@@ -37,6 +37,8 @@ export default async (boat: BoatI, message: Message) => {
   }
   if (!message.channel.isText()) return;
 
+  if (!handler.enabled) return;
+
   if (message.channel.type !== 'DM' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!');
   if (message.channel.type === 'DM' && !handler.dms) return;
 
