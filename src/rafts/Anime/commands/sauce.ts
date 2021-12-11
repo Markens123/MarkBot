@@ -86,7 +86,7 @@ async function genEmbed(data, offset) {
     .addField('Similarity', info.similarity)
     .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
 
-  if (info.ext_urls.length) {
+  if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
     for (let i = 0; i < info.ext_urls.length; i++) {
       if (info.ext_urls[i].includes('https://anidb.net/anime/')) {
       
