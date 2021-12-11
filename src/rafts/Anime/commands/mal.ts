@@ -1,8 +1,7 @@
 import { MessageEmbed, Message, ButtonInteraction } from 'discord.js';
-import axios from 'axios';
 import BaseCommand from '../../BaseCommand.js';
 import { ClientI, CommandOptions, RaftI } from '../../../../lib/interfaces/Main.js';
-import { Paginator } from '../../../util/Pagination.js';
+import { Paginator } from '../../../util/Buttons.js';
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
@@ -68,7 +67,7 @@ class MALCommand extends BaseCommand {
 
       rmsg.delete().catch(() => {});
       const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
-
+      
       const o = {
         boat: this.boat,
         message,

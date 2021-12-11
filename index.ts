@@ -2,7 +2,7 @@ import { Intents } from 'discord.js';
 import express from 'express';
 import 'dotenv/config'
 import shipyard from './src/boat.js';
-import { BoatOptions  } from './lib/interfaces/Main.js';
+import { BoatOptions } from './lib/interfaces/Main.js';
 
 
 

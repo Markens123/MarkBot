@@ -153,6 +153,7 @@ class Boat implements BoatI {
       this.client[key] = value;
     }
     this.client.maldata.ensure('states', {});
+    this.client.maldata.ensure('queue', []);
     
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }

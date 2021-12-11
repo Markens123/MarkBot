@@ -3,8 +3,9 @@ import nsauce from 'node-sauce';
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
-import { InteractionPaginator } from '../../../../../util/Pagination.js';
-import got from 'got' 
+import { InteractionPaginator } from '../../../../../util/Buttons.js';
+import got from 'got';
+
 class SauceInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {

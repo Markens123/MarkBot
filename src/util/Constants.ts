@@ -1,6 +1,19 @@
 import getHTML from 'html-get';
 import { JSDOM } from 'jsdom';
 
+export const AniQueue = (arr: string[] | []): string => {
+  let content = '';
+
+  if (!arr.length) content = 'The queue is currently empty please add something to it using the + button below.'
+  else {
+    for (let i = 0; i < arr.length; i++) {
+      content += `[${i}] ${arr[i]}\n`
+    }
+  }
+
+  return content;
+}
+
 export const checkTF = async (url: string): Promise<{ full: boolean; title: string; }> => {
   const { html } = await getHTML(url);
   const dom = new JSDOM(html);
@@ -39,7 +52,7 @@ export const DiscordColors = {
   DEEP_GOLD: 0xffab32,
 };
 
-export const ComponentFunctions = createEnum(['DELETE']);
+export const ComponentFunctions = createEnum(['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER']);
 
 function createEnum(keys) {
   const obj = {};

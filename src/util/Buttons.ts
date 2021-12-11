@@ -156,3 +156,33 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
 
     });
 }
+
+export const YesNo = async (message: Message, content: string): Promise<boolean | null> => {
+  const yes = new MessageButton().setStyle('SUCCESS').setCustomId(`collector:yes`).setLabel('Yes');
+  const no = new MessageButton().setStyle('DANGER').setCustomId(`collector:no`).setLabel('No');
+  const row = new MessageActionRow().addComponents(yes, no);
+
+  const msg = await message.channel.send({content, components: [row]})
+  const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
+  
+  const options = { 
+    filter,
+    idle: 15000 
+  }
+
+  try {
+    const int = await msg.awaitMessageComponent(options);
+
+    if (!(int instanceof Error)) {
+      msg.delete().catch(() => {});
+
+      if (int.customId === 'collector:yes') return true
+      else return false
+    
+    } else return null;
+
+  } catch(error) {
+    msg.delete().catch(() => {});
+    return null
+  }
+}

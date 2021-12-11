@@ -65,6 +65,7 @@ export interface BoatOptions {
   log?: LogOptions;
   basepath?: any;
   tokens?: any;
+  channels?: any;
 }
 
 export interface RaftI {

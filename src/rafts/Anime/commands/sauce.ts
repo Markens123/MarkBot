@@ -3,7 +3,7 @@ import nsauce from 'node-sauce';
 import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
 import { BoatI, CommandOptions } from '../../../../lib/interfaces/Main.js';
-import { Paginator } from '../../../util/Pagination.js';
+import { Paginator } from '../../../util/Buttons.js';
 import got from 'got';
 let sauce = new nsauce(process.env.SAUCE_API_KEY);
 

@@ -1,7 +1,8 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import { Paginator } from '../../../util/Pagination.js';
+import { Paginator } from '../../../util/Buttons.js';
 import BaseCommand from  '../../BaseCommand.js';
+
 class RemindersCommand extends BaseCommand {
   constructor(boat) {
     const options: CommandOptions = {
