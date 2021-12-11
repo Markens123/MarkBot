@@ -86,8 +86,8 @@ async function genEmbed(data, offset) {
     .addField('Similarity', info.similarity)
     .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
 
-  if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
-    for (let i = 0; i < info.ext_urls.length; i++) {
+    if (info.ext_urls.length && !info.ext_urls.some(l => l && l.includes('myanimelist.net'))) {
+      for (let i = 0; i < info.ext_urls.length; i++) {
       if (info.ext_urls[i].includes('https://anidb.net/anime/')) {
       
         let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=anidb&id=${info.ext_urls[i].replace('https://anidb.net/anime/', '')}`);
