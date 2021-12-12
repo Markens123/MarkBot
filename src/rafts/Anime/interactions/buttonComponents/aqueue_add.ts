@@ -1,4 +1,4 @@
-import { ButtonInteraction, MessageButton, Message } from 'discord.js';
+import { ButtonInteraction, MessageButton, Message, MessageEmbed } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { AniQueue, ComponentFunctions } from '../../../../util/Constants.js';
 

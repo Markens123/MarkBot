@@ -1,4 +1,4 @@
-import { Message, MessageActionRow } from 'discord.js';
+import { Message, MessageActionRow, MessageEmbed } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { AniQueue } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';

@@ -20,7 +20,7 @@ class AQueueReorderInteraction extends BaseInteraction {
     const code = SnowflakeUtil.generate();
     let arr = client.maldata.get('queue');
 
-    const embed = new MessageEmbed().setTitle('Preview').setDescription('Please add stuff using the select menu!').setColor('NOT_QUITE_BLACK')
+    const embed = new MessageEmbed().setTitle('Queue Preview').setDescription('Please add stuff using the select menu!').setColor('NOT_QUITE_BLACK')
 
     let options = [];
 
