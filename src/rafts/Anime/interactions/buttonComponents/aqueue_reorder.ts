@@ -93,9 +93,9 @@ class AQueueReorderInteraction extends BaseInteraction {
         if (int.customId.split(':')[1] === 'aqueue_done') {
           client.maldata.set('queue', newarr)
 
-          const content = AniQueue(newarr);
+          const embed = new MessageEmbed().setTitle('Queue').setDescription(AniQueue(newarr)).setColor('RANDOM')
 
-          interaction.channel.messages.cache.get(interaction.message.id).edit(content).catch(() => {});
+          interaction.channel.messages.cache.get(interaction.message.id).edit({ embeds: [embed] }).catch(() => {});
 
           const select = new MessageSelectMenu().setCustomId(`collector:aqueue_select:${code}`).addOptions({value: 'None', label: 'None'}).setDisabled(true);
           const done = new MessageButton().setLabel('Done').setStyle('SUCCESS').setCustomId(`collector:aqueue_done:${code}`).setDisabled(true);

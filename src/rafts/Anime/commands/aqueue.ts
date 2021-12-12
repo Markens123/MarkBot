@@ -16,8 +16,8 @@ class AQueueCommand extends BaseCommand {
   run(message: Message) {
     const client = this.boat.client;
     const arr = client.maldata.get('queue');
-    let content = AniQueue(arr);
 
+    const embed = new MessageEmbed().setTitle('Queue').setDescription(AniQueue(arr)).setColor('RANDOM')
 
     const add = this.boat.interactions.buttonComponents.get('AQUEUE_ADD').definition();
     const reor = this.boat.interactions.buttonComponents.get('AQUEUE_REORDER').definition();
@@ -25,7 +25,7 @@ class AQueueCommand extends BaseCommand {
 
     const row = new MessageActionRow().addComponents(add, reor, del);
 
-    return message.channel.send({ content, components: [row] });
+    return message.channel.send({ embeds: [embed], components: [row] });
   }
 }
 

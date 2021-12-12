@@ -39,9 +39,9 @@ class AQueueAddInteraction extends BaseInteraction {
 
     message.delete().catch(() => {})
 
-    const content = AniQueue(arr);
+    const embed = new MessageEmbed().setTitle('Queue').setDescription(AniQueue(arr)).setColor('RANDOM')
 
-    interaction.channel.messages.cache.get(interaction.message.id).edit(content).catch(() => {});
+    interaction.channel.messages.cache.get(interaction.message.id).edit({ embeds: [embed] }).catch(() => {});
     
     interaction.deleteReply()
 
