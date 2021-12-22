@@ -9,7 +9,7 @@ import { BoatOptions } from './lib/interfaces/Main.js';
 const botconfig: BoatOptions = {
     debug: true,
     token: process.env.DISCORD_TOKEN,
-    clientOpts: { partials: ['CHANNEL'], intents: Intents.FLAGS.DIRECT_MESSAGES | Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES | Intents.FLAGS.GUILD_MESSAGE_REACTIONS, http: { api: 'https://canary.discord.com/api' } },
+    clientOpts: { partials: ['CHANNEL'], intents: Intents.FLAGS.DIRECT_MESSAGES | Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES | Intents.FLAGS.GUILD_MESSAGE_REACTIONS },
     owners: ['396726969544343554'],
     log: {
       outputFile: process.env.LOG_LOCATION,
