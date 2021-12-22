@@ -22,8 +22,11 @@ class EvalCommand extends BaseCommand {
   }
 
   async run(message: Discord.Message, args: any) {
+    const client = this.boat.client;
     let depth = 2;
     let nf = false;
+    let nr = false;
+    let canary = false;
     const ogargs = args;
     if (args.includes('--depth') || args.includes('-d')) {
       const index = args.indexOf('--depth') > -1 ? args.indexOf('--depth') : args.indexOf('-d');
@@ -35,14 +38,26 @@ class EvalCommand extends BaseCommand {
       nf = true;
       args.splice(index, 1);
     }
-    /* eslint-disable-next-line no-unused-vars */
-    const client = this.boat.client;
+    if (args.includes('--noresp') || args.includes('-nr')) {
+      const index = args.indexOf('--noresp') > -1 ? args.indexOf('--noresp') : args.indexOf('-nr');
+      nr = true;
+      args.splice(index, 1);
+    }
+    if (args.includes('--canary') || args.includes('-c')) {
+      const index = args.indexOf('--canary') > -1 ? args.indexOf('--canary') : args.indexOf('-c');
+      canary = true;
+      client.options.http.api = 'https://canary.discord.com/api'
+      args.splice(index, 1);
+    }
+
     args = args.join(' ');
     if (args.slice(-1) !== ';') args = args.concat(';');
+
     if (args.toLowerCase().includes('token') || args.toLowerCase().includes('secret')) {
       message.channel.send(`Error: Execution of command refused`);
       return message.channel.send('https://media.tenor.com/images/59de4445b8319b9936377ec90dc5b9dc/tenor.gif');
     }
+    
     const scope = {
       message,
       client,
@@ -83,6 +98,9 @@ class EvalCommand extends BaseCommand {
     if (evaluated === this.boat) {
       evaluated = this.boat.toJSON();
     }
+
+    if (canary) client.options.http.api = 'https://discord.com/api';
+
     if (evaluated instanceof Discord.MessageAttachment || evaluated instanceof Discord.MessageEmbed) {
       try {
         let msg;
@@ -103,15 +121,15 @@ class EvalCommand extends BaseCommand {
     if (cleaned.split(/\r\n|\r|\n/).length > 4 || cleaned.length > 1023) {
       if (nf === true) {
         embed.addField('📤 Output', `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``);
-        return message.channel.send({ embeds: [embed] });
+        return nr && !e ? null : message.channel.send({ embeds: [embed] });
       }
       embed.addField('📤 Output', '```Eval output too long, see the attached file```');
       const attachment = new Discord.MessageAttachment(Buffer.from(cleaned, 'utf-8'), 'eval.js');
-      await message.channel.send({ embeds: [embed] })
-      return message.channel.send({ files: [attachment] });
+      nr && !e ? null : await message.channel.send({ embeds: [embed] })
+      return nr && !e ? null : message.channel.send({ files: [attachment] });
     }
     embed.addField('📤 Output', `\`\`\`js\n${cleaned}\`\`\``)
-    return message.channel.send({ embeds: [embed] });
+    return nr && !e ? null : message.channel.send({ embeds: [embed] });
   }
 
   clean(client, text) {
