@@ -1,7 +1,7 @@
 import * as util from 'util';
 import { Collection, Message } from 'discord.js';
 import { getCodeblockMatch } from '../util/Constants.js';
-import { BoatI } from '../../lib/interfaces/Main.js';
+import { ArgI, BoatI } from '../../lib/interfaces/Main.js';
 import { fileURLToPath } from 'url';
 import BaseCommand from '../rafts/BaseCommand.js';
 const __filename = fileURLToPath(import.meta.url);
@@ -85,8 +85,10 @@ export default async (boat: BoatI, message: Message) => {
     let count = 0
     for (let i = 0; i < handler.args.length; i++) {
       if (handler.args[i].type === 'flag') {
-        if (args.includes(handler.args[i].flags[0]) || args.includes(handler.args[i].flags[1])) {
-          let index = args.indexOf(handler.args[i].flags[0]) > -1 ? args.indexOf(handler.args[i].flags[0]) : args.indexOf(handler.args[i].flags[1]);
+        const f1 = new RegExp(`(?<=\s|^|\W)${handler.args[i].flags[0]}(?=\s|$|\W)`, 'i');
+        const f2 = new RegExp(`(?<=\s|^|\W)${handler.args[i].flags[1]}(?=\s|$|\W)`, 'i');
+        if (f1.test(args) || f2.test(args)) {
+          let index = args.search(f1) > -1 ? args.search(f1) : args.search(f2);
           newargs[handler.args[i].name] = handler.args[i].index === 0 ? true : args[index + handler.args[i].index];
           args.splice(index, handler.args[i].index+1);
         } else {
@@ -96,6 +98,8 @@ export default async (boat: BoatI, message: Message) => {
         let codeblock = getCodeblockMatch(message.content.slice(boat.prefix.length).replace('-nf', ' ').replace('--nofile', ' ').replace('-d', ' ').replace('--depth', ' ').trim()
         );
         newargs[handler.args[i].name] = codeblock;
+      } else if (handler.args[i].type === 'msg') {
+        newargs[handler.args[i].name] = removeFlags(ogargs, handler.args);
       } else {
         if (handler.args[i].index) {
           newargs[handler.args[i].name] = args.slice(count, handler.args[i].index+1).join(' ')
@@ -132,4 +136,18 @@ function parseArgs(thing, w) {
   else if (num === NaN) return null
   
   return num ?? thing; 
+}
+
+function removeFlags(msg: string[], args: ArgI[]) {
+  args = args.filter(x => x.type === 'flag')
+  let arr = [];
+  for (let i = 0; i < args.length; i++) {
+    arr.push(...args[i].flags);
+  }
+
+  const flags = new Set(arr);
+
+  const newArr = msg.filter(x => !flags.has(x))
+
+  return newArr
 }

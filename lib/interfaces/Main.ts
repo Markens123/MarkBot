@@ -78,7 +78,7 @@ export interface RaftI {
 
 export interface ArgI {
   name: string;
-  type: 'int' | 'integer' | 'string' | 'str' | 'flag';
+  type: 'int' | 'integer' | 'string' | 'str' | 'flag' | 'msg';
   index?: number;
   flags?: [string, string];
   default?: any;

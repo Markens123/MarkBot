@@ -21,4 +21,18 @@ export default (boat: BoatI) => {
     },
   });  
 
+  Object.defineProperty(Array.prototype, 'search', {
+    value: function (r) {
+      const arr = this;
+      const res = arr.indexOf((function() {
+        var i;
+        for(i in arr)
+            if(r.test(arr[i]))
+                return arr[i];
+        })());
+      
+      return res;
+    },
+  }); 
+
 };

@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction, CommandInteractionOption, MessageEmbed } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -24,9 +24,10 @@ class BannerInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction, args: any) {
+  async run(interaction: CommandInteraction, args: CommandInteractionOption[]) {
     const client = this.boat.client;
-    let user = args?.find(arg => arg.name === `user`)?.value;
+
+    let user = args[0].value as string;
 
     let res = await client.users.fetch(user, {force: true}).then(myUser => myUser).catch(error => error);
 
@@ -35,7 +36,7 @@ class BannerInteraction extends BaseInteraction {
     let embed = new MessageEmbed()
       .setTitle(`${res.tag}'s banner`)
       .setColor('NOT_QUITE_BLACK')
-      .setImage(res.bannerURL({format: 'png' ,size: 2048, dynamic: true}));
+      .setImage(res.bannerURL({format: 'png', size: 2048, dynamic: true}));
 
     return interaction.reply({ embeds: [embed] });
   }

@@ -17,40 +17,49 @@ class EvalCommand extends BaseCommand {
       owner: true,
       enabled: true,
       dms: true,
+      args: [
+        {
+          name: 'depth',
+          type: 'flag',
+          index: 1,
+          flags: ['--depth', '-d'],
+          default: 2,
+        },
+        {
+          name: 'nf',
+          type: 'flag',
+          index: 0,
+          flags: ['--nofile', '-nf'],
+          default: false,
+        },
+        {
+          name: 'nr',
+          type: 'flag',
+          index: 0,
+          flags: ['--noresp', '-nr'],
+          default: false,
+        },
+        {
+          name: 'canary',
+          type: 'flag',
+          index: 0,
+          flags: ['--canary', '-c'],
+          default: false,
+        },
+        {
+          name: 'msg',
+          type: 'msg'
+        }
+      ],      
     };
     super(boat, options);
   }
 
-  async run(message: Discord.Message, args: any) {
+  async run(message: Discord.Message, { depth, nf, nr, canary, msg }, ogargs) {
     const client = this.boat.client;
-    let depth = 2;
-    let nf = false;
-    let nr = false;
-    let canary = false;
-    const ogargs = args;
-    if (args.includes('--depth') || args.includes('-d')) {
-      const index = args.indexOf('--depth') > -1 ? args.indexOf('--depth') : args.indexOf('-d');
-      depth = args[index + 1];
-      args.splice(index, 2);
-    }
-    if (args.includes('--nofile') || args.includes('-n')) {
-      const index = args.indexOf('--nofile') > -1 ? args.indexOf('--nofile') : args.indexOf('-n');
-      nf = true;
-      args.splice(index, 1);
-    }
-    if (args.includes('--noresp') || args.includes('-nr')) {
-      const index = args.indexOf('--noresp') > -1 ? args.indexOf('--noresp') : args.indexOf('-nr');
-      nr = true;
-      args.splice(index, 1);
-    }
-    if (args.includes('--canary') || args.includes('-c')) {
-      const index = args.indexOf('--canary') > -1 ? args.indexOf('--canary') : args.indexOf('-c');
-      canary = true;
-      client.options.http.api = 'https://canary.discord.com/api'
-      args.splice(index, 1);
-    }
+    if (canary) client.options.http.api = 'https://canary.discord.com/api';
 
-    args = args.join(' ');
+    let args = msg.join(' ');
     if (args.slice(-1) !== ';') args = args.concat(';');
 
     if (args.toLowerCase().includes('token') || args.toLowerCase().includes('secret')) {
