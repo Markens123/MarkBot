@@ -85,14 +85,16 @@ export default async (boat: BoatI, message: Message) => {
     let count = 0
     for (let i = 0; i < handler.args.length; i++) {
       if (handler.args[i].type === 'flag') {
-        const f1 = new RegExp(`(?<=\s|^|\W)${handler.args[i].flags[0]}(?=\s|$|\W)`, 'i');
-        const f2 = new RegExp(`(?<=\s|^|\W)${handler.args[i].flags[1]}(?=\s|$|\W)`, 'i');
+
+        const f1 = new RegExp(`(?<=\\s|^|\\W)${handler.args[i].flags[0]}(?=\s|$|\\W)`, 'i');
+        const f2 = new RegExp(`(?<=\\s|^|\\W)${handler.args[i].flags[1]}(?=\s|$|\\W)`, 'i');
+
         if (f1.test(args) || f2.test(args)) {
           let index = args.search(f1) > -1 ? args.search(f1) : args.search(f2);
           newargs[handler.args[i].name] = handler.args[i].index === 0 ? true : args[index + handler.args[i].index];
           args.splice(index, handler.args[i].index+1);
         } else {
-          newargs[handler.args[i].name] = handler.args[i].default ?? undefined;  
+          newargs[handler.args[i].name] = handler.args[i].default ?? undefined;
         }
       } else if (handler.args[i].match === 'codeblock') {
         let codeblock = getCodeblockMatch(message.content.slice(boat.prefix.length).replace('-nf', ' ').replace('--nofile', ' ').replace('-d', ' ').replace('--depth', ' ').trim()
