@@ -19,7 +19,7 @@ class TestLoop extends BaseLoop {
     
     const oldLatest = client.halerts.get('latest') as HAnime[];
     const api = new AnimeAPI()
-    const newLatest = await api.getLatest(1);
+    const newLatest = await api.getLatest(10);
     let diff = [];
     let oldArr = [];
     let newArr = [];
