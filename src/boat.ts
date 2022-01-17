@@ -3,12 +3,15 @@ import { Client, Collection, Snowflake } from 'discord.js';
 import events from './events/index.js';
 import rafts from './rafts/index.js';
 import BaseRaft from './rafts/BaseRaft.js';
+import loops from './loops/index.js';
 import logBuilder from './rafts/captainsLog/LogRouter.js';
 import { util } from './util/index.js';
 import databases from './databases.js';
 import { BoatI, BoatOptions, ClientI } from '../lib/interfaces/Main.js'
 import path from 'path';
 import { fileURLToPath } from 'url';
+import BaseLoop from './loops/BaseLoop.js';
+import BaseCommand from './rafts/BaseCommand.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 var module = __filename;
@@ -24,7 +27,8 @@ class Boat implements BoatI {
   events: any;
   rafts: any;
   commands: any;
-  interactions: any;
+  interactions: BoatI["interactions"];
+  loops: Collection<string, BaseLoop>;
   token: string;
   debug: boolean;
   ending: boolean;
@@ -100,6 +104,12 @@ class Boat implements BoatI {
     this.commands = new Collection();
 
     /**
+     * Loops, mapped by name
+     * @type {Collection<string, BaseLoop>}
+     */
+     this.loops = new Collection();    
+
+    /**
      * The interactions that can be called, mapped by name
      * @type {Object}
      */
@@ -136,6 +146,10 @@ class Boat implements BoatI {
     // Iniatiate all rafts
     this.log.debug(module, 'Launching rafts');
     await util.objForEach(rafts, this.launchRaft.bind(this));
+    
+    // Register all loops
+    this.log.debug(module, 'Collecting loops');
+    await util.objForEach(loops, this.launchLoop.bind(this));
 
     // Register all text based commands
     this.log.debug(module, 'Collecting commands');
@@ -154,6 +168,7 @@ class Boat implements BoatI {
     }
     this.client.maldata.ensure('states', {});
     this.client.maldata.ensure('queue', []);
+    this.client.halerts.ensure('latest', []);
     
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }
@@ -194,6 +209,18 @@ class Boat implements BoatI {
         this.commands.set(commandName, command);
       });
     });
+  }
+
+  /**
+   * Associate all loops
+   * @private
+   */
+   async launchLoop(loop, name) {
+    if (name === 'captainsLog') return;
+    loop = new loop(this);
+    if (!(loop instanceof BaseLoop)) throw new TypeError('All loops must extend BaseLoop');
+    if (loop.active) loop.start();
+    this.loops.set(name, loop);
   }
 
   /**

@@ -33,6 +33,6 @@ export default (boat: BoatI) => {
       
       return res;
     },
-  }); 
+  });
 
 };

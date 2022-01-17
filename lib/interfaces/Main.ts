@@ -1,10 +1,16 @@
 import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable } from 'discord.js'
 import Enmap from 'enmap'
+import BaseLoop from '../../src/loops/BaseLoop'
+import BaseCommand from '../../src/rafts/BaseCommand'
+import BaseInteraction from '../../src/rafts/BaseInteraction'
+import BaseRaft from '../../src/rafts/BaseRaft'
 
 export interface ClientI extends Client {
   cooldowns?: Collection<string, Collection<Snowflake, number>>;
   maldata?: Enmap;
   reminders?: Enmap<Snowflake, Reminder[]>;
+  halerts?: Enmap;
+  loops?: Collection<string, Loop>;
 }
 
 export interface Reminder {
@@ -21,6 +27,7 @@ export interface BoatI {
     events: any;
     rafts: any;
     commands: any;
+    loops: Collection<string, BaseLoop>;
     interactions: InteractionsI;
     token: string;
     debug: boolean;
@@ -33,12 +40,12 @@ export interface BoatI {
 }
 
 interface InteractionsI {
-  commands: Collection<string, any>;
-  buttonComponents: Collection<string, any>;
-  selectMenuComponents: Collection<string, any>;
-  userContextMenuComponents: Collection<string, any>;
-  messageContextMenuComponents: Collection<string, any>;
-  autocomplete: Collection<string, any>;
+  commands: Collection<string, BaseInteraction>;
+  buttonComponents: Collection<string, BaseInteraction>;
+  selectMenuComponents: Collection<string, BaseInteraction>;
+  userContextMenuComponents: Collection<string, BaseInteraction>;
+  messageContextMenuComponents: Collection<string, BaseInteraction>;
+  autocomplete: Collection<string, BaseInteraction>;
 }
 
 export interface CommandOptions {
@@ -120,4 +127,40 @@ export interface UpdatesFile {
   updated?: number;
   channel?: Snowflake;
   mention?: Snowflake[];
+}
+
+export interface HAnime {
+  id: number;
+  name: string;
+  titles: string[];
+  slug?: string;
+  description: string;
+  views: number;
+  interests: number;
+  poster_url: string;
+  cover_url: string;
+  brand: string;
+  brand_id: number;
+  duration_in_ms: number;
+  is_censored: boolean;
+  rating: number;
+  likes: number;
+  dislikes: number;
+  downloads: number;
+  monthly_rank: number;
+  tags: string[];
+  created_at: number;
+  released_at: number;
+}
+
+export interface Loop {
+  active: boolean;
+  boat: BoatI;
+  name: string;
+  time: number;
+  id: NodeJS.Timer;
+  interval: number;
+  stop: () => void;
+  start: () => void;
+  run: () => void;
 }

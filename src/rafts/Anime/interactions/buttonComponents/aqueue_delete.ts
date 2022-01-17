@@ -50,8 +50,8 @@ class AQueueDeleteInteraction extends BaseInteraction {
 
     interaction.channel.messages.cache.get(interaction.message.id).edit({ embeds: [embed] }).catch(() => {});
     
-    interaction.deleteReply()
-    message.delete().catch(() => {}) 
+    interaction.deleteReply();
+    message.delete().catch(() => {});
 
   }
 

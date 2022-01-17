@@ -1,4 +1,4 @@
-import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil, CommandInteraction } from 'discord.js';
+import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil, CommandInteraction, User } from 'discord.js';
 import { BoatI } from '../../lib/interfaces/Main.js';
 
 export const Paginator = async ({boat, message, data, offset = 0, length = 1, callback, options}: {
@@ -157,13 +157,13 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
     });
 }
 
-export const YesNo = async (message: Message, content: string): Promise<boolean | null> => {
+export const YesNo = async (message: Message, content: string, author: User = message.author): Promise<boolean | null> => {
   const yes = new MessageButton().setStyle('SUCCESS').setCustomId(`collector:yes`).setLabel('Yes');
   const no = new MessageButton().setStyle('DANGER').setCustomId(`collector:no`).setLabel('No');
   const row = new MessageActionRow().addComponents(yes, no);
 
   const msg = await message.channel.send({content, components: [row]})
-  const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
+  const filter = (interaction: ButtonInteraction) => interaction.user.id === author.id;
   
   const options = { 
     filter,
