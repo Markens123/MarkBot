@@ -8,7 +8,7 @@ class TestLoop extends BaseLoop {
     const options = {
       name: 'test',
       active: true,
-      time: 30*60000
+      time: 1800
     };
     super(boat, options);
   }
