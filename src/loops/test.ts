@@ -14,7 +14,6 @@ class TestLoop extends BaseLoop {
   }
 
   async run() {
-    console.log('Running')
     const client = this.boat.client;
     
     const oldLatest = client.halerts.get('latest') as HAnime[];
@@ -39,7 +38,6 @@ class TestLoop extends BaseLoop {
       const embeds = api.genEmbeds(newAnime);
 
       client.halerts.forEach(async (g, i) => {
-        
         if (i !== 'latest') {
           const channel = await client.channels.fetch(g.channel) as TextChannel;
           channel.send({ content: g.mentions?.length ? g.mentions.join(' ') : null, embeds })
@@ -49,7 +47,6 @@ class TestLoop extends BaseLoop {
       client.halerts.set('latest', newLatest);
 
     }
-    console.log('Done running')
   }
 }
 
