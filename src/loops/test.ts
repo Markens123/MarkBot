@@ -8,7 +8,7 @@ class TestLoop extends BaseLoop {
     const options = {
       name: 'test',
       active: true,
-      time: 1800
+      every: 'half-hour'
     };
     super(boat, options);
   }
@@ -31,6 +31,15 @@ class TestLoop extends BaseLoop {
         diff.push((newArr[i]))
       }
     }
+
+    client.halerts.forEach(async (g, i) => {
+      if (i !== 'latest') {
+        const channel = await client.channels.fetch(g.channel) as TextChannel;
+        channel.edit({
+          topic: `Last Check: <t:${Math.round(Date.now() / 1000)}:R>`
+        })
+      }
+    })    
 
     if (diff.length) {
       const newAnime = newLatest.map(x => diff.includes(x.id) ? x : null).filter(x => x !== null);

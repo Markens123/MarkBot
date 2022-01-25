@@ -159,7 +159,8 @@ export interface Loop {
   name: string;
   time: number;
   id: NodeJS.Timer;
-  interval: number;
+  iterations: number;
+  lasthour: number;
   stop: () => void;
   start: () => void;
   run: () => void;

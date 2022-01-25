@@ -10,7 +10,10 @@ class BaseLoop {
   name: string;
   time: number;
   id: NodeJS.Timer;
-  interval: number;
+  iterations: number;
+  every: 'half-hour' | 'hour';
+  lasthour: number;
+  lastmin: number;
   
   constructor(boat, options) {
     /**
@@ -29,8 +32,7 @@ class BaseLoop {
 
     /**
      * The amount of time between each loop in seconds
-     * @name BaseLoop#name
-     * @type {string}
+     * @type {number}
      */
      this.time = options.time;
 
@@ -41,10 +43,28 @@ class BaseLoop {
     this.active = options.active ?? true;
 
     /**
-     * The amount of times the loop has looped (only current iteration, starts at 0)
-     * @type {boolean}
+     * The amount of times the loop has looped (starts at 0)
+     * @type {number}
      */
-     this.interval = 0;    
+     this.iterations = 0;
+
+    /**
+     * The last hour the loop has ran (only used with every)
+     * @type {number}
+     */
+     this.lasthour = 0;
+
+    /**
+     * The last minute the loop has ran (only used with every)
+     * @type {number}
+     */
+     this.lastmin = 0;
+
+    /**
+     * When the loop should loop
+     * @type {string}
+     */
+     this.every = options.every ?? undefined;
   }
   
   /**
@@ -52,16 +72,54 @@ class BaseLoop {
    * @abstract
    */
    start(): void {
-    const id = setInterval(() => {
-      if (this.active) {
-        this.run()
-        this.interval++
+    if (this.every) {
+      const id = setInterval(() => {
+        if (this.matchCheck()) {
+          if (this.active) {
+            this.run()
+            this.iterations++
+          }          
+        }
+      }, 10000);
+      
+      this.id = id;
+      this.active = true;
+      this.iterations = 0;
+      this.lasthour = 0;
+      return;
+    } else {
+      const id = setInterval(() => {
+        if (this.active) {
+          this.run()
+          this.iterations++
+        }
+      }, this.time * 1000);
+      
+      this.id = id;
+      this.active = true;
+      this.iterations = 0;
+    }
+  }
+
+  /**
+   * Checks if the current time is the time to loop (only works for every)
+   * @abstract
+   */  
+  matchCheck(): boolean {
+    if (!this.every) return null;
+    const d = new Date();
+    if (this.every === 'hour' && d.getMinutes() === 0 && this.lasthour !== d.getHours()) {
+      this.lasthour = d.getHours();
+      return true;
+    }
+    else if (this.every === 'half-hour' && (d.getMinutes() === 0 || d.getMinutes() === 30)) {
+      if ((d.getMinutes() === 0 && this.lasthour !== d.getHours()) || (d.getMinutes() === 30 && this.lastmin !== d.getMinutes())) {
+        this.lasthour = d.getHours();
+        this.lastmin = d.getMinutes();
+        return true;
       }
-    }, this.time * 1000);
-    
-    this.id = id;
-    this.active = true;
-    this.interval = 0;
+    }
+    return false;
   }
 
   /**
@@ -72,7 +130,7 @@ class BaseLoop {
     clearInterval(this.id);
     this.active = false;
     this.id = null;
-    this.interval = 0;
+    this.iterations = 0;
   }  
 
   /**
