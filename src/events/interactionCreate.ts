@@ -14,7 +14,7 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
   }
 
   if (interaction.isAutocomplete()) {
-    name = boat.interactions.autocomplete.map(i => i.commands.includes(interaction.commandName) ? i.name : null)[0];
+    name = boat.interactions.autocomplete.map(i => i.commands.includes(interaction.commandName) ? i.name : null).filter(x => x !== null)[0];
     handler = boat.interactions.autocomplete.get(name);
   }
 
