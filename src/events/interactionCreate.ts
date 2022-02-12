@@ -28,6 +28,7 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
         break;
     }
   }
+
   if (interaction.isMessageComponent()) {
     if (!verifyCustomId(interaction.customId, interaction.message.components)) {
       interaction.reply({content: 'You think you are sneaky huh, well, no such luck here!', ephemeral: true });
@@ -43,6 +44,7 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
         break;
     }
   }
+
   if (!handler || !handler.enabled) {
     if (interaction.customId?.split(':')[0] === 'collector') return;
     if (interaction.isAutocomplete()) return;

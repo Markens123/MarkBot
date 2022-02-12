@@ -1,6 +1,6 @@
 import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, CommandInteractionOption } from 'discord.js';
 const definition = getDefinition()
 
 class TestInteraction extends BaseInteraction {
@@ -13,7 +13,68 @@ class TestInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction, args: any) {
+  async run(interaction: CommandInteraction, args: CommandInteractionOption[]) {
+    const resp = args?.find(arg => arg.name === `response`)?.value;
+    const client = interaction.client;
+
+    if (resp === 'modal') {
+      //@ts-expect-error
+      return client.api.interactions(interaction.id, interaction.token).callback.post({data: {
+        type: 9,
+        data: {
+          custom_id: 'test',
+          title: 'Test Modal!',
+          components: [
+            {
+              type: 1,
+              components: [
+                {
+                  type: 4,
+                  custom_id: "name",
+                  label: "Name",
+                  style: 1,
+                  min_length: 1,
+                  max_length: 4000,
+                  placeholder: "John",
+                  required: true
+                },
+              ]              
+            },
+            {
+              type: 1,
+              components: [
+                {
+                  type: 4,
+                  custom_id: "age",
+                  label: "Age",
+                  style: 1,
+                  min_length: 1,
+                  max_length: 4,
+                  placeholder: "21",
+                  required: false                 
+                }                
+              ]
+            },
+            {
+              type: 1,
+              components: [
+                {
+                  type: 4,
+                  custom_id: "hud",
+                  label: "How are you doing today?",
+                  style: 2,
+                  min_length: 1,
+                  max_length: 4000,
+                  placeholder: "I'm doing fine!",
+                  required: false                 
+                },                
+              ]
+            }
+          ]
+        }
+      }})
+    } 
+
     interaction.reply(`\`\`\`js\n${util.inspect(args)}\`\`\``);
   }
 }
@@ -70,7 +131,19 @@ function getDefinition() {
         description: "A number",
         type: 10,
         required: false
-      },      
+      },
+      {
+        name: "response",
+        description: "The response",
+        type: 3,
+        required: false,
+        choices: [
+          {
+            name: "Modal",
+            value: "modal"
+          }
+        ]
+      }
     ] 
     } 
 }
