@@ -11,6 +11,7 @@ commands.reloadcommand = (await import('./reloadcommand.js')).default;
 commands.remind = (await import('./remind.js')).default;
 commands.reminders = (await import('./reminders.js')).default;
 commands.delreminder = (await import('./delreminder.js')).default;
+commands.test = (await import('./test.js')).default;
 
 
 export default commands;

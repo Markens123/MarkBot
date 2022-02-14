@@ -97,8 +97,7 @@ export default async (boat: BoatI, message: Message) => {
           newargs[handler.args[i].name] = handler.args[i].default ?? undefined;
         }
       } else if (handler.args[i].match === 'codeblock') {
-        let codeblock = getCodeblockMatch(message.content.slice(boat.prefix.length).replace('-nf', ' ').replace('--nofile', ' ').replace('-d', ' ').replace('--depth', ' ').trim()
-        );
+        let codeblock = getCodeblockMatch(removeFlags(message.content.slice(boat.prefix.length).split(' '), handler.args).join(' '));
         newargs[handler.args[i].name] = codeblock;
       } else if (handler.args[i].type === 'msg') {
         newargs[handler.args[i].name] = removeFlags(ogargs, handler.args);
