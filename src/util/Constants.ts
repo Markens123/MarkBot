@@ -1,3 +1,4 @@
+import { MessageActionRow, TextInputComponent } from 'discord.js';
 import getHTML from 'html-get';
 import { JSDOM } from 'jsdom';
 
@@ -20,6 +21,17 @@ export const checkTF = async (url: string): Promise<{ full: boolean; title: stri
   let title = dom.window.document.title;
   title = title.slice(9).replace(' beta - TestFlight - Apple','');
   return {full: html.includes("This beta is full."), title}
+}
+
+export const ModalComponents = (arr: any[]): MessageActionRow<TextInputComponent>[] | null => {
+  const finalArr: any = []
+  arr.forEach(i => {
+    finalArr.push(new MessageActionRow().addComponents(i))
+  })
+
+  if (finalArr.length == 0) return null
+  else return finalArr;
+
 }
 
 export const LogLevels = {
@@ -53,6 +65,7 @@ export const DiscordColors = {
 };
 
 export const ComponentFunctions = createEnum(['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER', 'HALERTS_EDIT', 'HALERTS_RESET']);
+export const ModalFunctions = createEnum(['TEST']);
 
 function createEnum(keys) {
   const obj = {};

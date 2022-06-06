@@ -1,7 +1,7 @@
 import {  MessageComponentInteraction } from 'discord.js';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
-import { ComponentFunctions } from '../util/Constants.js';
+import { ComponentFunctions, ModalFunctions } from '../util/Constants.js';
 import { fileURLToPath } from 'url';
 const module = fileURLToPath(import.meta.url);
 
@@ -11,6 +11,12 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
   // Check for handler
   if (interaction.isCommand()) {
     handler = boat.interactions.commands.get(interaction.commandName);
+  }
+
+  if (interaction.isModalSubmit()) {
+    name = ModalFunctions[Number(interaction.customId.split(':')[0])];
+
+    handler = boat.interactions.modals.get(name);
   }
 
   if (interaction.isAutocomplete()) {

@@ -45,6 +45,9 @@ export default async (boat: BoatI, message: Message) => {
   if (!message.channel.isThread() && handler.threads === 'only') return message.channel.send('This command can only be used in threads!');
   if (message.channel.isThread() && !handler.threads) return;
 
+  if (!message.channel.isVoice() && handler.voice === 'only') return message.channel.send('This command can only be used in voice channels!');
+  if (message.channel.isVoice() && !handler.voice) return;
+
   if (handler.permissions) {
     const authorPerms = message.member.permissions;
     if (!authorPerms || !authorPerms.has(handler.permissions)) {

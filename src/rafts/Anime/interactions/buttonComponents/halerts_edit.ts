@@ -1,4 +1,4 @@
-import { ButtonInteraction, MessageButton, Message, MessageEmbed, Snowflake, SnowflakeUtil, MessageSelectMenu, MessageActionRow, SelectMenuInteraction } from 'discord.js';
+import { ButtonInteraction, MessageButton, Message, MessageEmbed, MessageComponentInteraction, SnowflakeUtil, MessageSelectMenu, MessageActionRow, SelectMenuInteraction } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 
@@ -19,7 +19,7 @@ class HAlertsEditInteraction extends BaseInteraction {
     const client = this.boat.client;
     const code = SnowflakeUtil.generate();
     const config = client.halerts.get(interaction.guild.id);
-
+    
     const embed = new MessageEmbed().setTitle('Edit HAlerts Config').setDescription('Preview').addField('Channel', `<#${config.channel}>`).addField('Mentions', config.mentions ? config.mentions.join(' ') : 'None').setColor('NOT_QUITE_BLACK');
 
     let options = [
@@ -43,7 +43,7 @@ class HAlertsEditInteraction extends BaseInteraction {
 
     interaction.reply({ embeds: [embed], components: [row, row2], ephemeral: true });
 
-    const filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
+    const filter = (intt: MessageComponentInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
 
     const o = {
       filter,

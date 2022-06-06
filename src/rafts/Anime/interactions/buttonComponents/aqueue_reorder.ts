@@ -1,4 +1,4 @@
-import { ButtonInteraction, MessageButton, MessageEmbed, SnowflakeUtil, MessageSelectMenu, MessageActionRow, SelectMenuInteraction } from 'discord.js';
+import { ButtonInteraction, MessageButton, MessageEmbed, SnowflakeUtil, MessageSelectMenu, MessageActionRow, SelectMenuInteraction, MessageComponentInteraction } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { AniQueue, ComponentFunctions } from '../../../../util/Constants.js';
 
@@ -41,11 +41,11 @@ class AQueueReorderInteraction extends BaseInteraction {
 
     interaction.reply({ embeds: [embed], components: [row, row2], ephemeral: true });
 
-    const filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
+    const filter = (intt: MessageComponentInteraction) => intt.user.id === interaction.user.id  && intt.customId.split(':')[2]  === code;
 
     const o = {
       filter,
-      idle: 15000
+      idle: 15000,
     }
 
 

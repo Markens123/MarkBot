@@ -120,6 +120,7 @@ class Boat implements BoatI {
       userContextMenuComponents: new Collection(),
       messageContextMenuComponents: new Collection(),
       autocomplete: new Collection(),
+      modals: new Collection(),
     };
 
     /**

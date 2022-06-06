@@ -46,6 +46,7 @@ interface InteractionsI {
   userContextMenuComponents: Collection<string, BaseInteraction>;
   messageContextMenuComponents: Collection<string, BaseInteraction>;
   autocomplete: Collection<string, BaseInteraction>;
+  modals: Collection<string, BaseInteraction>;
 }
 
 export interface CommandOptions {
@@ -55,6 +56,7 @@ export interface CommandOptions {
   owner?: boolean;
   dms?: boolean | 'only';
   threads?: boolean | 'only';
+  voice?: boolean | 'only';
   args?: ArgI[] | false;
   channels?: Snowflake[] | false;
   guilds?: Snowflake[] | false;

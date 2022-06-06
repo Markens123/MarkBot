@@ -1,6 +1,7 @@
 import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
-import { CommandInteraction, CommandInteractionOption } from 'discord.js';
+import { CommandInteraction, CommandInteractionOption, Modal, TextInputComponent } from 'discord.js';
+import { ModalComponents, ModalFunctions } from '../../../../util/Constants.js';
 const definition = getDefinition()
 
 class TestInteraction extends BaseInteraction {
@@ -18,61 +19,31 @@ class TestInteraction extends BaseInteraction {
     const client = interaction.client;
 
     if (resp === 'modal') {
-      //@ts-expect-error
-      return client.api.interactions(interaction.id, interaction.token).callback.post({data: {
-        type: 9,
-        data: {
-          custom_id: 'test',
-          title: 'Test Modal!',
-          components: [
-            {
-              type: 1,
-              components: [
-                {
-                  type: 4,
-                  custom_id: "name",
-                  label: "Name",
-                  style: 1,
-                  min_length: 1,
-                  max_length: 4000,
-                  placeholder: "John",
-                  required: true
-                },
-              ]              
-            },
-            {
-              type: 1,
-              components: [
-                {
-                  type: 4,
-                  custom_id: "age",
-                  label: "Age",
-                  style: 1,
-                  min_length: 1,
-                  max_length: 4,
-                  placeholder: "21",
-                  required: false                 
-                }                
-              ]
-            },
-            {
-              type: 1,
-              components: [
-                {
-                  type: 4,
-                  custom_id: "hud",
-                  label: "How are you doing today?",
-                  style: 2,
-                  min_length: 1,
-                  max_length: 4000,
-                  placeholder: "I'm doing fine!",
-                  required: false                 
-                },                
-              ]
-            }
-          ]
-        }
-      }})
+      const modal = new Modal().setCustomId(`${ModalFunctions['TEST']}:`).setTitle('Test Modal!');
+
+      const nameInput = new TextInputComponent()
+      .setCustomId('name')
+      .setLabel('Name')
+      .setRequired(true)
+      .setPlaceholder('Josh')
+      .setStyle('SHORT');
+
+      const ageInput = new TextInputComponent()
+      .setCustomId('age')
+      .setLabel('Age')
+      .setRequired(false)
+      .setPlaceholder('21')
+      .setStyle('SHORT');
+      
+      const hruInput = new TextInputComponent()
+      .setCustomId('hru')
+      .setLabel('How are you doing today?')
+      .setRequired(false)
+      .setStyle('PARAGRAPH');
+
+      modal.addComponents(...ModalComponents([nameInput, ageInput, hruInput]));
+
+      return interaction.showModal(modal);
     } 
 
     interaction.reply(`\`\`\`js\n${util.inspect(args)}\`\`\``);

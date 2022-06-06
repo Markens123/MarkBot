@@ -10,6 +10,7 @@ class BaseCommand {
   owner: boolean;
   dms: boolean | 'only';
   threads: boolean | 'only';
+  voice: boolean | 'only';
   args: ArgI[] | false;
   channels: Snowflake[] | false;
   guilds: Snowflake[] | false;
@@ -65,6 +66,12 @@ class BaseCommand {
      * @type {boolean|'only'}
      */
     this.threads = options.threads ?? true;
+
+        /**
+     * Whether this command can be used in voice text channels
+     * @type {boolean|'only'}
+     */
+         this.voice = options.voice ?? true;
 
     /**
      * Arguments for the command

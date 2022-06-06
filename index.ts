@@ -31,22 +31,6 @@ markBot.boot();
 
 const client = markBot.client;
 
-
-client.ws.on('INTERACTION_CREATE', async interaction => {
-  if (interaction.type === 5) {
-    //@ts-expect-error
-    client.api.interactions(interaction.id, interaction.token).callback.post({data: {
-      type: 4,
-      data: { 
-        content: 'test',
-        flags: 1 << 6
-      }
-
-    }})
-  }
-})
-
-
 let app = express();
 
 app.get('/callback', async ({ query }, response) => {

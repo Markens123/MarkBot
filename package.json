@@ -23,7 +23,7 @@
     "canvas": "^2.8.0",
     "cheerio": "^1.0.0-rc.10",
     "discord-build-fetcher-js": "^1.0.7",
-    "discord.js": "^13.3.0",
+    "discord.js": "^13.8.0",
     "dotenv": "^8.2.0",
     "enmap": "^5.8.4",
     "express": "^4.17.1",
@@ -40,7 +40,7 @@
     "node-sauce": "^1.0.5",
     "parse-duration": "^1.0.0",
     "pm2": "^5.1.0",
-    "sharp": "^0.28.3",
+    "sharp": "^0.30.6",
     "strip-ansi": "^6.0.1",
     "wait": "^0.4.2",
     "winston": "^3.3.3"
