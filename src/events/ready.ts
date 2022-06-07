@@ -1,7 +1,7 @@
 
 import { MessageActionRow } from 'discord.js';
 import { fileURLToPath } from 'url';
-import { BoatI } from '../../lib/interfaces/Main';
+import { BoatI } from '../../lib/interfaces/Main.js';
 var module = fileURLToPath(import.meta.url);
 
 

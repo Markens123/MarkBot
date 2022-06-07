@@ -23,15 +23,14 @@ export const checkTF = async (url: string): Promise<{ full: boolean; title: stri
   return {full: html.includes("This beta is full."), title}
 }
 
-export const ModalComponents = (arr: any[]): MessageActionRow<TextInputComponent>[] | null => {
-  const finalArr: any = []
+export const ModalComponents = (arr: TextInputComponent[]): MessageActionRow<TextInputComponent>[] | null => {
+  const finalArr: any[] = []
   arr.forEach(i => {
-    finalArr.push(new MessageActionRow().addComponents(i))
+    if (i instanceof TextInputComponent) finalArr.push(new MessageActionRow().addComponents(i))
   })
 
   if (finalArr.length == 0) return null
   else return finalArr;
-
 }
 
 export const LogLevels = {
