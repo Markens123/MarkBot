@@ -11,6 +11,7 @@ class BaseCommand {
   dms: boolean | 'only';
   threads: boolean | 'only';
   voice: boolean | 'only';
+  dev: boolean | 'only';
   args: ArgI[] | false;
   channels: Snowflake[] | false;
   guilds: Snowflake[] | false;
@@ -130,6 +131,12 @@ class BaseCommand {
      * @type {string}
      */
     this.permissions = options.permissions ?? false;
+
+    /**
+     * Whether this runs in dev (true by default)
+     * @type {boolean|'none'}
+     */
+     this.dev = options.dev ?? true;    
   }
 
   /**

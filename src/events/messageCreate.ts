@@ -61,6 +61,11 @@ export default async (boat: BoatI, message: Message) => {
 
   if (handler.guilds && !handler.guilds.includes(message.guild.id)) return;
 
+  if (!handler.dev && boat.options.dev) return;
+
+  if (handler.dev === 'only' && boat.options.dev == false) return;
+
+
   // Cooldown stuff
   const { cooldowns } = boat.client;
 

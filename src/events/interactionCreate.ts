@@ -59,6 +59,10 @@ export default async (boat: BoatI, interaction: MessageComponentInteraction) => 
     return;
   }
 
+  if (!handler.dev && boat.options.dev) return;
+
+  if (handler.dev === 'only' && boat.options.dev == false) return;
+
   // Handle command
   try {
     //@ts-ignore

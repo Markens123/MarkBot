@@ -3,12 +3,13 @@ import { HAnime } from '../../lib/interfaces/Main.js';
 import AnimeAPI from '../rafts/Anime/apis/hen.js';
 import BaseLoop from  './BaseLoop.js';
 
-class TestLoop extends BaseLoop {
+class HLoop extends BaseLoop {
   constructor(boat) {
     const options = {
       name: 'test',
       active: true,
-      every: 'half-hour'
+      every: 'half-hour',
+      dev: false
     };
     super(boat, options);
   }
@@ -59,4 +60,4 @@ class TestLoop extends BaseLoop {
   }
 }
 
-export default TestLoop;
+export default HLoop;

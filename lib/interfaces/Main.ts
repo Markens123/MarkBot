@@ -57,6 +57,7 @@ export interface CommandOptions {
   dms?: boolean | 'only';
   threads?: boolean | 'only';
   voice?: boolean | 'only';
+  dev?: boolean | 'only';
   args?: ArgI[] | false;
   channels?: Snowflake[] | false;
   guilds?: Snowflake[] | false;
@@ -70,6 +71,7 @@ export interface BoatOptions {
   token: string;
   clientOpts: ClientOptions;
   owners: Snowflake[];
+  dev?: boolean;
   commandPrefix?: string;
   log?: LogOptions;
   basepath?: any;

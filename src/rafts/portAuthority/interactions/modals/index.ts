@@ -1,5 +1,5 @@
 const modals: any = {};
 
-modals.TEST = (await import('./test.js')).default;
+modals.TEST = (await import('./testmodal.js')).default;
 
 export default modals;

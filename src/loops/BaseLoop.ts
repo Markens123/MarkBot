@@ -1,3 +1,4 @@
+import { threadId } from 'worker_threads';
 import { BoatI } from '../../lib/interfaces/Main.js';
 
 /**
@@ -14,6 +15,7 @@ class BaseLoop {
   every: 'half-hour' | 'hour';
   lasthour: number;
   lastmin: number;
+  dev: boolean | 'only';
   
   constructor(boat, options) {
     /**
@@ -65,6 +67,12 @@ class BaseLoop {
      * @type {string}
      */
      this.every = options.every ?? undefined;
+
+    /**
+     * Whether this runs in dev (true by default)
+     * @type {boolean|'none'}
+     */
+     this.dev = options.dev ?? true;
   }
   
   /**
@@ -72,6 +80,11 @@ class BaseLoop {
    * @abstract
    */
    start(): void {
+
+    if (!this.dev && this.boat.options.dev) return;
+
+    if (this.dev === 'only' && this.boat.options.dev == false) return;
+
     if (this.every) {
       const id = setInterval(() => {
         if (this.matchCheck()) {

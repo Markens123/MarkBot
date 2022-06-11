@@ -27,7 +27,7 @@ class BaseInteraction extends BaseCommand {
      * The definition for this interaction that gets passed to discord to register / send it
      * @type {string[]}
      */
-     this.commands = options.commands;    
+     this.commands = options.commands;       
   }
 
   /**

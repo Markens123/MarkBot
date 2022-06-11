@@ -61,7 +61,7 @@ class Boat implements BoatI {
     if (!options) throw new Error('Boat options must be provided');
 
     /**
-     * The options used to launc this boat
+     * The options used to launch this boat
      * @type {Object}
      */
     this.options = options;

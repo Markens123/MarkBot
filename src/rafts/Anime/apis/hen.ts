@@ -62,7 +62,7 @@ class AnimeAPI {
   genEmbeds(data: HAnime[]): MessageEmbed[] {
     let arr = [];
     for (let i = 0; i < data.length; i++) {
-      arr.push(new MessageEmbed().setTitle(data[i].name).setURL(this.toUrl(data[i].id)).setImage(data[i].cover_url).setFooter(shorten(data[i].tags.join(' • '), 2048, ' • ')).setColor('RANDOM'))
+      arr.push(new MessageEmbed().setTitle(data[i].name).setURL(this.toUrl(data[i].id)).setImage(data[i].cover_url).setFooter({ text: shorten(data[i].tags.join(' • '), 2048, ' • ') }).setColor('RANDOM'))
     }
     return arr;
   }

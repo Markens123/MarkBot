@@ -1,4 +1,4 @@
-import { ModalSubmitInteraction } from 'discord.js';
+import { MessageAttachment, ModalSubmitInteraction } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
 
@@ -12,7 +12,9 @@ class TestInteraction extends BaseInteraction {
   }
 
   async run(interaction: ModalSubmitInteraction) {
-    interaction.reply(`\`\`\`js\n${util.inspect(interaction.fields)}\`\`\``);
+    const attachment = new MessageAttachment(Buffer.from(util.inspect(interaction.fields, { depth: 5}), 'utf-8'), 'eval.js');
+
+    interaction.reply({ files: [attachment] });
     }
 
   }
