@@ -24,7 +24,7 @@ class BaseInteraction extends BaseCommand {
     this.definition = options.definition;
 
     /**
-     * The definition for this interaction that gets passed to discord to register / send it
+     * The commands that autocomplete uses
      * @type {string[]}
      */
      this.commands = options.commands;       

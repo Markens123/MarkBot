@@ -11,7 +11,7 @@ import { BoatI, BoatOptions, ClientI } from '../lib/interfaces/Main.js'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import BaseLoop from './loops/BaseLoop.js';
-import BaseCommand from './rafts/BaseCommand.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 var module = __filename;

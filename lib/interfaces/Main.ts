@@ -1,9 +1,7 @@
 import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable } from 'discord.js'
 import Enmap from 'enmap'
 import BaseLoop from '../../src/loops/BaseLoop'
-import BaseCommand from '../../src/rafts/BaseCommand'
 import BaseInteraction from '../../src/rafts/BaseInteraction'
-import BaseRaft from '../../src/rafts/BaseRaft'
 
 export interface ClientI extends Client {
   cooldowns?: Collection<string, Collection<Snowflake, number>>;
