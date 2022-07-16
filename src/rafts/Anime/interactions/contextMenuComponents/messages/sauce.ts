@@ -81,6 +81,7 @@ async function genEmbed(data, offset, ogimg) {
   if (info.source) embed.addField('Title', info.source);
   const encurl = encodeURIComponent(ogimg);
 
+
   if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
     for (let i = 0; i < info.ext_urls.length; i++) {
       if (info.ext_urls[i].includes('https://anidb.net/anime/')) {
@@ -95,15 +96,16 @@ async function genEmbed(data, offset, ogimg) {
   }
 
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
-  if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));  
+  if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
+
 
   embed
     .setTitle('Sauce found')
     .setImage(info.thumbnail)
     .addField('Similarity', info.similarity)
     .addField('Image Search', `
-    [Google](https://www.google.com/searchbyimage?image_url=${encurl})
-    [Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})`)
+    [Google](https://www.google.com/searchbyimage?image_url=${encurl})\n[Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})`
+    )
     .setFooter({ text: `${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}` });
 
 
