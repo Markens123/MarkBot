@@ -4,8 +4,9 @@ import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
 import { BoatI, CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
-import got from 'got';
-let sauce = new nsauce(process.env.SAUCE_API_KEY);
+import { getMalUrl } from '../../../../../util/Constants.js';
+
+const sauce = new nsauce(process.env.SAUCE_API_KEY);
 
 class SauceCommand extends BaseCommand {
   constructor(boat) {
@@ -75,31 +76,24 @@ class SauceCommand extends BaseCommand {
 
 async function genEmbed(data, offset, ogimg) {
   const info = data[offset];
-
   const embed = new MessageEmbed();
-
-  if (info.source) embed.addField('Title', info.source);
   const encurl = encodeURIComponent(ogimg);
-
 
   if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
     for (let i = 0; i < info.ext_urls.length; i++) {
-      if (info.ext_urls[i].includes('https://anidb.net/anime/')) {
-      
-        let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=anidb&id=${info.ext_urls[i].replace('https://anidb.net/anime/', '')}`);
-        body = JSON.parse(body);
-        if (body?.myanimelist) {
-          info.ext_urls.push(`https://myanimelist.net/anime/${body.myanimelist}`)
-        }
+      let url = await getMalUrl(info.ext_urls[i]);
+      if (url) {
+        info.ext_urls.push(url);
       }
     }
   }
 
+  if (info.source) embed.addField('Title', info.source);
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
 
 
-  embed
+  return embed
     .setTitle('Sauce found')
     .setImage(info.thumbnail)
     .addField('Similarity', info.similarity)
@@ -107,9 +101,6 @@ async function genEmbed(data, offset, ogimg) {
     [Google](https://www.google.com/searchbyimage?image_url=${encurl})\n[Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})`
     )
     .setFooter({ text: `${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}` });
-
-
-  return embed;
 }
 
 function genButtons(num: number, boat: BoatI, code: Snowflake) {

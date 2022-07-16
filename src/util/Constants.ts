@@ -1,6 +1,7 @@
 import { MessageActionRow, TextInputComponent } from 'discord.js';
 import getHTML from 'html-get';
 import { JSDOM } from 'jsdom';
+import got from 'got';
 
 export const AniQueue = (arr: string[] | []): string => {
   let content = '';
@@ -13,6 +14,17 @@ export const AniQueue = (arr: string[] | []): string => {
   }
 
   return content;
+}
+
+export const getMalUrl = async (dburl: string): Promise<string | null> => {
+  if (dburl.includes('https://anidb.net/anime/')) {
+    let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=anidb&id=${dburl.replace('https://anidb.net/anime/', '')}`);
+    body = JSON.parse(body);
+    if (body?.myanimelist) {
+      return `https://myanimelist.net/anime/${body.myanimelist}`
+    }
+  } else return null
+
 }
 
 export const checkTF = async (url: string): Promise<{ full: boolean; title: string; }> => {
