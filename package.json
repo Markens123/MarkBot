@@ -19,7 +19,6 @@
     "app-store-scraper": "^0.16.3",
     "axios": "^0.21.1",
     "better-sqlite3": "^7.4.3",
-    "browserless": "^9.0.0-rc.0",
     "canvas": "^2.8.0",
     "cheerio": "^1.0.0-rc.10",
     "discord-build-fetcher-js": "^1.0.7",

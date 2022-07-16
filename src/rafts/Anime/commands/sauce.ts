@@ -65,7 +65,7 @@ class SauceCommand extends BaseCommand {
       message,
       data: out,
       length: out.length,
-      callback: async ({ data, offset }) => await genEmbed(data, offset),
+      callback: async ({ data, offset }) => await genEmbed(data, offset, url),
       options: { filter, idle: 15000 }
     }
 
@@ -73,37 +73,41 @@ class SauceCommand extends BaseCommand {
   }
 }
 
-async function genEmbed(data, offset) {
+async function genEmbed(data, offset, ogimg) {
   const info = data[offset];
 
   const embed = new MessageEmbed();
 
   if (info.source) embed.addField('Title', info.source);
-  
-  embed
-    .setTitle('Sauce found')
-    .setImage(info.thumbnail)
-    .addField('Similarity', info.similarity)
-    .setFooter(`${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}`);
+  const encurl = encodeURIComponent(ogimg);
 
-    if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
-      for (let i = 0; i < info.ext_urls.length; i++) {
+
+  if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
+    for (let i = 0; i < info.ext_urls.length; i++) {
       if (info.ext_urls[i].includes('https://anidb.net/anime/')) {
       
         let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=anidb&id=${info.ext_urls[i].replace('https://anidb.net/anime/', '')}`);
         body = JSON.parse(body);
-        
-
-
         if (body?.myanimelist) {
           info.ext_urls.push(`https://myanimelist.net/anime/${body.myanimelist}`)
-        }      
+        }
       }
     }
   }
 
   if (info.est_time) embed.addField('Estimated Time', info.est_time);
   if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
+
+
+  embed
+    .setTitle('Sauce found')
+    .setImage(info.thumbnail)
+    .addField('Similarity', info.similarity)
+    .addField('Image Search', `
+    [Google](https://www.google.com/searchbyimage?image_url=${encurl})
+    [Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})`)
+    .setFooter({ text: `${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}` });
+
 
   return embed;
 }
