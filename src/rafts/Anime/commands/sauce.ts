@@ -4,7 +4,7 @@ import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
 import { BoatI, CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
-import { getMalUrl } from '../../../../../util/Constants.js';
+import { getMalUrl } from '../../../util/Constants.js';
 
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 
