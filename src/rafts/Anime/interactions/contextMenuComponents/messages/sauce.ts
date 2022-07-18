@@ -40,7 +40,7 @@ class SauceInteraction extends BaseInteraction {
     else if (a.length > 0) {
       const code = SnowflakeUtil.generate();
       const components = genButtons(a.length, this.boat, code.toString());
-      const filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code;
+      const filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code.toString();
 
       await interaction.reply({ content: `There are ${a.length} images on that message which image would you like to get sauce for?`, components });
       const col = await interaction.channel.awaitMessageComponent({ filter, componentType: ComponentType.Button, time: 5000 }).catch(err => err) as ButtonInteraction;
@@ -52,12 +52,11 @@ class SauceInteraction extends BaseInteraction {
     }
 
     if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true });
-
-    console.log(url)
+    
+    if (!interaction.replied) await interaction.reply('Loading Data');
 
     const out: any = await sauce(url);
 
-    if (!interaction.replied) await interaction.reply('Loading Data');
 
     if (!out.length) return interaction.editReply('No sauce found for that image')
     
