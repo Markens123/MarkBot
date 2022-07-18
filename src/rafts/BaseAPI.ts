@@ -1,7 +1,7 @@
 
 import axios, { AxiosInstance } from 'axios';
 import { Collection } from 'discord.js';
-import router from './APIRouter.js';
+import router from '../util/APIRouter.js';
 
 /**
  * Represents an api handler
