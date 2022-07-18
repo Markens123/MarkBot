@@ -1,5 +1,4 @@
-import { ActionRowBuilder, TextInputBuilder, TextInputComponent } from 'discord.js';
-import getHTML from 'html-get';
+import { ActionRowBuilder, TextInputBuilder } from 'discord.js';
 import { JSDOM } from 'jsdom';
 import got from 'got';
 
@@ -24,15 +23,16 @@ export const getMalUrl = async (dburl: string): Promise<string | null> => {
       return `https://myanimelist.net/anime/${body.myanimelist}`
     }
   } else return null
-
 }
 
 export const checkTF = async (url: string): Promise<{ full: boolean; title: string; }> => {
-  const { html } = await getHTML(url);
-  const dom = new JSDOM(html);
+  const { body } = await got(url)
+  const dom = new JSDOM(body);
+  
   let title = dom.window.document.title;
   title = title.slice(9).replace(' beta - TestFlight - Apple','');
-  return {full: html.includes("This beta is full."), title}
+
+  return {full: body.includes("This beta is full."), title}
 }
 
 export const ModalComponents = (arr: TextInputBuilder[]): ActionRowBuilder<TextInputBuilder>[] | null => {

@@ -20,12 +20,10 @@ class DeleteInteraction extends BaseInteraction {
     const author = interaction.customId.split(':').slice(1)[0];
 
     if (author == interaction.user.id) {
-      //@ts-expect-error
-      if (interaction.message.flags.toArray().includes('EPHEMERAL')) return interaction.reply({ content: "You can't delete an ephemeral message silly but you can dismiss it by clicking 'Dismiss Message' below", ephemeral: true })
+      if (interaction.message.flags.toArray().includes('Ephemeral')) return interaction.reply({ content: "You can't delete an ephemeral message silly but you can dismiss it by clicking 'Dismiss Message' below", ephemeral: true })
     
       return interaction.channel.messages.cache.get(interaction.message.id)?.delete().catch(() => {});
     }
-
   }
 
   generateDefinition(messagea) {
