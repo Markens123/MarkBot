@@ -1,9 +1,7 @@
-import * as Discord from 'discord.js';
+import { Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import { exec } from 'child_process';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 class CEvalCommand extends BaseCommand {
   constructor(raft) {
@@ -15,14 +13,13 @@ class CEvalCommand extends BaseCommand {
     super(raft, options);
   }
 
-  async run(message: Discord.Message, args: any): Promise<any> {
+  async run(message: Message, args: any): Promise<any> {
     let nf = false;
     if (args.includes('--nofile') || args.includes('-n')) {
       const index = args.indexOf('--nofile') > -1 ? args.indexOf('--nofile') : args.indexOf('-n');
       nf = true;
       args.splice(index, 1);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const client = this.boat.client;
 
     args = args.join(' ');
@@ -40,19 +37,23 @@ class CEvalCommand extends BaseCommand {
       stderr = error;
       e = true;
     }
-    const embed = new Discord.MessageEmbed().setColor(e === true ? '#FF0000' : '#32CD32').addField('📥 Input', `\`\`\`bash\n${args}\`\`\``);
+    const embed = new EmbedBuilder()
+      .setColor(e === true ? '#FF0000' : '#32CD32')
+      .addFields([{name: '📥 Input', value: `\`\`\`bash\n${args}\`\`\``}]);
+
     const out = stderr + stdout;
+
     if (out.split(/\r\n|\r|\n/).length > 4) {
       if (nf === true) {
-        embed.addField('📤 Output', `\`\`\`bash\n${out.slice(0, 1000)}\n\`\`\``);
+        embed.addFields([{name: '📤 Output', value: `\`\`\`bash\n${out.slice(0, 1000)}\n\`\`\``}]);
         return message.channel.send({ embeds: [embed] });
       }
-      embed.addField('📤 Output', '```Eval output too long, see the attached file```');
-      const attachment = new Discord.MessageAttachment(Buffer.from(out, 'utf-8'), 'eval.bash');
+      embed.addFields([{name: '📤 Output', value: '```Eval output too long, see the attached file```'}]);
+      const attachment = new AttachmentBuilder(Buffer.from(out, 'utf-8'), {name: 'eval.bash'});
       await message.channel.send({ embeds: [embed] });
       return message.channel.send({ files: [attachment] });
     }
-    embed.addField('📤 Output', `\`\`\`bash\n${out}\`\`\``);
+    embed.addFields([{name: '📤 Output', value: `\`\`\`bash\n${out}\`\`\``}]);
     return message.channel.send({ embeds: [embed] });
   }
 }

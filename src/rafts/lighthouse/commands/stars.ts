@@ -1,7 +1,7 @@
 import pkg from 'canvas';
 const { createCanvas } = pkg;
 
-import Discord from 'discord.js';
+import { Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 
 import BaseCommand from '../../BaseCommand.js';
@@ -34,7 +34,7 @@ class StarsCommand extends BaseCommand {
     super(raft, options);
   }
 
-  run(message: Discord.Message, args: any) {
+  run(message: Message, args: any) {
     const width = 1200;
     const height = 730;
     const canvas = createCanvas(width, height);
@@ -66,14 +66,14 @@ class StarsCommand extends BaseCommand {
         context.closePath();
       }
     }
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'image.png');
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: 'image.png'});
 
-    let embed = new Discord.MessageEmbed()
+    let embed = new EmbedBuilder()
       .setTitle('Random Stars')
       .setColor('#000001')
       .setImage('attachment://image.png')
-      .setFooter(`Dots: ${stars} | Lines: ${lines}`)
-      .setAuthor(message.author.tag, message.author.displayAvatarURL());
+      .setFooter({text: `Dots: ${stars} | Lines: ${lines}`})
+      .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()});
 
     message.channel.send({embeds: args.image ? null : [embed], files: [attachment]});
   }

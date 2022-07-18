@@ -1,5 +1,5 @@
 
-import { MessageActionRow } from 'discord.js';
+import { ActionRowBuilder } from 'discord.js';
 import { fileURLToPath } from 'url';
 import { BoatI } from '../../lib/interfaces/Main.js';
 var module = fileURLToPath(import.meta.url);
@@ -17,7 +17,7 @@ export default (boat: BoatI) => {
   Object.defineProperty(Array.prototype, 'chunkc', {
     value: function (chunkSize) {
       const array = this;
-      return [].concat(...array.map((elem, i) => (i % chunkSize ? [] : new MessageActionRow().addComponents(array.slice(i, i + chunkSize)))));
+      return [].concat(...array.map((elem, i) => (i % chunkSize ? [] : new ActionRowBuilder().addComponents(array.slice(i, i + chunkSize)))));
     },
   });  
 

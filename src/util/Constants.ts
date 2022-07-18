@@ -1,4 +1,4 @@
-import { MessageActionRow, TextInputComponent } from 'discord.js';
+import { ActionRowBuilder, TextInputBuilder, TextInputComponent } from 'discord.js';
 import getHTML from 'html-get';
 import { JSDOM } from 'jsdom';
 import got from 'got';
@@ -35,10 +35,10 @@ export const checkTF = async (url: string): Promise<{ full: boolean; title: stri
   return {full: html.includes("This beta is full."), title}
 }
 
-export const ModalComponents = (arr: TextInputComponent[]): MessageActionRow<TextInputComponent>[] | null => {
+export const ModalComponents = (arr: TextInputBuilder[]): ActionRowBuilder<TextInputBuilder>[] | null => {
   const finalArr: any[] = []
   arr.forEach(i => {
-    if (i instanceof TextInputComponent) finalArr.push(new MessageActionRow().addComponents(i))
+    if (i instanceof TextInputBuilder) finalArr.push(new ActionRowBuilder().addComponents(i))
   })
 
   if (finalArr.length == 0) return null

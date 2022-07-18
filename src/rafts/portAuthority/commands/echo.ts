@@ -1,4 +1,4 @@
-import * as Discord from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 
 import BaseCommand from  '../../BaseCommand.js';
@@ -13,13 +13,13 @@ class EchoCommand extends BaseCommand {
     super(boat, options);
   }
 
-  run(message: Discord.Message, args: any) {
-    let embed = new Discord.MessageEmbed()
+  run(message: Message, args: any) {
+    let embed = new EmbedBuilder()
       .setTitle('Echo')
-      .setColor('RANDOM')
+      .setColor('Random')
       .setDescription(args.join(' '))
-      .setFooter('Made by Pilottoaster, Ethan, Markens123 without ck')
-      .setAuthor(message.author.tag, message.author.displayAvatarURL());
+      .setFooter({text: 'Made by Pilottoaster, Ethan, Markens123 without ck'})
+      .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()});
 
     message.channel.send({embeds: [embed]});
   }

@@ -1,5 +1,5 @@
 import BaseInteraction from '../../../BaseInteraction.js';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import { checkTF } from '../../../../util/Constants.js';
 
 const definition = {
@@ -24,7 +24,7 @@ class CheckTFInteraction extends BaseInteraction {
     let url = 'https://testflight.apple.com/join/gdE4pRzI'
     const { full, title } = await checkTF(url)
 
-    let embed = new MessageEmbed();
+    let embed = new EmbedBuilder();
     embed.setTitle(title + " - TestFlight Status").setURL(url).setTimestamp();
 
     if (full) embed.setDescription("Discord testflight is full!").setColor('#FF0000');

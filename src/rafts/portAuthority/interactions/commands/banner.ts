@@ -1,4 +1,4 @@
-import { CommandInteraction, CommandInteractionOption, MessageEmbed } from 'discord.js';
+import { CommandInteraction, CommandInteractionOption, EmbedBuilder, User } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -29,14 +29,18 @@ class BannerInteraction extends BaseInteraction {
 
     let user = args[0].value as string;
 
-    let res = await client.users.fetch(user, {force: true}).then(myUser => myUser).catch(error => error);
+    let res = await client.users.fetch(user, {force: true}).then(myUser => myUser).catch(error => error) as User | Error;
+
+    if (res instanceof Error) {
+      return this.boat.log.error('commands/banner', res)
+    }
 
     if (!res.banner) return interaction.reply({ content: 'That user does not have a banner!', ephemeral: true })
 
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
       .setTitle(`${res.tag}'s banner`)
-      .setColor('NOT_QUITE_BLACK')
-      .setImage(res.bannerURL({format: 'png', size: 2048, dynamic: true}));
+      .setColor('NotQuiteBlack')
+      .setImage(res.bannerURL({extension: 'png', size: 2048}));
 
     return interaction.reply({ embeds: [embed] });
   }

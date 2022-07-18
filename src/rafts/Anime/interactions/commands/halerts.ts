@@ -1,4 +1,4 @@
-import { CommandInteraction, Message, MessageActionRow, MessageEmbed } from 'discord.js';
+import { CommandInteraction, Message, ActionRowBuilder, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class HAlertsInteraction extends BaseInteraction {
@@ -77,16 +77,18 @@ class HAlertsInteraction extends BaseInteraction {
     
     const config = client.halerts.get(interaction.guild.id);
 
-    let embed = new MessageEmbed().setTitle('HAlerts Config').addField('Channel', `<#${config.channel}>`).addField('Mentions', config.mentions ? config.mentions.join(' ') : 'None');
-    //const edit = this.boat.interactions.buttonComponents.get('HALERTS_EDIT').definition();
+    let embed = new EmbedBuilder()
+      .setTitle('HAlerts Config')
+      .addFields([
+        {name: 'Channel', value: `<#${config.channel}>`},
+        {name: 'Mentions', value: config.mentions ? config.mentions.join(' ') : 'None'}
+      ]);
+
     const reset = this.boat.interactions.buttonComponents.get('HALERTS_RESET').definition();
-    const row = new MessageActionRow().addComponents(reset);
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(reset);
 
     interaction.reply({ embeds: [embed], components: [row] });
-
-  
   }
-
 }
 
 function getDefinition() {

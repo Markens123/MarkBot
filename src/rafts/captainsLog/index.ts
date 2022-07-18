@@ -1,5 +1,5 @@
 import * as util from 'util';
-import { WebhookClient, MessageEmbed, MessageAttachment, Snowflake } from 'discord.js';
+import { WebhookClient, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import wn from 'winston';
 import { LogLevels, LogColors, DiscordColors } from '../../util/Constants.js';
 import BaseRaft from '../BaseRaft.js';
@@ -133,16 +133,16 @@ class CaptainsLog extends BaseRaft {
     }
     formatted = `${formatted.join('\n')}${code ? '```' : ''}`;
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription(formatted)
       .setTimestamp(Date.now())
       .setTitle(`${level} \u00B7 ${path}`)
       .setColor(DiscordColors[levels[level] ?? 'CYAN']);
 
-    const attachments: MessageAttachment[] = [];
+    const attachments: AttachmentBuilder[] = [];
 
     if (error?.stack && formattedError.length > 100) {
-      attachments.push(new MessageAttachment(Buffer.from(formattedError), 'stacktrace.ada'));
+      attachments.push(new AttachmentBuilder(Buffer.from(formattedError), {name: 'stacktrace.ada'}));
     }
 
     return this.webhook.send({embeds: [embed], files: attachments}).catch(err => {

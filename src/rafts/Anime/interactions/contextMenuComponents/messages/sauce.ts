@@ -1,4 +1,4 @@
-import { ButtonInteraction, Message, MessageEmbed, SnowflakeUtil, Snowflake, ContextMenuInteraction } from 'discord.js';
+import { ButtonInteraction, Message, EmbedBuilder, SnowflakeUtil, Snowflake, MessageContextMenuCommandInteraction, ComponentType } from 'discord.js';
 import nsauce from 'node-sauce';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
@@ -17,7 +17,7 @@ class SauceInteraction extends BaseInteraction {
     super(raft, info);
   }
 
-  async run(interaction: ContextMenuInteraction) {
+  async run(interaction: MessageContextMenuCommandInteraction) {
     const message = interaction.options.getMessage('message') as Message;
     let url = '';
     let a = [];
@@ -39,11 +39,11 @@ class SauceInteraction extends BaseInteraction {
     if (a.length === 1) url = a[0];
     else if (a.length > 0) {
       const code = SnowflakeUtil.generate();
-      const components = genButtons(a.length, this.boat, code);
+      const components = genButtons(a.length, this.boat, code.toString());
       const filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code;
 
       await interaction.reply({ content: `There are ${a.length} images on that message which image would you like to get sauce for?`, components });
-      const col = await interaction.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 5000 }).catch(err => err) as ButtonInteraction;
+      const col = await interaction.channel.awaitMessageComponent({ filter, componentType: ComponentType.Button, time: 5000 }).catch(err => err) as ButtonInteraction;
       if (!(col instanceof Error)) {
         url = a[col.customId.split(':')[1]];
         col.deferUpdate();
@@ -52,6 +52,8 @@ class SauceInteraction extends BaseInteraction {
     }
 
     if (!url) return interaction.reply({ content: 'Please use this on a message with an image attachment!', ephemeral: true });
+
+    console.log(url)
 
     const out: any = await sauce(url);
 
@@ -76,7 +78,7 @@ class SauceInteraction extends BaseInteraction {
 
 async function genEmbed(data, offset, ogimg) {
   const info = data[offset];
-  const embed = new MessageEmbed();
+  const embed = new EmbedBuilder();
   const encurl = encodeURIComponent(ogimg);
 
   if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
@@ -88,18 +90,23 @@ async function genEmbed(data, offset, ogimg) {
     }
   }
 
-  if (info.source) embed.addField('Title', info.source);
-  if (info.est_time) embed.addField('Estimated Time', info.est_time);
-  if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
+  if (info.source) embed.addFields([{name: 'Title', value: info.source}]);
+  if (info.est_time) embed.addFields([{name: 'Estimated Time', value: info.est_time}]);
+  if (info.ext_urls) embed.addFields([{name: 'External URLS', value: info.ext_urls.join('\n')}]);
 
 
   return embed
     .setTitle('Sauce found')
     .setImage(info.thumbnail)
-    .addField('Similarity', info.similarity)
-    .addField('Image Search', `
-    [Google](https://www.google.com/searchbyimage?image_url=${encurl})\n[Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})`
-    )
+    .addFields([
+      {name: 'Similarity', value: info.similarity},
+      {
+        name: 'Image Search', 
+        value: `
+          [Google](https://www.google.com/searchbyimage?image_url=${encurl})\n[Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})
+        `
+      }
+    ])
     .setFooter({ text: `${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}` });
 }
 

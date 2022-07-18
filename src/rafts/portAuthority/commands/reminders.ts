@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
 import BaseCommand from  '../../BaseCommand.js';
@@ -47,17 +47,17 @@ const chunckarr = (arr: any[], chunk: number) => arr.reduce((all,one,i) => {
   return all
 }, []);
 
-function genEmbed(data: string[][], offset: number): MessageEmbed {
+function genEmbed(data: string[][], offset: number): EmbedBuilder {
   if (offset >= data.length) 
-    return new MessageEmbed()
+    return new EmbedBuilder()
       .setTitle('Error')
       .setDescription('An error has occured please try again')
-      .setColor('RED');
+      .setColor('Red');
 
-  return new MessageEmbed()
+  return new EmbedBuilder()
     .setTitle('Reminders')
     .setDescription(data[offset].join('\n'))
-    .setColor('NAVY');
+    .setColor('Navy');
 
 }
 

@@ -1,11 +1,13 @@
 import Discord, { CommandInteraction } from 'discord.js';
 import pm2 from 'pm2';
+
 pm2.connect(function(err) {
   if (err) {
     console.error(err);
     process.exit(2);
   }  
 });
+
 import { exec } from 'child_process';
 import BaseInteraction from '../../../BaseInteraction.js';
 

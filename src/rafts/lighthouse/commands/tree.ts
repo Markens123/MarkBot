@@ -1,7 +1,7 @@
 import pkg from 'canvas';
 const { createCanvas } = pkg;
 
-import * as Discord from 'discord.js';
+import {Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 
 import BaseCommand from '../../BaseCommand.js';
@@ -16,7 +16,7 @@ class TreeCommand extends BaseCommand {
     super(raft, options);
   }
 
-  async run(message: Discord.Message) {
+  async run(message: Message) {
 
     const responseMsg = await message.channel.send('Generating Tree');
     const startTime = Date.now();
@@ -84,13 +84,13 @@ class TreeCommand extends BaseCommand {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, width, height);
     const endTime = Date.now();
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'tree.png');
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: 'tree.png'});
 
-    const embed = new Discord.MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle('Randomly generated tree')
       .setImage('attachment://tree.png')
-      .setFooter(`Generation time: ${(endTime - startTime) / 1000}s`)
-      .setAuthor(message.author.tag, message.author.displayAvatarURL());
+      .setFooter({text: `Generation time: ${(endTime - startTime) / 1000}s`})
+      .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()});
 
     if (responseMsg.deletable) responseMsg.delete();
     message.channel.send({embeds: [embed], files: [attachment]});

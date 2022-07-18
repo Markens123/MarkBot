@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
+import { Message, AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 import { fileURLToPath } from 'url';
@@ -44,7 +44,7 @@ class UpdateCommand extends BaseCommand {
     const reboot = args.reboot;
     const python = args.python;
 
-    let embed = new MessageEmbed().setColor('BLURPLE');
+    let embed = new EmbedBuilder().setColor('Blurple');
 
     if (branch) {
       let { stdout, stderr } = await promiseExec(`git checkout ${branch}`).catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
@@ -72,7 +72,7 @@ class UpdateCommand extends BaseCommand {
       if (!stdout && !stderr) return;
       stdout = clean(stdout);
       stderr = clean(stderr);
-      let attachment2 = new MessageAttachment(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), 'transpiled.bash')
+      let attachment2 = new AttachmentBuilder(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), {name: 'transpiled.bash'})
       await message.channel.send({files: [attachment2]});    
     }
 
@@ -80,7 +80,7 @@ class UpdateCommand extends BaseCommand {
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
-    let attachment = new MessageAttachment(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), 'transpiled.bash')
+    let attachment = new AttachmentBuilder(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), {name: 'transpiled.bash'})
     await message.channel.send({files: [attachment]});
 
     if (reboot) {

@@ -1,10 +1,10 @@
-import { ButtonInteraction, Snowflake, MessageButton } from 'discord.js';
+import { ButtonInteraction, Snowflake, ButtonBuilder, ButtonStyle } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 
 class DeleteInteraction extends BaseInteraction {
   
-  definition: (user: Snowflake) => MessageButton;
+  definition: (user: Snowflake) => ButtonBuilder;
   name: string;
 
   constructor(raft) {
@@ -30,10 +30,10 @@ class DeleteInteraction extends BaseInteraction {
 
   generateDefinition(messagea) {
     const customId = `${ComponentFunctions[this.name]}:${messagea}`;
-    return new MessageButton({
+    return new ButtonBuilder({
       customId,
       label: '🗑️',
-      style: 'DANGER',
+      style: ButtonStyle.Danger,
     })  
   } 
 }

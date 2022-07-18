@@ -1,10 +1,10 @@
-import { ButtonInteraction, MessageButton } from 'discord.js';
+import { ButtonInteraction, ButtonBuilder, ButtonStyle } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 import { YesNo } from '../../../../util/Buttons.js';
 
 class HAlertsResetInteraction extends BaseInteraction {
-  definition: () => MessageButton;
+  definition: () => ButtonBuilder;
   name: string;
 
   constructor(raft) {
@@ -35,10 +35,10 @@ class HAlertsResetInteraction extends BaseInteraction {
 
   generateDefinition() {
     const customId = `${ComponentFunctions[this.name]}`;
-    return new MessageButton({
+    return new ButtonBuilder({
       customId,
       label: '🗑️',
-      style: 'DANGER',
+      style: ButtonStyle.Danger,
     })  
   } 
 }

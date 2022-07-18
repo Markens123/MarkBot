@@ -1,9 +1,9 @@
-import { ButtonInteraction, MessageButton, Message, MessageEmbed } from 'discord.js';
+import { ButtonInteraction, ButtonBuilder, Message, EmbedBuilder, ButtonStyle } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { AniQueue, ComponentFunctions } from '../../../../util/Constants.js';
 
 class AQueueDeleteInteraction extends BaseInteraction {
-  definition: () => MessageButton;
+  definition: () => ButtonBuilder;
   name: string;
 
   constructor(raft) {
@@ -46,7 +46,7 @@ class AQueueDeleteInteraction extends BaseInteraction {
 
     client.maldata.set('queue', arr)
 
-    const embed = new MessageEmbed().setTitle('Queue').setDescription(AniQueue(arr)).setColor('RANDOM')
+    const embed = new EmbedBuilder().setTitle('Queue').setDescription(AniQueue(arr)).setColor('Random')
 
     interaction.channel.messages.cache.get(interaction.message.id).edit({ embeds: [embed] }).catch(() => {});
     
@@ -57,10 +57,10 @@ class AQueueDeleteInteraction extends BaseInteraction {
 
   generateDefinition() {
     const customId = `${ComponentFunctions[this.name]}`;
-    return new MessageButton({
+    return new ButtonBuilder({
       customId,
       label: '🗑️',
-      style: 'DANGER',
+      style: ButtonStyle.Danger,
     })  
   } 
 }

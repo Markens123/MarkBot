@@ -1,4 +1,4 @@
-import { ContextMenuInteraction, MessageActionRow, MessageEmbed, Snowflake, Message, SnowflakeUtil, ButtonInteraction } from 'discord.js';
+import { ContextMenuCommandInteraction, EmbedBuilder, Snowflake, Message, SnowflakeUtil, ButtonInteraction, ComponentType } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import Identify from '../../../../../util/Identify.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
@@ -12,7 +12,7 @@ class GuessInteraction extends BaseInteraction {
     super(raft, info);
   }
 
-  async run(interaction: ContextMenuInteraction) {
+  async run(interaction: ContextMenuCommandInteraction) {
     const message = interaction.options.getMessage('message') as Message;
     let url = '';
     let a = [];
@@ -34,11 +34,11 @@ class GuessInteraction extends BaseInteraction {
     if (a.length === 1) url = a[0];
     else if (a.length > 0) {
       const code = SnowflakeUtil.generate();
-      const components = genButtons(a.length, this.boat, code);
+      const components = genButtons(a.length, this.boat, code.toString());
       const filter = i => i.user.id === interaction.user.id && i.customId.split(':')[2] === code;
 
       await interaction.reply({ content: `There are ${a.length} valid images on that message. Which image would you like to use?`, components });
-      const col = await interaction.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 5000 }).catch(err => err) as ButtonInteraction;
+      const col = await interaction.channel.awaitMessageComponent({ filter, componentType: ComponentType.Button, time: 5000 }).catch(err => err) as ButtonInteraction;
       if (!(col instanceof Error)) {
         url = a[col.customId.split(':')[1]];
         col.deferUpdate();
@@ -94,13 +94,13 @@ function processImage(interaction, url, boat) {
     let guess = stdout[0].replace(/(\r\n|\n|\r)/gm, '');
     let confidence = stdout[1].replace(/(\r\n|\n|\r)/gm, '');
 
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
       .setTitle('Neural Network Guess')
       .setURL('https://github.com/Pabszito/NNTwitterBot')
       .setDescription(`My best guess for the following image is \`${guess}\`, with a confidence of about \`${confidence}\`.`)
       .setImage(url)
-      .setColor('RANDOM') 
-      .setFooter('Original twitter bot by riscmkv, code by Pabszito#1158, stolen by Markens')
+      .setColor('Random') 
+      .setFooter({text: 'Original twitter bot by riscmkv, code by Pabszito#1158, stolen by Markens'})
 
     interaction.editReply({ content: null, embeds: [embed], components: [] })
   });
