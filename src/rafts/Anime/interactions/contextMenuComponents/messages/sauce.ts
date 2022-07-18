@@ -80,7 +80,7 @@ async function genEmbed(data, offset, ogimg) {
   const embed = new EmbedBuilder();
   const encurl = encodeURIComponent(ogimg);
 
-  if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
+  if (info.ext_urls?.length && !info.ext_urls?.some(l => l.includes('myanimelist.net'))) {
     for (let i = 0; i < info.ext_urls.length; i++) {
       let url = await getMalUrl(info.ext_urls[i]);
       if (url) {
