@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -40,57 +40,71 @@ class ScheduleInteraction extends BaseInteraction {
     const date = new Date(date_str);
 
     const { c, day, next_class, next_class_ts, period, class_end } = getData(date, temp);
-    const embed = new MessageEmbed();
+    const embed = new EmbedBuilder();
     console.log({ c, day, next_class, next_class_ts, period, class_end })
-    if (day !== 'Sunday' && day !== 'Saturday') embed.setFooter(`${day} day`).setTimestamp()
+    if (day !== 'Sunday' && day !== 'Saturday') embed.setFooter({text: `${day} day`}).setTimestamp()
 
 
     if (c && next_class.p === 'Lunch') {
-      embed.setColor('AQUA')
-      .addField('Current', `You currently have **${c}** and it will end <t:${class_end}:R>`)
-      .addField('Next', `You have **Lunch** next and it will start <t:${next_class_ts}:R>`)
+      embed.setColor('Aqua')
+      .addFields([
+        {name: 'Current', value: `You currently have **${c}** and it will end <t:${class_end}:R>`},
+        {name: 'Next', value: `You have **Lunch** next and it will start <t:${next_class_ts}:R>`}
+      ]);
 
       return interaction.reply({ embeds: [embed], ephemeral: true })
     }
 
     if (period === 'NS' && next_class.p) {
-      embed.setColor('AQUA')
-      .addField('Current', `There are no class atm`)
-      .addField('Next', `Next period will be ${nth(next_class.p)} period and you will have **${next_class.c}** and it will will start <t:${next_class_ts}:R>`)
+      embed.setColor('Aqua')
+      .addFields([
+        {name: 'Current', value: `There are no class atm`},
+        {
+          name:'Next', 
+          value: `Next period will be ${nth(next_class.p)} period and you will have **${next_class.c}** and it will will start <t:${next_class_ts}:R>`
+        }
+      ]);
       
       return interaction.reply({ embeds: [embed], ephemeral: true })
     }
 
     if (day === 'Sunday' || day === 'Saturday') {
-      embed.setColor('DARK_RED').setDescription('There is no school today!')
+      embed.setColor('DarkRed').setDescription('There is no school today!');
       return interaction.reply({ embeds: [embed], ephemeral: true })
     }
 
     if (!next_class.p) {
       if (!c) {
-        embed.setColor('AQUA')
-        .addField('Current', `You currently have **${c}** and it will end <t:${class_end}:R>`)
-        .addField('Next', 'There are no more classes scheduled for the day')
+        embed.setColor('Aqua')
+        .addFields([
+          {name: 'Current', value: `You currently have **${c}** and it will end <t:${class_end}:R>`},
+          {name: 'Next', value: 'There are no more classes scheduled for the day'}
+        ]);
         
         return interaction.reply({ embeds: [embed], ephemeral: true })
       } 
-      embed.setColor('DARK_RED')
-      .setDescription('There are no more classes scheduled for today!')
+      
+      embed
+        .setColor('DarkRed')
+        .setDescription('There are no more classes scheduled for today!')
       
       return interaction.reply({ embeds: [embed], ephemeral: true })
     }
 
     if (period && c && next_class.p) {
-      embed.setColor('AQUA')
-      .addField('Current', `You currently have **${c}** and it will end <t:${class_end}:R>`)
-      .addField('Next', `Next period will be ${nth(next_class.p)} period, you will have **${next_class.c}** and it will start <t:${next_class_ts}:R>`)
-      
+      embed
+        .setColor('Aqua')
+        .addFields([
+          {name: 'Current', value: `You currently have **${c}** and it will end <t:${class_end}:R>`},
+          {name: 'Next', value: `Next period will be ${nth(next_class.p)} period, you will have **${next_class.c}** and it will start <t:${next_class_ts}:R>}`}
+        ]);
+
       return interaction.reply({ embeds: [embed], ephemeral: true })
     }
     if (!period && next_class.p) {
-      embed.setColor('AQUA')
-      .addField('Next', `Next period will be ${nth(next_class.p)} period, you will have **${next_class.c}** and it will start <t:${next_class_ts}:R>`)
       return embed
+        .setColor('Aqua')
+        .addFields({name: 'Next', value: `Next period will be ${nth(next_class.p)} period, you will have **${next_class.c}** and it will start <t:${next_class_ts}:R>`})
     }
   }
 }

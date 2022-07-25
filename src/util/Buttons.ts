@@ -1,4 +1,4 @@
-import { ButtonInteraction, InteractionCollectorOptions, Message, MessageActionRow, MessageButton, SnowflakeUtil, CommandInteraction, User } from 'discord.js';
+import { ButtonInteraction, InteractionCollectorOptions, Message, ActionRowBuilder, ButtonBuilder, SnowflakeUtil, CommandInteraction, User, MessageActionRowComponentBuilder, ButtonStyle, MessageComponentCollectorOptions, SelectMenuInteraction, MessageComponentType, ComponentType } from 'discord.js';
 import { BoatI } from '../../lib/interfaces/Main.js';
 
 export const Paginator = async ({boat, message, data, offset = 0, length = 1, callback, options}: {
@@ -8,7 +8,7 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
   offset?: number,
   length?: number,
   callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any,
-  options: InteractionCollectorOptions<ButtonInteraction>
+  options: MessageComponentCollectorOptions<ButtonInteraction>
   }) => {
     let currentIndex = offset;
     
@@ -16,11 +16,12 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
 
     const msg = await message.channel.send({ embeds: [embed] });
 
+    //@ts-expect-error
     const collector = msg.createMessageComponentCollector(options);
 
     if (!msg.components.length) {
-      let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-      let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
+      let next = new ButtonBuilder().setLabel('➡️').setStyle(ButtonStyle.Primary).setCustomId('collector:next');
+      let back = new ButtonBuilder().setLabel('⬅️').setStyle(ButtonStyle.Primary).setCustomId('collector:back');
       let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
       
       if (currentIndex === 0) back.setDisabled(true)
@@ -31,7 +32,7 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
         back = null;
       }
 
-      let row = new MessageActionRow().addComponents([back, next, del].filter(x => x))
+      let row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([back, next, del].filter(x => x))
 
       
       
@@ -39,8 +40,8 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
     }
 
     collector.on('collect', async (interaction) => {
-      const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next');
-      const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back');
+      const next = new ButtonBuilder().setLabel('➡️').setStyle(ButtonStyle.Primary).setCustomId('collector:next');
+      const back = new ButtonBuilder().setLabel('⬅️').setStyle(ButtonStyle.Primary).setCustomId('collector:back');
       const del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
 
       interaction.deferUpdate();
@@ -50,7 +51,7 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
       if (currentIndex === 0) back.setDisabled(true);
       if (currentIndex + 1 >= length) next.setDisabled(true);
 
-      const row = new MessageActionRow().addComponents(back, next, del);
+      const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(back, next, del);
 
       const e = await callback({ data, offset: currentIndex, message });
 
@@ -58,8 +59,8 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
     });
 
     collector.on('end', () => {
-      let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId('collector:next').setDisabled(true);
-      let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId('collector:back').setDisabled(true);
+      let next = new ButtonBuilder().setLabel('➡️').setStyle(ButtonStyle.Primary).setCustomId('collector:next').setDisabled(true);
+      let back = new ButtonBuilder().setLabel('⬅️').setStyle(ButtonStyle.Primary).setCustomId('collector:back').setDisabled(true);
       let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
       
       if (length === 1) {
@@ -67,7 +68,7 @@ export const Paginator = async ({boat, message, data, offset = 0, length = 1, ca
         back = null;
       }
 
-      let row = new MessageActionRow().addComponents([back, next, del].filter(x => x));
+      let row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([back, next, del].filter(x => x));
 
       msg.edit({ components: [row] }).catch(() => {});
 
@@ -94,13 +95,13 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
     if (editreply) msg = await interaction.editReply({ content: null, embeds: [embed] }) as Message;
     else msg = await interaction.channel.send({ embeds: [embed] })
 
-    options.filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
+    options.filter = (intt: ButtonInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code.toString();
 
     const collector = interaction.channel.createMessageComponentCollector(options);
 
     if (!msg.components.length) {
-      let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
-      let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
+      let next = new ButtonBuilder().setLabel('➡️').setStyle(ButtonStyle.Primary).setCustomId(`collector:next:${code}`);
+      let back = new ButtonBuilder().setLabel('⬅️').setStyle(ButtonStyle.Primary).setCustomId(`collector:back:${code}`);
       let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
       
       if (currentIndex === 0) back.setDisabled(true)
@@ -111,7 +112,7 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
         back = null;
       }
 
-      let row = new MessageActionRow().addComponents([back, next, del].filter(x => x))
+      let row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([back, next, del].filter(x => x))
 
       
       if (editreply) interaction.editReply({ components: [row] }).catch(() => {})
@@ -119,8 +120,8 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
     }
 
     collector.on('collect', async (int) => {
-      const next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`);
-      const back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`);
+      const next = new ButtonBuilder().setLabel('➡️').setStyle(ButtonStyle.Primary).setCustomId(`collector:next:${code}`);
+      const back = new ButtonBuilder().setLabel('⬅️').setStyle(ButtonStyle.Primary).setCustomId(`collector:back:${code}`);
       const del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
 
       int.deferUpdate();
@@ -130,7 +131,7 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
       if (currentIndex === 0) back.setDisabled(true);
       if (currentIndex + 1 >= length) next.setDisabled(true);
 
-      const row = new MessageActionRow().addComponents(back, next, del);
+      const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(back, next, del);
 
       const e = await callback({ data, offset: currentIndex, interaction });
 
@@ -140,8 +141,8 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
     });
 
     collector.on('end', () => {
-      let next = new MessageButton().setLabel('➡️').setStyle('PRIMARY').setCustomId(`collector:next:${code}`).setDisabled(true);
-      let back = new MessageButton().setLabel('⬅️').setStyle('PRIMARY').setCustomId(`collector:back:${code}`).setDisabled(true);
+      let next = new ButtonBuilder().setLabel('➡️').setStyle(ButtonStyle.Primary).setCustomId(`collector:next:${code}`).setDisabled(true);
+      let back = new ButtonBuilder().setLabel('⬅️').setStyle(ButtonStyle.Primary).setCustomId(`collector:back:${code}`).setDisabled(true);
       let del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(interaction.user.id);
       
       if (length === 1) {
@@ -149,7 +150,7 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
         back = null;
       }
 
-      let row = new MessageActionRow().addComponents([back, next, del].filter(x => x));
+      let row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents([back, next, del].filter(x => x));
 
       if (editreply) interaction.editReply({ components: [row] }).catch(() => {})
       else msg.edit({ components: [row] }).catch(() => {})
@@ -158,9 +159,9 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
 }
 
 export const YesNo = async (message: Message, content: string, author: User = message.author): Promise<boolean | null> => {
-  const yes = new MessageButton().setStyle('SUCCESS').setCustomId(`collector:yes`).setLabel('Yes');
-  const no = new MessageButton().setStyle('DANGER').setCustomId(`collector:no`).setLabel('No');
-  const row = new MessageActionRow().addComponents(yes, no);
+  const yes = new ButtonBuilder().setStyle(ButtonStyle.Success).setCustomId(`collector:yes`).setLabel('Yes');
+  const no = new ButtonBuilder().setStyle(ButtonStyle.Danger).setCustomId(`collector:no`).setLabel('No');
+  const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(yes, no);
 
   const msg = await message.channel.send({content, components: [row]})
   const filter = (interaction: ButtonInteraction) => interaction.user.id === author.id;

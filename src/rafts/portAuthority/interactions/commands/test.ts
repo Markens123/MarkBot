@@ -1,6 +1,6 @@
 import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
-import { CommandInteraction, CommandInteractionOption, Modal, TextInputComponent } from 'discord.js';
+import { CommandInteraction, CommandInteractionOption, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { ModalComponents, ModalFunctions } from '../../../../util/Constants.js';
 const definition = getDefinition()
 
@@ -19,27 +19,27 @@ class TestInteraction extends BaseInteraction {
     const client = interaction.client;
 
     if (resp === 'modal') {
-      const modal = new Modal().setCustomId(`${ModalFunctions['TEST']}:`).setTitle('Test Modal!');
+      const modal = new ModalBuilder().setCustomId(`${ModalFunctions['TEST']}:`).setTitle('Test Modal!');
 
-      const nameInput = new TextInputComponent()
+      const nameInput = new TextInputBuilder()
       .setCustomId('name')
       .setLabel('Name')
       .setRequired(true)
       .setPlaceholder('Josh')
-      .setStyle('SHORT');
+      .setStyle(TextInputStyle.Short);
 
-      const ageInput = new TextInputComponent()
+      const ageInput = new TextInputBuilder()
       .setCustomId('age')
       .setLabel('Age')
       .setRequired(false)
       .setPlaceholder('21')
-      .setStyle('SHORT');
+      .setStyle(TextInputStyle.Short);
       
-      const hruInput = new TextInputComponent()
+      const hruInput = new TextInputBuilder()
       .setCustomId('hru')
       .setLabel('How are you doing today?')
       .setRequired(false)
-      .setStyle('PARAGRAPH');
+      .setStyle(TextInputStyle.Paragraph);
 
       modal.addComponents(...ModalComponents([nameInput, ageInput, hruInput]));
 

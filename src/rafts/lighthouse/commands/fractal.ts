@@ -1,7 +1,7 @@
 import pkg from 'canvas';
 const { createCanvas } = pkg;
 
-import Discord from 'discord.js';
+import { Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { util } from '../../../util/index.js';
 
@@ -17,7 +17,7 @@ class FractalCommand extends BaseCommand {
     super(raft, options);
   }
 
-  async run(message: Discord.Message) {
+  async run(message: Message) {
     const responseMsg = await message.channel.send('Generating Fractal');
     const startTime = Date.now();
     const width = 1200;
@@ -69,13 +69,13 @@ class FractalCommand extends BaseCommand {
     ctx.translate(width / 2, height / 2);
     ctx.rotate((Math.floor(Math.random() * 360) * Math.PI) / 180);
     const endTime = Date.now();
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'fractal.png');
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: 'fractal.png'});
 
-    const embed = new Discord.MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle('Randomly generated fractal')
       .setImage('attachment://fractal.png')
-      .setFooter(`Generation time: ${(endTime - startTime) / 1000}s`)
-      .setAuthor(message.author.tag, message.author.displayAvatarURL());
+      .setFooter({text: `Generation time: ${(endTime - startTime) / 1000}s`})
+      .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()});
 
     if (responseMsg.deletable) responseMsg.delete();
     message.channel.send({embeds: [embed], files: [attachment]});

@@ -1,9 +1,9 @@
-import { ButtonInteraction, MessageButton, MessageEmbed, SnowflakeUtil, MessageSelectMenu, MessageActionRow, SelectMenuInteraction, MessageComponentInteraction } from 'discord.js';
+import { ButtonInteraction, ButtonBuilder, EmbedBuilder, SnowflakeUtil, SelectMenuBuilder, ActionRowBuilder, SelectMenuInteraction, MessageComponentInteraction, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { AniQueue, ComponentFunctions } from '../../../../util/Constants.js';
 
 class AQueueReorderInteraction extends BaseInteraction {
-  definition: () => MessageButton;
+  definition: () => ButtonBuilder;
   name: string;
 
   constructor(raft) {
@@ -20,7 +20,7 @@ class AQueueReorderInteraction extends BaseInteraction {
     const code = SnowflakeUtil.generate();
     let arr = client.maldata.get('queue');
 
-    const embed = new MessageEmbed().setTitle('Queue Preview').setDescription('Please add stuff using the select menu!').setColor('NOT_QUITE_BLACK')
+    const embed = new EmbedBuilder().setTitle('Queue Preview').setDescription('Please add stuff using the select menu!').setColor('NotQuiteBlack')
 
     let options = [];
 
@@ -31,17 +31,17 @@ class AQueueReorderInteraction extends BaseInteraction {
       })
     }
 
-    const select = new MessageSelectMenu().addOptions(options).setCustomId(`collector:aqueue_select:${code}`);
-    const done = new MessageButton().setLabel('Done').setStyle('SUCCESS').setCustomId(`collector:aqueue_done:${code}`);
-    const reset = new MessageButton().setLabel('Reset').setStyle('DANGER').setCustomId(`collector:aqueue_reset:${code}`);
-    const row = new MessageActionRow().addComponents(select);
-    const row2 = new MessageActionRow().addComponents(done, reset);
+    const select = new SelectMenuBuilder().addOptions(options).setCustomId(`collector:aqueue_select:${code}`);
+    const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`);
+    const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);
+    const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(done, reset);
 
 
 
     interaction.reply({ embeds: [embed], components: [row, row2], ephemeral: true });
 
-    const filter = (intt: MessageComponentInteraction) => intt.user.id === interaction.user.id  && intt.customId.split(':')[2]  === code;
+    const filter = (intt: MessageComponentInteraction) => intt.user.id === interaction.user.id  && intt.customId.split(':')[2]  === code.toString();
 
     const o = {
       filter,
@@ -53,9 +53,17 @@ class AQueueReorderInteraction extends BaseInteraction {
 
     let newarr = []
 
-    collector.on('collect', async (int: ButtonInteraction | SelectMenuInteraction) => {
+    collector.on('collect', (int) => {
+      console.log(int)
+      return
+    })
 
-      if (!int.customId.split(':')[1].startsWith('aqueue')) return int.reply({ content: "These are not the droids you're looking for", ephemeral: true });
+    collector.on('collect', async (int) => {
+
+      if (!int.customId.split(':')[1].startsWith('aqueue')) {
+        int.reply({ content: "These are not the droids you're looking for", ephemeral: true });
+        return
+      }
 
       int.deferUpdate()
 
@@ -64,7 +72,7 @@ class AQueueReorderInteraction extends BaseInteraction {
         newarr.push(arr[index])
         arr.splice(index, 1)
 
-        const embed = new MessageEmbed().setTitle('Preview').setDescription(AniQueue(newarr)).setColor('NOT_QUITE_BLACK')
+        const embed = new EmbedBuilder().setTitle('Preview').setDescription(AniQueue(newarr)).setColor('NotQuiteBlack')
 
         let oarr = [];
     
@@ -75,17 +83,17 @@ class AQueueReorderInteraction extends BaseInteraction {
           })
         }
     
-        const select = new MessageSelectMenu().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
-        const done = new MessageButton().setLabel('Done').setStyle('SUCCESS').setCustomId(`collector:aqueue_done:${code}`);
-        const reset = new MessageButton().setLabel('Reset').setStyle('DANGER').setCustomId(`collector:aqueue_reset:${code}`);
+        const select = new SelectMenuBuilder().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
+        const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`);
+        const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
         
         if (!arr.length) {
           select.addOptions({value: 'None', label: 'None'});
           select.setDisabled(true);
         }
 
-        const row = new MessageActionRow().addComponents(select);
-        const row2 = new MessageActionRow().addComponents(done, reset);
+        const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);
+        const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(done, reset);
 
         interaction.editReply({ embeds: [embed], components: [row, row2] })
 
@@ -93,16 +101,16 @@ class AQueueReorderInteraction extends BaseInteraction {
         if (int.customId.split(':')[1] === 'aqueue_done') {
           client.maldata.set('queue', newarr)
 
-          const e = new MessageEmbed().setTitle('Queue').setDescription(AniQueue(newarr)).setColor('RANDOM')
+          const e = new EmbedBuilder().setTitle('Queue').setDescription(AniQueue(newarr)).setColor('Random')
 
           interaction.channel.messages.cache.get(interaction.message.id).edit({ embeds: [e] }).catch(() => {});
 
-          const select = new MessageSelectMenu().setCustomId(`collector:aqueue_select:${code}`).addOptions({value: 'None', label: 'None'}).setDisabled(true);
-          const done = new MessageButton().setLabel('Done').setStyle('SUCCESS').setCustomId(`collector:aqueue_done:${code}`).setDisabled(true);
-          const reset = new MessageButton().setLabel('Reset').setStyle('DANGER').setCustomId(`collector:aqueue_reset:${code}`);
+          const select = new SelectMenuBuilder().setCustomId(`collector:aqueue_select:${code}`).addOptions({value: 'None', label: 'None'}).setDisabled(true);
+          const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`).setDisabled(true);
+          const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
           
-          const row = new MessageActionRow().addComponents(select);
-          const row2 = new MessageActionRow().addComponents(done, reset);
+          const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);
+          const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(done, reset);
   
           interaction.editReply({ embeds: [embed], components: [row, row2] })
 
@@ -120,11 +128,11 @@ class AQueueReorderInteraction extends BaseInteraction {
             })
           }
       
-          const select = new MessageSelectMenu().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
-          const done = new MessageButton().setLabel('Done').setStyle('SUCCESS').setCustomId(`collector:aqueue_done:${code}`);
-          const reset = new MessageButton().setLabel('Reset').setStyle('DANGER').setCustomId(`collector:aqueue_reset:${code}`);
-          const row = new MessageActionRow().addComponents(select);
-          const row2 = new MessageActionRow().addComponents(done, reset);
+          const select = new SelectMenuBuilder().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
+          const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`);
+          const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
+          const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);
+          const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(done, reset);
 
           interaction.editReply({ embeds: [embed], components: [row, row2] });
         }
@@ -137,10 +145,10 @@ class AQueueReorderInteraction extends BaseInteraction {
 
   generateDefinition() {
     const customId = `${ComponentFunctions[this.name]}`;
-    return new MessageButton({
+    return new ButtonBuilder({
       customId,
       label: '🔄',
-      style: 'SECONDARY',
+      style: ButtonStyle.Secondary,
     })  
   } 
 }

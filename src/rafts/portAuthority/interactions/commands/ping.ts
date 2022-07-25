@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -20,7 +20,7 @@ class PingInteraction extends BaseInteraction {
   async run(interaction: CommandInteraction) {
     const client = this.boat.client;
     const description = `🏓 API offset: ${Date.now() - interaction.createdTimestamp}ms. Heartbeat: ${Math.round(client.ws.ping)}ms.`;
-    let embed = new MessageEmbed();
+    let embed = new EmbedBuilder();
     embed.setTitle('Pong').setColor('#F1C40F').setDescription(description);
 
     await interaction.reply({embeds: [embed]});

@@ -1,7 +1,7 @@
 import pkg from 'canvas';
 const { createCanvas } = pkg;
 
-import * as Discord from 'discord.js';
+import { AttachmentBuilder, Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { util } from '../../../util/index.js';
 
@@ -17,7 +17,7 @@ class AbstractCommand extends BaseCommand {
     super(raft, options);
   }
 
-  async run(message: Discord.Message) {
+  async run(message: Message) {
     const width = 1200;
     const height = 730;
     const canvas = createCanvas(width, height);
@@ -36,7 +36,7 @@ class AbstractCommand extends BaseCommand {
       { context },
     );
 
-    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'blue.png');
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: 'blue.png'});
 
     message.channel.send({files: [attachment]});
   }

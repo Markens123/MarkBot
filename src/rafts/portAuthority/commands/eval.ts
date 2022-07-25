@@ -1,5 +1,5 @@
 import * as util from 'util';
-import * as Discord from 'discord.js';
+import Discord, { Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import glob from 'glob';
 import * as fs from 'fs';
@@ -57,7 +57,10 @@ class EvalCommand extends BaseCommand {
 
   async run(message: Discord.Message, { depth, nf, nr, canary, msg }, ogargs) {
     const client = this.boat.client;
-    if (canary) client.options.http.api = 'https://canary.discord.com/api';
+    if (canary) client.options.rest.api = 'https://canary.discord.com/api';
+
+    Discord.Client
+    
 
     depth = parseInt(depth)
 
@@ -110,12 +113,12 @@ class EvalCommand extends BaseCommand {
       evaluated = this.boat.toJSON();
     }
 
-    if (canary) client.options.http.api = 'https://discord.com/api';
+    if (canary) client.options.rest.api = 'https://discord.com/api';
 
-    if (evaluated instanceof Discord.MessageAttachment || evaluated instanceof Discord.MessageEmbed) {
+    if (evaluated instanceof AttachmentBuilder || evaluated instanceof EmbedBuilder) {
       try {
         let msg;
-        if (evaluated instanceof Discord.MessageAttachment) msg = await message.channel.send({ files: [evaluated] })
+        if (evaluated instanceof AttachmentBuilder) msg = await message.channel.send({ files: [evaluated] })
         else msg = await message.channel.send({ embeds: [evaluated] })
         e = false;
         evaluated = msg;
@@ -125,21 +128,26 @@ class EvalCommand extends BaseCommand {
       }
     }
     const cleaned = await this.clean(client, util.inspect(evaluated, { depth }));
-    const embed = new Discord.MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(e === true ? '#FF0000' : '#32CD32')
-      .addField('📥 Input', `\`\`\`js\n${(args.replace('(async () => {return ', '').replace('})()', '')).slice(0, 1000)}\`\`\``)
+      .addFields([
+        {
+          name: '📥 Input', 
+          value: `\`\`\`js\n${(args.replace('(async () => {return ', '').replace('})()', '')).slice(0, 1000)}\`\`\``
+        }
+      ]);
 
     if (cleaned.split(/\r\n|\r|\n/).length > 4 || cleaned.length > 1023) {
       if (nf === true) {
-        embed.addField('📤 Output', `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``);
+        embed.addFields([{name: '📤 Output', value: `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``}]);
         return nr && !e ? null : message.channel.send({ embeds: [embed] });
       }
-      embed.addField('📤 Output', '```Eval output too long, see the attached file```');
-      const attachment = new Discord.MessageAttachment(Buffer.from(cleaned, 'utf-8'), 'eval.js');
+      embed.addFields([{name: '📤 Output', value: '```Eval output too long, see the attached file```'}]);
+      const attachment = new AttachmentBuilder(Buffer.from(cleaned, 'utf-8'), {name: 'eval.js'});
       nr && !e ? null : await message.channel.send({ embeds: [embed] })
       return nr && !e ? null : message.channel.send({ files: [attachment] });
     }
-    embed.addField('📤 Output', `\`\`\`js\n${cleaned}\`\`\``)
+    embed.addFields({name: '📤 Output', value: `\`\`\`js\n${cleaned}\`\`\``})
     return nr && !e ? null : message.channel.send({ embeds: [embed] });
   }
 
@@ -176,7 +184,7 @@ function readFile(path, text = false, newname = undefined) {
   const file = fs.readFileSync(filepath, { encoding: 'utf8' });
 
   if (text) return file;
-  else return new Discord.MessageAttachment(Buffer.from(file), newname ?? basename(filepath));
+  else return new AttachmentBuilder(Buffer.from(file), {name: newname ?? basename(filepath)});
 }
 
 export default EvalCommand;

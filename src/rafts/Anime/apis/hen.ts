@@ -1,7 +1,7 @@
 import got from 'got';
 import * as cheerio from 'cheerio';
 import { HAnime } from '../../../../lib/interfaces/Main'
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 class AnimeAPI {
   url: string = 'https://hanime.tv';
@@ -59,10 +59,10 @@ class AnimeAPI {
     return `${this.url}/videos/hentai/${id}`
   }
 
-  genEmbeds(data: HAnime[]): MessageEmbed[] {
+  genEmbeds(data: HAnime[]): EmbedBuilder[] {
     let arr = [];
     for (let i = 0; i < data.length; i++) {
-      arr.push(new MessageEmbed().setTitle(data[i].name).setURL(this.toUrl(data[i].id)).setImage(data[i].cover_url).setFooter({ text: shorten(data[i].tags.join(' • '), 2048, ' • ') }).setColor('RANDOM'))
+      arr.push(new EmbedBuilder().setTitle(data[i].name).setURL(this.toUrl(data[i].id)).setImage(data[i].cover_url).setFooter({ text: shorten(data[i].tags.join(' • '), 2048, ' • ') }).setColor('Random'))
     }
     return arr;
   }

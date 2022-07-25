@@ -1,4 +1,4 @@
-import { Intents } from 'discord.js';
+import { GatewayIntentBits, Partials } from 'discord.js';
 import express from 'express';
 import 'dotenv/config'
 import shipyard from './src/boat.js';
@@ -10,7 +10,12 @@ const botconfig: BoatOptions = {
     debug: true,
     dev: process.env.DEV ? true : false,
     token: process.env.DISCORD_TOKEN,
-    clientOpts: { partials: ['CHANNEL'], intents: Intents.FLAGS.DIRECT_MESSAGES | Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES | Intents.FLAGS.GUILD_MESSAGE_REACTIONS },
+    clientOpts: { 
+      partials: [Partials.Channel], 
+      intents: GatewayIntentBits.DirectMessages | GatewayIntentBits.Guilds 
+      | GatewayIntentBits.GuildMessages | GatewayIntentBits.GuildMessageReactions 
+      | GatewayIntentBits.MessageContent
+    },
     owners: ['396726969544343554'],
     log: {
       outputFile: process.env.LOG_LOCATION,

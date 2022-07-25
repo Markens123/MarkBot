@@ -217,7 +217,6 @@ class Boat implements BoatI {
    * @private
    */
    async launchLoop(loop, name) {
-    if (name === 'captainsLog') return;
     loop = new loop(this);
     if (!(loop instanceof BaseLoop)) throw new TypeError('All loops must extend BaseLoop');
     if (loop.active) loop.start();

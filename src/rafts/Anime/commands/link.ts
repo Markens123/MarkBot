@@ -1,4 +1,4 @@
-import * as Discord from 'discord.js';
+import { EmbedBuilder, Message} from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 
@@ -13,7 +13,7 @@ class LinkCommand extends BaseCommand {
     super(boat, options);
   }
 
-  run(message: Discord.Message) {
+  run(message: Message) {
     const client = this.boat.client;
     let state = '';
     if (client.maldata.has('states', message.author.id)) state = client.maldata.get('states', message.author.id);
@@ -22,7 +22,7 @@ class LinkCommand extends BaseCommand {
       client.maldata.set('states', state, message.author.id);
     }
 
-    const embed = new Discord.MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription(`To link your account you must authorize it first [here](${process.env.MAL_AUTH_LINK}&state=${state}) then send the link command!`)
       .setColor('#FF0000');
     return message.channel.send({ embeds: [embed] });

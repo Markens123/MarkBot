@@ -1,5 +1,5 @@
 import * as util from 'util';
-import { Collection, Message } from 'discord.js';
+import { ChannelType, Collection, Message } from 'discord.js';
 import { getCodeblockMatch } from '../util/Constants.js';
 import { ArgI, BoatI } from '../../lib/interfaces/Main.js';
 import { fileURLToPath } from 'url';
@@ -35,18 +35,25 @@ export default async (boat: BoatI, message: Message) => {
     handleRaft(boat.rafts, message);
     return;
   }
-  if (!message.channel.isText()) return;
+
+  console.log(message.channel.type)
+
+  if (!(
+    (message.channel.type === ChannelType.GuildText) 
+    || (message.channel.type === ChannelType.DM)
+    || (message.channel.type === ChannelType.GuildVoice)
+    )) return;
 
   if (!handler.enabled) return;
 
-  if (message.channel.type !== 'DM' && handler.dms === 'only') return message.channel.send('This command can only be used in dms!');
-  if (message.channel.type === 'DM' && !handler.dms) return;
+  if (message.channel.type !== ChannelType.DM && handler.dms === 'only') return message.channel.send('This command can only be used in dms!');
+  if (message.channel.type === ChannelType.DM && !handler.dms) return;
 
   if (!message.channel.isThread() && handler.threads === 'only') return message.channel.send('This command can only be used in threads!');
   if (message.channel.isThread() && !handler.threads) return;
 
-  if (!message.channel.isVoice() && handler.voice === 'only') return message.channel.send('This command can only be used in voice channels!');
-  if (message.channel.isVoice() && !handler.voice) return;
+  if (!(message.channel.type === ChannelType.GuildVoice) && handler.voice === 'only') return message.channel.send('This command can only be used in voice channels!');
+  if (message.channel.type === ChannelType.GuildVoice && !handler.voice) return;
 
   if (handler.permissions) {
     const authorPerms = message.member.permissions;

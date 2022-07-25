@@ -1,4 +1,4 @@
-import * as Discord from 'discord.js';
+import {Message, EmbedBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 
@@ -12,7 +12,7 @@ class PuppyCommand extends BaseCommand {
     super(raft, options);
   }
 
-  async run(message: Discord.Message, args: string[]) {
+  async run(message: Message, args: string[]) {
     let breed;
     let subbreed;
     if (args.length > 1) {
@@ -38,7 +38,7 @@ class PuppyCommand extends BaseCommand {
       return;
     }
 
-    const embed = new Discord.MessageEmbed().setImage(`${pupper.message}`).setColor('#0000FF');
+    const embed = new EmbedBuilder().setImage(`${pupper.message}`).setColor('#0000FF');
     embed.setDescription(`It's a freaking pupper`).setTimestamp(Date.now());
     message.channel.send({embeds: [embed]});
   }

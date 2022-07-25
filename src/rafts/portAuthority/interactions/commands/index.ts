@@ -3,7 +3,6 @@ const commands: any = {};
 commands['8ball'] = (await import('./8ball.js')).default;
 commands.atol = (await import('./atol.js')).default;
 commands.avatar = (await import('./avatar.js')).default;
-commands.bots = (await import('./bots.js')).default;
 commands.checktf = (await import('./checktf.js')).default;
 commands.discordver = (await import('./discordver.js')).default;
 commands.shrug = (await import('./shrug.js')).default;

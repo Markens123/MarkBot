@@ -1,4 +1,4 @@
-import { MessageEmbed, Message, ButtonInteraction, SnowflakeUtil, Snowflake } from 'discord.js';
+import { EmbedBuilder, Message, ButtonInteraction, SnowflakeUtil, Snowflake, ComponentType } from 'discord.js';
 import nsauce from 'node-sauce';
 import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
@@ -47,7 +47,7 @@ class SauceCommand extends BaseCommand {
 
       await message.channel.send({ content: `There are ${a.length} images on that message which image would you like to get sauce for?`, components });
       
-      const col = await message.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 5000 }).catch(err => err) as ButtonInteraction;
+      const col = await message.channel.awaitMessageComponent({ filter, componentType: ComponentType.Button, time: 5000 }).catch(err => err) as ButtonInteraction;
       if (!(col instanceof Error)) {
         url = a[col.customId.split(':')[1]];
         col.deferUpdate();
@@ -76,7 +76,7 @@ class SauceCommand extends BaseCommand {
 
 async function genEmbed(data, offset, ogimg) {
   const info = data[offset];
-  const embed = new MessageEmbed();
+  const embed = new EmbedBuilder();
   const encurl = encodeURIComponent(ogimg);
 
   if (info.ext_urls.length && !info.ext_urls.some(l => l.includes('myanimelist.net'))) {
@@ -88,22 +88,27 @@ async function genEmbed(data, offset, ogimg) {
     }
   }
 
-  if (info.source) embed.addField('Title', info.source);
-  if (info.est_time) embed.addField('Estimated Time', info.est_time);
-  if (info.ext_urls) embed.addField('External URLS', info.ext_urls.join('\n'));
+  if (info.source) embed.addFields([{name: 'Title', value: info.source}]);
+  if (info.est_time) embed.addFields([{name: 'Estimated Time', value: info.est_time}]);
+  if (info.ext_urls) embed.addFields([{name: 'External URLS', value: info.ext_urls.join('\n')}]);
 
 
   return embed
     .setTitle('Sauce found')
     .setImage(info.thumbnail)
-    .addField('Similarity', info.similarity)
-    .addField('Image Search', `
-    [Google](https://www.google.com/searchbyimage?image_url=${encurl})\n[Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})`
-    )
+    .addFields([
+      {name: 'Similarity', value: info.similarity},
+      {
+        name: 'Image Search', 
+        value: `
+          [Google](https://www.google.com/searchbyimage?image_url=${encurl})\n[Yandex](https://yandex.com/images/search?rpt=imageview&url=${encurl})
+        `
+      }
+    ])
     .setFooter({ text: `${offset + 1}/${data.length} ${info.year ? `• ${info.year}` : ''}` });
 }
 
-function genButtons(num: number, boat: BoatI, code: Snowflake) {
+function genButtons(num: number, boat: BoatI, code: bigint) {
   if (num > 10) {
     boat.log.warn('Sauce interaction/Gen Buttons function', 'The provided number was over 10');
     num = 10;

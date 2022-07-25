@@ -1,9 +1,9 @@
-import { ButtonInteraction, MessageButton, Message, MessageEmbed, MessageComponentInteraction, SnowflakeUtil, MessageSelectMenu, MessageActionRow, SelectMenuInteraction } from 'discord.js';
+import { ButtonInteraction, ButtonBuilder, Message, EmbedBuilder, MessageComponentInteraction, SnowflakeUtil, SelectMenuBuilder, ActionRowBuilder, SelectMenuInteraction, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 
 class HAlertsEditInteraction extends BaseInteraction {
-  definition: () => MessageButton;
+  definition: () => ButtonBuilder;
   name: string;
 
   constructor(raft) {
@@ -20,7 +20,14 @@ class HAlertsEditInteraction extends BaseInteraction {
     const code = SnowflakeUtil.generate();
     const config = client.halerts.get(interaction.guild.id);
     
-    const embed = new MessageEmbed().setTitle('Edit HAlerts Config').setDescription('Preview').addField('Channel', `<#${config.channel}>`).addField('Mentions', config.mentions ? config.mentions.join(' ') : 'None').setColor('NOT_QUITE_BLACK');
+    const embed = new EmbedBuilder()
+    .setTitle('Edit HAlerts Config')
+    .setDescription('Preview')
+    .addFields([
+      {name: 'Channel', value: `<#${config.channel}>`},
+      {name: 'Mentions', value: config.mentions ? config.mentions.join(' ') : 'None'}
+    ])
+    .setColor('NotQuiteBlack');
 
     let options = [
       {
@@ -33,17 +40,17 @@ class HAlertsEditInteraction extends BaseInteraction {
       },
     ];
 
-    const select = new MessageSelectMenu().addOptions(options).setCustomId(`collector:halerts_select:${code}`).setPlaceholder('Select option to edit');
-    const done = new MessageButton().setLabel('Done').setStyle('SUCCESS').setCustomId(`collector:halerts_done:${code}`);
+    const select = new SelectMenuBuilder().addOptions(options).setCustomId(`collector:halerts_select:${code}`).setPlaceholder('Select option to edit');
+    const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:halerts_done:${code}`);
 
-    const row = new MessageActionRow().addComponents(select);
-    const row2 = new MessageActionRow().addComponents(done);
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);
+    const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(done);
 
 
 
     interaction.reply({ embeds: [embed], components: [row, row2], ephemeral: true });
 
-    const filter = (intt: MessageComponentInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code;
+    const filter = (intt: MessageComponentInteraction) => intt.user.id === interaction.user.id && intt.customId.split(':')[2] === code.toString();
 
     const o = {
       filter,
@@ -66,7 +73,10 @@ class HAlertsEditInteraction extends BaseInteraction {
 
     collector.on('collect', async (int: ButtonInteraction | SelectMenuInteraction) => {
 
-      if (!int.customId.split(':')[1].startsWith('halerts')) return int.reply({ content: "These are not the droids you're looking for.", ephemeral: true });
+      if (!int.customId.split(':')[1].startsWith('halerts')) {
+        int.reply({ content: "These are not the droids you're looking for.", ephemeral: true });
+        return
+      }
 
       if (int instanceof SelectMenuInteraction) {
 
@@ -89,7 +99,14 @@ class HAlertsEditInteraction extends BaseInteraction {
             
             int.editReply(`Great! You've selected <#${newchannel}> to be the new channel. Please click the done button below to set the changes.`);
 
-            const embed = new MessageEmbed().setTitle('Edit HAlerts Config').setDescription('Preview').addField('Channel', `<#${newchannel}>`).addField('Mentions', newmen?.length ? newmen.join(' ') : 'None').setColor('NOT_QUITE_BLACK');
+            const embed = new EmbedBuilder()
+              .setTitle('Edit HAlerts Config')
+              .setDescription('Preview')
+              .addFields([
+                {name: 'Channel', value:`<#${newchannel}>`},
+                {name: 'Mentions', value: newmen?.length ? newmen.join(' ') : 'None'}
+              ])
+              .setColor('NotQuiteBlack');
 
             interaction.editReply({ embeds: [embed], components: [row, row2] });
           }
@@ -128,14 +145,23 @@ class HAlertsEditInteraction extends BaseInteraction {
 
             int.editReply(`Great! ${newmen?.length ? newmen.join(' ') : 'none'} have been selected. Please click the done button below to set the changes.`);
 
-            const embed = new MessageEmbed().setTitle('Edit HAlerts Config').setDescription('Preview').addField('Channel', `<#${newchannel}>`).addField('Mentions', newmen?.length ? newmen.join(' ') : 'None').setColor('NOT_QUITE_BLACK');
+            const embed = new EmbedBuilder()
+              .setTitle('Edit HAlerts Config').setDescription('Preview')
+              .addFields([
+                {name: 'Channel', value: `<#${newchannel}>`},
+                {name: 'Mentions', value: newmen?.length ? newmen.join(' ') : 'None'}
+              ])
+              .setColor('NotQuiteBlack');
 
             interaction.editReply({ embeds: [embed], components: [row, row2] });
           }
         }
       } else {
 
-        if (!newchannel) return int.reply('Please add a channel')
+        if (!newchannel) {
+          int.reply('Please add a channel')
+          return
+        }
 
         console.log(newmen, newchannel);
 
@@ -153,10 +179,10 @@ class HAlertsEditInteraction extends BaseInteraction {
 
   generateDefinition() {
     const customId = `${ComponentFunctions[this.name]}`;
-    return new MessageButton({
+    return new ButtonBuilder({
       customId,
       label: '✏️',
-      style: 'SECONDARY',
+      style: ButtonStyle.Secondary,
     })  
   } 
 }

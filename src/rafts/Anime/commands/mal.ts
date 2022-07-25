@@ -1,4 +1,4 @@
-import { MessageEmbed, Message, ButtonInteraction } from 'discord.js';
+import { EmbedBuilder, Message, ButtonInteraction, ColorResolvable } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import { ClientI, CommandOptions, RaftI } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
@@ -136,17 +136,19 @@ class MALCommand extends BaseCommand {
 
     }
     const cmd = this.boat.prefix + this.name;
-    const embed = new MessageEmbed()
-      .setColor('DARK_RED')
+    const embed = new EmbedBuilder()
+      .setColor('DarkRed')
       .setTitle('Usage')
-      .addField('Commands', `${cmd} ml/mylist (page #) (flags)\n${cmd} get/g <anime id>\n${cmd} search/s <title>\n`)
-      .addField('Flags', '--sort/-so <sort type>\n--status/-st <status>\n*Only usable with mylist*');
+      .addFields([
+        {name: 'Commands',  value: `${cmd} ml/mylist (page #) (flags)\n${cmd} get/g <anime id>\n${cmd} search/s <title>\n`},
+        {name: 'Flags', value: '--sort/-so <sort type>\n--status/-st <status>\n*Only usable with mylist*'}
+      ]);
 
     message.channel.send({ embeds: [embed] });
   }
 }
 
-function gencolor(status) {
+function gencolor(status: string): ColorResolvable  {
   if (status === 'watching') return '#32CD32';
   if (status === 'completed') return '#000080';
   if (status === 'on_hold') return '#E7B715';
@@ -190,22 +192,24 @@ function genEmbed(data, message, offset) {
     anime.my_list_status.num_episodes_watched = 0;
   }
 
-  return new MessageEmbed()
-    .setAuthor(message.author.tag, message.author.displayAvatarURL())
+  return new EmbedBuilder()
+    .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()})
     .setColor(gencolor(anime.my_list_status.status))
     .setTitle(anime.title)
     .setURL(`https://myanimelist.net/anime/${anime.id}`)
     .setThumbnail(anime.main_picture.medium)
-    .setFooter(`${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${anime.genres.map(a => a.name).join(', ')}`)
-    .addField('Status', hreadable(anime.my_list_status.status))
-    .addField('Score given', genscore(anime.my_list_status.score))
-    .addField(
-      'Info',
-      `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? `#${anime.rank}` : 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(
-        anime.num_list_users,
-      ).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`,
-    )
-    .addField('Synopsis', synopsis);
+    .setFooter({text: `${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${anime.genres.map(a => a.name).join(', ')}`})
+    .addFields([
+      {name: 'Status', value: hreadable(anime.my_list_status.status)},
+      {name: 'Score given', value: genscore(anime.my_list_status.score)},
+      {
+        name: 'Info',
+        value: `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? `#${anime.rank}` : 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(
+          anime.num_list_users,
+        ).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`,
+      },
+      {name: 'Synopsis', value: synopsis}
+      ]);
 }
 
 async function refreshtoken(raft: RaftI, message: Message, rtoken: string, client: ClientI): Promise<Message | null> {

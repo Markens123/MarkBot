@@ -1,4 +1,4 @@
-import Discord from 'discord.js';
+import { Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
@@ -14,7 +14,7 @@ class EmojiCommand extends BaseCommand {
     super(raft, options);
   }
 
-  async run(message: Discord.Message, args: any) {
+  async run(message: Message, args: any) {
     let a = [];
 
     if (isImageUrl(args[0])) a.push(args[0]);
@@ -46,7 +46,7 @@ class EmojiCommand extends BaseCommand {
     if (!resp) return;
 
     for (let i = 0; i < a.length; i++) {
-      message.guild.emojis.create(a[i], args[i] ?? a[i].split('/').pop().split('#')[0].split('?')[0].match(/([\w\d_-]*)\.?[^\\\/]*$/i)[1].match(/(.{1,32})/g)[0]).catch((error) => {
+      message.guild.emojis.create({attachment: a[i], name: args[i] ?? a[i].split('/').pop().split('#')[0].split('?')[0].match(/([\w\d_-]*)\.?[^\\\/]*$/i)[1].match(/(.{1,32})/g)[0]}).catch((error) => {
         this.boat.log.error('emoji command', error)
         return message.channel.send('An error has occured')
       })

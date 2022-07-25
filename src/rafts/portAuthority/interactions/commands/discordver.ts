@@ -1,5 +1,5 @@
 import BaseInteraction from '../../../BaseInteraction.js';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction, EmbedBuilder } from 'discord.js';
 
 import fetcher from 'discord-build-fetcher-js';
 //import gplay from 'google-play-scraper';
@@ -41,11 +41,13 @@ class DiscordVerInteraction extends BaseInteraction {
     const istable = await store.app({id: 985746746}).then(data => {
       return "Stable " + data.version
     });
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
     .setTitle("Current Discord Builds")
     .setColor('#00FF00')
-    .addField("Desktop", `${stable}\n${ptb}\n${canary}`)
-    .addField("iOS", istable)
+    .addFields([
+      {name: "Desktop", value: `${stable}\n${ptb}\n${canary}`},
+      {name: "iOS", value: istable}
+    ])
     .setTimestamp()
     //.addField("Android", astable);
     

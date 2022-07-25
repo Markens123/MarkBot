@@ -8,7 +8,7 @@ class TestCommand extends BaseCommand {
     const options: CommandOptions = {
       name: 'test',
       owner: true,
-      enabled: true,
+      enabled: false,
     };
     super(boat, options);
   }

@@ -1,4 +1,4 @@
-import * as Discord from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 
@@ -12,18 +12,18 @@ class SpaceCommand extends BaseCommand {
     super(raft, options);
   }
 
-  async run(message: Discord.Message) {
+  async run(message: Message) {
     const stars = await this.raft.apis.nasa.getAPOD();
     // Message.channel.send(`${stars.data.url}`)
-    let embed = new Discord.MessageEmbed()
+    let embed = new EmbedBuilder()
       .setTitle(`${stars.title}`)
       .setURL('https://apod.nasa.gov/')
       .setColor('#0B3D91')
       .setDescription(`${stars.explanation}`)
       .setImage(`${stars.url}`)
-      .addField('Date', `${stars.date}`)
+      .addFields([{name: 'Date', value: `${stars.date}`}])
       .setTimestamp()
-      .setFooter('nasa.gov', 'https://cdn.discordapp.com/app-assets/811111315988283413/811114038036529152.png');
+      .setFooter({text: 'nasa.gov', iconURL: 'https://cdn.discordapp.com/app-assets/811111315988283413/811114038036529152.png'});
     message.channel.send({embeds: [embed]});
   }
 }
