@@ -85,17 +85,28 @@ export interface RaftI {
   boat: BoatI;
 }
 
-export interface ArgI {
+type ArgDefault = {
   name: string;
-  type: 'int' | 'integer' | 'string' | 'str' | 'flag' | 'msg';
-  index?: number;
-  flags?: [string, string];
-  default?: any;
+  default?: any,
   validation?: ({arg: any, message: Message, boat: BoatI}) => any;
-  required?: boolean;
-  match?: 'codeblock';
+  required?: boolean,
   error?: string
 }
+
+type ArgMainOption = {
+    type: 'int' | 'integer' | 'string' | 'str' | 'msg',
+    flags?: never,
+    match?: 'codeblock'
+}
+
+type ArgFlagOption = {
+    type: 'flag',
+    flags: [`--${string}`, `-${string}`],
+    index: number,
+    match?: never
+}
+
+export type ArgI = (ArgDefault  & ArgMainOption ) | (ArgDefault  & ArgFlagOption);
 
 export interface LogOptions {
   maxLevel?: LogLevel;
