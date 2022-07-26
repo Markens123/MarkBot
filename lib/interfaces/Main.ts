@@ -90,6 +90,7 @@ type ArgDefault = {
   default?: any,
   validation?: ({arg: any, message: Message, boat: BoatI}) => any;
   required?: boolean,
+  index?: number,
   error?: string
 }
 
@@ -102,7 +103,6 @@ type ArgMainOption = {
 type ArgFlagOption = {
     type: 'flag',
     flags: [`--${string}`, `-${string}`],
-    index: number,
     match?: never
 }
 
