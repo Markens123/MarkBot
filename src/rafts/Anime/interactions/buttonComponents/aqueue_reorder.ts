@@ -54,7 +54,6 @@ class AQueueReorderInteraction extends BaseInteraction {
     let newarr = []
 
     collector.on('collect', (int) => {
-      console.log(int)
       return
     })
 

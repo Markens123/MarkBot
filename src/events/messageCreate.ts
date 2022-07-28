@@ -36,8 +36,6 @@ export default async (boat: BoatI, message: Message) => {
     return;
   }
 
-  console.log(message.channel.type)
-
   if (!(
     (message.channel.type === ChannelType.GuildText) 
     || (message.channel.type === ChannelType.DM)

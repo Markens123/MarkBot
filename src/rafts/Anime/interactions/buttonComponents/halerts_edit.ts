@@ -162,9 +162,7 @@ class HAlertsEditInteraction extends BaseInteraction {
           int.reply('Please add a channel')
           return
         }
-
-        console.log(newmen, newchannel);
-
+        
         client.halerts.set(interaction.guild.id, {
           channel: newchannel,
           newmen,

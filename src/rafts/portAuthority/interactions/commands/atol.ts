@@ -38,7 +38,6 @@ class AtolInteraction extends BaseInteraction {
             }
           return `<${a.join(">\n<")}>`;
       } catch (error) {
-          console.log(error)
           return "An error has occured please send the command again!";  
       }
   })();
