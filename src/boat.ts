@@ -1,5 +1,6 @@
 // Import dependencies
-import { Client, Collection, Snowflake } from 'discord.js';
+import { Client, Collection, Snowflake, Routes } from 'discord.js';
+import { REST } from '@discordjs/rest'
 import events from './events/index.js';
 import rafts from './rafts/index.js';
 import BaseRaft from './rafts/BaseRaft.js';
@@ -245,8 +246,7 @@ class Boat implements BoatI {
    */
   async registerInteraction(type, name: string | string[]) {
     let interaction;
-    //@ts-ignore
-    let path = this.client.api as any;
+    const rest = new REST({ version: '10' }).setToken(this.client.token);
     let promises = [];
     let results;
     switch (type) {
@@ -260,20 +260,28 @@ class Boat implements BoatI {
           interaction = this.interactions.commands.get(names[i]);
           if (!interaction) return `No such interaction (${names[i]})`;
           if (!interaction.definition) return `This command has no definition (${names[i]})`;
-          path = path.applications(this.client.user.id);
           if (Array.isArray(interaction.guild)) {
             interaction.guild.forEach(guild => {
-              promises.push(path.guilds(guild).commands.post({ data: interaction.definition }));
+              promises.push(
+                rest.post(
+                  Routes.applicationGuildCommands(this.client.user.id, guild),
+                  { body:  interaction.definition },
+                )
+              )
             });
             results = await Promise.all(promises).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
             return results.map(result => ({ guild: result.guild_id, id: result.id, name: result.name }));
           }
           if (interaction.guild) {
-            path = path.guilds(interaction.guild);
+            return rest.post(
+              Routes.applicationGuildCommands(this.client.user.id, interaction.guild),
+              { body:  interaction.definition },
+            ).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
           }
-          return path.commands
-            .post({ data: interaction.definition })
-            .catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
+          return rest.post(
+            Routes.applicationCommands(this.client.user.id),
+            { body: interaction.definition }
+          ).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
         }
         default:
     }
