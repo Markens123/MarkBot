@@ -25,8 +25,6 @@ class TimestampInteraction extends BaseInteraction {
     time = time.trim().replace(/ +(?= )/g, '');
     let string = `${date} ${time}`;
 
-    console.log(string);
-
     const dt = DateTime.fromFormat(string, "MMM d y t", { zone: tz });
     const s = dt.toSeconds()
 
