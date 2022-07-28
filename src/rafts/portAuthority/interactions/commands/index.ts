@@ -15,5 +15,6 @@ commands.reload = (await import('./reload.js')).default;
 commands.banner = (await import('./banner.js')).default;
 commands.enable = (await import('./enable.js')).default;
 commands.disable = (await import('./disable.js')).default;
+commands.timestamp = (await import('./timestamp.js')).default;
 
 export default commands;

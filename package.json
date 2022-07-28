@@ -15,6 +15,7 @@
   "dependencies": {
     "@discordjs/rest": "^1.0.1",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@types/luxon": "^3.0.0",
     "@types/node": "^16.4.3",
     "8ball.js": "^1.1.2",
     "app-store-scraper": "^0.16.3",
@@ -35,6 +36,7 @@
     "imgur": "^0.3.1",
     "is-image-url": "^1.1.8",
     "jsdom": "^16.6.0",
+    "luxon": "^3.0.1",
     "node-downloader-helper": "^1.0.19",
     "node-sauce": "^1.0.5",
     "parse-duration": "^1.0.0",
