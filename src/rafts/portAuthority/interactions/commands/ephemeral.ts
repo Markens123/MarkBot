@@ -18,7 +18,7 @@ class EphemeralInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'ephemeral',
-      guild: '274765646217216003',      
+      guild: ['274765646217216003', '816098833054302208'],      
       enabled: true,      
       definition,
     };
