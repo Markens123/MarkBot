@@ -23,7 +23,10 @@ export default async (boat: BoatI, interaction: Interaction) => {
   }
 
   if (interaction.type === InteractionType.ApplicationCommandAutocomplete) {
-    name = boat.interactions.autocomplete.map(i => i.commands.includes(interaction.commandName) ? i.name : null).filter(x => x !== null)[0];
+    name = boat.interactions.autocomplete
+      .filter(i => i.name === interaction.options.getFocused(true).name)
+      .map(i => i.commands.includes(interaction.commandName) ? i.name : null)
+      .filter(x => x !== null)[0];
     handler = boat.interactions.autocomplete.get(name);
   }
 
