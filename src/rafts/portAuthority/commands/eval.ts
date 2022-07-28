@@ -1,5 +1,5 @@
 import * as util from 'util';
-import Discord, { Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
+import Discord, { EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import glob from 'glob';
 import * as fs from 'fs';
@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+import { loop } from '../../../util/Constants.js'
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
@@ -59,9 +60,6 @@ class EvalCommand extends BaseCommand {
     const client = this.boat.client;
     if (canary) client.options.rest.api = 'https://canary.discord.com/api';
 
-    Discord.Client
-    
-
     depth = parseInt(depth)
 
     let args = msg.join(' ');
@@ -88,8 +86,9 @@ class EvalCommand extends BaseCommand {
       __dirname,
       readFile,
       readfile: readFile,
+      loop,
     };
-
+  
     if (!args.toLowerCase().includes('return')) {
       if (args.split(';').length > 2) {
         const last = args.split(';').filter(Boolean).pop();
@@ -186,5 +185,6 @@ function readFile(path, text = false, newname = undefined) {
   if (text) return file;
   else return new AttachmentBuilder(Buffer.from(file), {name: newname ?? basename(filepath)});
 }
+
 
 export default EvalCommand;
