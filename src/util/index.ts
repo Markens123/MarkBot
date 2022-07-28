@@ -48,7 +48,6 @@ class Util {
     }
 
     for (let i = 0; i < iterations; i++) {
-      /* eslint-disable no-await-in-loop */
       await unblock();
       const response = await func(i, args);
       if (response) {
@@ -58,7 +57,6 @@ class Util {
         delete args.break;
         break;
       }
-      /* eslint-enable no-await-in-loop */
     }
     return args;
   }  

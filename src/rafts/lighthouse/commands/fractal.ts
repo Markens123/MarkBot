@@ -48,7 +48,6 @@ class FractalCommand extends BaseCommand {
     const panX = Math.random() * 2;
     const panY = Math.random() * 1;
     for (let x = 0; x < canvas.width; x++) {
-      /* eslint-disable no-await-in-loop */
       await util.nonBlockLoop(
         canvas.height,
         (iteration, args) => {

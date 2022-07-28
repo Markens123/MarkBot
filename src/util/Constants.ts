@@ -75,7 +75,10 @@ export const DiscordColors = {
   DEEP_GOLD: 0xffab32,
 };
 
-export const ComponentFunctions = createEnum(['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER', 'HALERTS_EDIT', 'HALERTS_RESET']);
+export const ComponentFunctions = createEnum(
+    ['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER', 'HALERTS_EDIT', 'HALERTS_RESET']
+  );
+
 export const ModalFunctions = createEnum(['TEST']);
 
 function createEnum(keys) {

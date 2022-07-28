@@ -1,4 +1,4 @@
-const noop = () => {}; // eslint-disable-line no-empty-function
+const noop = () => {};
 const methods = ['get', 'post', 'delete', 'patch', 'put'];
 const reflectors = ['toString', 'valueOf', 'inspect', 'constructor', Symbol.toPrimitive, Symbol.for('nodejs.util.inspect.custom')];
 
@@ -65,7 +65,7 @@ function buildRoute(manager) {
       return new Proxy(noop, handler);
     },
     apply(target, _, args) {
-      route.push(...args.filter(x => x != null)); // eslint-disable-line eqeqeq
+      route.push(...args.filter(x => x != null)); 
       return new Proxy(noop, handler);
     },
   };

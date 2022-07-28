@@ -157,7 +157,7 @@ class CaptainsLog extends BaseRaft {
    */
   path(source) {
     if (!source.id) return source;
-    /* eslint-disable-next-line newline-per-chained-call */
+    
     return source.id.split('.').shift().replace(`${this.boat.options.basepath}/`, '').replace(/\//g, '.');
   }
 }
