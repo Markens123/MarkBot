@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { Message, AttachmentBuilder, EmbedBuilder } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 import { fileURLToPath } from 'url';
@@ -72,16 +72,17 @@ class UpdateCommand extends BaseCommand {
       if (!stdout && !stderr) return;
       stdout = clean(stdout);
       stderr = clean(stderr);
-      let attachment2 = new AttachmentBuilder(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), {name: 'transpiled.bash'})
-      await message.channel.send({files: [attachment2]});    
+      embed.setTitle('Python Updated').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
+      await message.channel.send({embeds: [embed]});    
     }
 
+    const build_msg = await message.channel.send('Building...');
     ({ stdout, stderr } = await promiseExec('npm run build').catch(err => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
-    let attachment = new AttachmentBuilder(Buffer.from(`${stdout}\n${stderr}`, 'utf-8'), {name: 'transpiled.bash'})
-    await message.channel.send({files: [attachment]});
+    embed.setTitle('Build Complete').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
+    await build_msg.edit({ content: null, embeds: [embed] });
 
     if (reboot) {
       this.boat.log(module, 'Reboot instruct received');
