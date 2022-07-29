@@ -4,7 +4,7 @@ import BaseInteraction from '../../../BaseInteraction.js';
 class ThingsInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
-      name: 'things',
+      name: 'thing',
       commands: ['reload', 'enable', 'disable']
     };
     super(raft, info);
