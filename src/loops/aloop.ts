@@ -75,7 +75,7 @@ class ALoop extends BaseLoop {
             const mentions = ids.join(' ');
             
             ChunkEmbeds(embeds, (c_embeds) => {
-              channel.send({ content: mentions ?? null, embeds: c_embeds })
+              channel.send({ content: mentions || null, embeds: c_embeds })
             })
 
           }
