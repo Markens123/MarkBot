@@ -102,7 +102,9 @@ class EvalCommand extends BaseCommand {
         ? await new AsyncFunction(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope))
         : new Function(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope));
       if (isPromise(evaluated)) {
+        message.react('1002621741127958578');
         evaluated = await evaluated;
+        message.reactions.cache.get('1002621741127958578')?.remove();
       }
     } catch (err) {
       evaluated = err;
