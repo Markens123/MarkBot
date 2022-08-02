@@ -1,4 +1,4 @@
-import { ActionRowBuilder, TextInputBuilder } from 'discord.js';
+import { ActionRowBuilder, EmbedBuilder, TextInputBuilder } from 'discord.js';
 import { JSDOM } from 'jsdom';
 import got from 'got';
 
@@ -16,12 +16,22 @@ export const AniQueue = (arr: string[] | []): string => {
 }
 
 export const getMalUrl = async (dburl: string): Promise<string | null> => {
+  let id: string;
+  let source: string;
+
   if (dburl.includes('https://anidb.net/anime/')) {
-    let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=anidb&id=${dburl.replace('https://anidb.net/anime/', '')}`);
-    body = JSON.parse(body);
-    if (body?.myanimelist) {
-      return `https://myanimelist.net/anime/${body.myanimelist}`
-    }
+    id = dburl.replace('https://anidb.net/anime/', '');
+    source = 'anidb'
+
+  } else if (dburl.includes('https://kitsu.io/api/edge/anime/')) {
+    id = dburl.replace('https://kitsu.io/api/edge/anime/', '')
+    source = 'kitsu'
+  } else return null
+
+  let { body }: { body: any } = await got(`https://relations.yuna.moe/api/ids?source=${source}&id=${id}`);
+  body = JSON.parse(body);
+  if (body?.myanimelist) {
+    return `https://myanimelist.net/anime/${body.myanimelist}`
   } else return null
 }
 
@@ -107,6 +117,15 @@ export const loop = (num: number, func: (j: number) => void, start: number = 1):
   for (let index = start; index < num+start; index++) {
     func(index)
   }
+}
+
+export const ChunkEmbeds = (embeds: EmbedBuilder[], callback: (e: EmbedBuilder[]) => void): void => {
+  
+  callback(
+    [].concat(...embeds.map((elem, i) => (i % 10 ? [] : embeds.slice(i, i + 10))))
+  )
+  
+
 }
 
 export const range = (start: number, stop: number, step: number): number[] => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));

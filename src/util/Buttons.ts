@@ -1,4 +1,4 @@
-import { ButtonInteraction, InteractionCollectorOptions, Message, ActionRowBuilder, ButtonBuilder, SnowflakeUtil, CommandInteraction, User, MessageActionRowComponentBuilder, ButtonStyle, MessageComponentCollectorOptions, SelectMenuInteraction, MessageComponentType, ComponentType } from 'discord.js';
+import { ButtonInteraction, InteractionCollectorOptions, Message, ActionRowBuilder, ButtonBuilder, SnowflakeUtil, CommandInteraction, User, MessageActionRowComponentBuilder, ButtonStyle, MessageComponentCollectorOptions, SelectMenuInteraction, MessageComponentType, ComponentType, Interaction, ChatInputCommandInteraction, Snowflake } from 'discord.js';
 import { BoatI } from '../../lib/interfaces/Main.js';
 
 export const Paginator = async ({boat, message, data, offset = 0, length = 1, callback, options}: {
@@ -158,13 +158,19 @@ export const InteractionPaginator = async ({boat, interaction, data, offset = 0,
     });
 }
 
-export const YesNo = async (message: Message, content: string, author: User = message.author): Promise<boolean | null> => {
+export const YesNo = async ({ message, content, user_id = message.author.id }: 
+  {
+    message: Message,
+    content: string,
+    user_id?: string | Snowflake 
+  }): Promise<boolean | null> => {
   const yes = new ButtonBuilder().setStyle(ButtonStyle.Success).setCustomId(`collector:yes`).setLabel('Yes');
   const no = new ButtonBuilder().setStyle(ButtonStyle.Danger).setCustomId(`collector:no`).setLabel('No');
   const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(yes, no);
+  content = content.replace('{user}', `<@${user_id}>`); 
 
   const msg = await message.channel.send({content, components: [row]})
-  const filter = (interaction: ButtonInteraction) => interaction.user.id === author.id;
+  const filter = (interaction: ButtonInteraction) => interaction.user.id === user_id;
   
   const options = { 
     filter,
@@ -184,6 +190,50 @@ export const YesNo = async (message: Message, content: string, author: User = me
 
   } catch(error) {
     msg.delete().catch(() => {});
+    return null
+  }
+}
+
+export const InteractionYesNo = async ({ interaction, content, editReply = false, user_id = interaction.user.id }: 
+  {
+    interaction: ChatInputCommandInteraction | ButtonInteraction, 
+    content: string,
+    editReply?: boolean,
+    user_id?: string | Snowflake 
+  }): Promise<boolean> => {
+  const code = SnowflakeUtil.generate();
+  const yes = new ButtonBuilder().setStyle(ButtonStyle.Success).setCustomId(`collector:yes:${code}`).setLabel('Yes');
+  const no = new ButtonBuilder().setStyle(ButtonStyle.Danger).setCustomId(`collector:no:${code}`).setLabel('No');
+  const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(yes, no);
+  let msg: Message;
+  content = content.replace('{user}', `<@${user_id}>`);
+
+
+  if (editReply) msg = await interaction.editReply({ content, components: [row], allowedMentions: { parse: ['users', 'roles', 'everyone'] } });
+  else msg = await interaction.channel.send({content, components: [row]})
+
+  const filter = (intt) => intt.user.id === user_id && intt.customId.split(':')[2] == code.toString();
+  
+  const options = {
+    filter,
+    idle: 15000 
+  }
+
+  try {
+    const int = await interaction.channel.awaitMessageComponent(options);
+
+    if (!(int instanceof Error)) {
+      int.deferUpdate()
+      if (!editReply) msg.delete().catch(() => {});
+      
+
+      if (int.customId.startsWith('collector:yes')) return true
+      else return false
+    
+    } else return null;
+
+  } catch(error) {
+    if (!editReply) msg.delete().catch(() => {});
     return null
   }
 }

@@ -8,7 +8,7 @@ import loops from './loops/index.js';
 import logBuilder from './rafts/captainsLog/LogRouter.js';
 import { util } from './util/index.js';
 import databases from './databases.js';
-import { BoatI, BoatOptions, ClientI } from '../lib/interfaces/Main.js'
+import { BoatI, BoatOptions, ClientI, InteractionsI } from '../lib/interfaces/Main.js'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import BaseLoop from './loops/BaseLoop.js';
@@ -28,7 +28,7 @@ class Boat implements BoatI {
   events: any;
   rafts: any;
   commands: any;
-  interactions: BoatI["interactions"];
+  interactions: InteractionsI;
   loops: Collection<string, BaseLoop>;
   token: string;
   debug: boolean;
@@ -171,6 +171,7 @@ class Boat implements BoatI {
     this.client.maldata.ensure('states', {});
     this.client.maldata.ensure('queue', []);
     this.client.halerts.ensure('latest', []);
+  this.client.animealerts.ensure('latest', {});
     
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }

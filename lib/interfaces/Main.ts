@@ -8,6 +8,7 @@ export interface ClientI extends Client {
   maldata?: Enmap;
   reminders?: Enmap<Snowflake, Reminder[]>;
   halerts?: Enmap;
+  animealerts?: Enmap;
   loops?: Collection<string, Loop>;
 }
 
@@ -37,7 +38,7 @@ export interface BoatI {
     listen: any;
 }
 
-interface InteractionsI {
+export interface InteractionsI {
   commands: Collection<string, BaseInteraction>;
   buttonComponents: Collection<string, BaseInteraction>;
   selectMenuComponents: Collection<string, BaseInteraction>;
@@ -164,6 +165,151 @@ export interface HAnime {
   tags: string[];
   created_at: number;
   released_at: number;
+}
+
+export interface SimpleAnime {
+  id: string;
+  title: string;
+  mal_url: string;
+  image: string;
+  eps: number;
+  alt_titles: string[];
+}
+
+export interface AnimeI {
+  id: string;
+  type: string;
+  links: { self: string };
+  attributes: AnimeAttr;
+  relationships: AnimeRelationships;
+}
+interface AnimeRelationships {
+  genres: AnimeRelationshipsLink,
+  categories: AnimeRelationshipsLink,
+  castings: AnimeRelationshipsLink,
+  installments: AnimeRelationshipsLink,
+  mappings: AnimeRelationshipsLink,
+  reviews: AnimeRelationshipsLink,
+  mediaRelationships: AnimeRelationshipsLink,
+  characters: AnimeRelationshipsLink,
+  staff: AnimeRelationshipsLink,
+  productions: AnimeRelationshipsLink,
+  quotes: AnimeRelationshipsLink,
+  episodes: AnimeRelationshipsLink,
+  streamingLinks: AnimeRelationshipsLink,
+  animeProductions: AnimeRelationshipsLink,
+  animeCharacters: AnimeRelationshipsLink,
+  animeStaff: AnimeRelationshipsLink
+}
+
+type AnimeRelationshipsLink = {
+  links: {
+    self: string,
+    related: string
+  }
+}
+
+interface AnimeAttr {
+  createdAt: string;
+  updatedAt: string;
+  slug: string;
+  synopsis: string;
+  titles: AnimeTitles;
+  canonicalTitle: string;
+  abbreviatedTitles: string[];
+  averageRating: string;
+  ratingFrequencies: AnimeRatingFrequencies;
+  userCount: number;
+  favoritesCount: number;
+  startDate: string;
+  endDate: string;
+  popularityRank: number;
+  ratingRank: number;
+  ageRating: AnimeAgeRating;
+  ageRatingGuide: string;
+  subtype: AnimeSubType;
+  status: AnimeStatus;
+  tba: string;
+  posterImage: AnimePosterImage;
+  coverImage: AnimeCoverImage;
+  episodeCount: number;
+  episodeLength: number;
+  youtubeVideoId: string;
+  nsfw: boolean;
+}
+
+type AnimeTitles = {
+  en: string,
+  en_jp: string,
+  ja_jp: string,
+  [key: string]: string,
+}
+
+type AnimeRatingFrequencies = {
+  [key: number]: string,
+}
+
+enum AnimeAgeRating {
+  G = 'G',
+  PG = 'PG',
+  R = 'R',
+  R18 = 'R18'
+}
+
+enum AnimeSubType {
+  ONA = "ONA",
+  OVA = "OVA",
+  TV = "TV",
+  movie = "movie",
+  music = "music",
+  special = "special"
+}
+
+enum AnimeStatus {
+  current = 'current',
+  finished = 'finished',
+  tba = 'tba',
+  unreleased = 'unreleased',
+  upcoming = "upcoming"
+}
+
+type AnimePosterImage = {
+  tiny: string,
+  small: string,
+  medium: string,
+  large: string,
+  original: string,
+  meta: PosterImageMeta
+}
+
+type AnimeCoverImage = {
+  tiny: string,
+  small: string,
+  large: string,
+  original: string,
+  meta: CoverImageMeta
+}
+
+type WH = {
+  width: string,
+  height: string
+}
+
+type CoverImageMeta = {
+  dimensions: {
+    tiny: WH,
+    small: WH,
+    large: WH
+  }
+}
+
+type PosterImageMeta = {
+  dimensions: {
+    tiny: WH,
+    small: WH,
+    medium: WH,
+    large: WH
+  }
 }
 
 export interface Loop {
