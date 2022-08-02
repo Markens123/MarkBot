@@ -19,8 +19,8 @@ class ListAPI extends BaseAPI {
    */
   async getList(token, sort, status, nsfw = false) {
     const url = 
-      `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=100&sort=${sort}${
-        status ? `&status=${status}` : ''}
+      `https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes&limit=100&sort=${sort}
+        ${status ? `&status=${status}` : ''}
         ${nsfw ? '&nsfw=true' : '&nsfw=false'}`;
     this.driver.defaults.baseURL = url;
 

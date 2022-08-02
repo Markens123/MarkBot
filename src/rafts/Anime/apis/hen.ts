@@ -26,7 +26,7 @@ class AnimeAPI {
       if (data) farr.push(data);
     }
     
-    return farr.slice(0, count)
+    return farr.slice(0, count);
   }
 
 

@@ -18,7 +18,7 @@ class TimestampInteraction extends BaseInteraction {
     let time = interaction.options.get('time', true).value.toString();
     const tz = interaction.options.get('timezone', false)?.value.toString() ?? 'America/New_York';
     
-    if (!time.toLocaleLowerCase().includes('pm') && !time.toLocaleLowerCase().includes('am')) {
+    if (!time.toLowerCase().includes('pm') && !time.toLowerCase().includes('am')) {
       time += ' pm'
     }
     
