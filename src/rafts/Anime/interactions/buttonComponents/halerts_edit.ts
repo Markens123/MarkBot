@@ -25,7 +25,7 @@ class HAlertsEditInteraction extends BaseInteraction {
     .setDescription('Preview')
     .addFields([
       {name: 'Channel', value: `<#${config.channel}>`},
-      {name: 'Mentions', value: config.mentions ? config.mentions.join(' ') : 'None'}
+      {name: 'Mentions', value: config.mentions?.join(' ') || 'None'}
     ])
     .setColor('NotQuiteBlack');
 
@@ -54,7 +54,7 @@ class HAlertsEditInteraction extends BaseInteraction {
 
     const o = {
       filter,
-      idle: 15000
+      idle: 20000
     }
 
 
@@ -64,7 +64,7 @@ class HAlertsEditInteraction extends BaseInteraction {
 
     const msgoptions = {
       msgfilter,
-      idle: 15000,
+      idle: 200000,
       max: 1,
     }
 
@@ -97,14 +97,14 @@ class HAlertsEditInteraction extends BaseInteraction {
               return;
             }
             
-            int.editReply(`Great! You've selected <#${newchannel}> to be the new channel. Please click the done button below to set the changes.`);
+            int.editReply(`Great! You've selected <#${newchannel}> to be the new channel. Please click the done button above to set the changes.`);
 
             const embed = new EmbedBuilder()
               .setTitle('Edit HAlerts Config')
               .setDescription('Preview')
               .addFields([
                 {name: 'Channel', value:`<#${newchannel}>`},
-                {name: 'Mentions', value: newmen?.length ? newmen.join(' ') : 'None'}
+                {name: 'Mentions', value: newmen.join(' ') || config.mentions?.join(' ') || 'None'}
               ])
               .setColor('NotQuiteBlack');
 
@@ -141,15 +141,15 @@ class HAlertsEditInteraction extends BaseInteraction {
               roles.forEach(r => {
                 newmen.push(r.toString())
               });
-            } else newmen = undefined
+            } else newmen.push('NONE')
 
-            int.editReply(`Great! ${newmen?.length ? newmen.join(' ') : 'none'} have been selected. Please click the done button below to set the changes.`);
+            int.editReply(`Great! ${newmen.includes('NONE') ? 'none': newmen.join(' ')} have been selected. Please click the done button below to set the changes.`);
 
             const embed = new EmbedBuilder()
               .setTitle('Edit HAlerts Config').setDescription('Preview')
               .addFields([
-                {name: 'Channel', value: `<#${newchannel}>`},
-                {name: 'Mentions', value: newmen?.length ? newmen.join(' ') : 'None'}
+                {name: 'Channel', value: `<#${newchannel || config.channel}>`},
+                {name: 'Mentions', value: newmen.join(' ') || 'None'}
               ])
               .setColor('NotQuiteBlack');
 
@@ -158,14 +158,10 @@ class HAlertsEditInteraction extends BaseInteraction {
         }
       } else {
 
-        if (!newchannel) {
-          int.reply('Please add a channel')
-          return
-        }
         
         client.halerts.set(interaction.guild.id, {
-          channel: newchannel,
-          newmen,
+          channel: newchannel || config.channel,
+          mentions: newmen.includes('NONE') ? [] : newmen.length === 0 ? config.mentions : newmen,
         })
         
         int.reply({ content: 'The changes have been saved!', ephemeral: true })

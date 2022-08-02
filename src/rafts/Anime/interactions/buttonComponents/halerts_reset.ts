@@ -1,7 +1,7 @@
 import { ButtonInteraction, ButtonBuilder, ButtonStyle } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
-import { YesNo } from '../../../../util/Buttons.js';
+import { InteractionYesNo } from '../../../../util/Buttons.js';
 
 class HAlertsResetInteraction extends BaseInteraction {
   definition: () => ButtonBuilder;
@@ -22,13 +22,17 @@ class HAlertsResetInteraction extends BaseInteraction {
 
     if (!client.halerts.get(interaction.guild.id)) return interaction.editReply('This guild does not have a config set. Please use /halerts to configure it.')
 
-    const resp = await YesNo(interaction.channel.messages.cache.get(interaction.message.id), 'Would you like to reset the halert config for this server?', interaction.user);
+    const resp = await InteractionYesNo({
+      interaction,
+      content: 'Are you sure that you want to reset the halert config for this server?',
+      editReply: true
+    });
 
     if (resp) {
       client.halerts.delete(interaction.guild.id)
-      interaction.editReply('The config has been reset please use /halerts to reconfigure it.')
+      interaction.editReply({ content: 'The config has been reset please use /halerts to reconfigure it.', components: [] })
     } else {
-      interaction.editReply('Opertation canceled')
+      interaction.editReply({ content: 'Opertation canceled', components: [] })
     }
 
   }
