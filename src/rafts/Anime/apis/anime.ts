@@ -6,7 +6,7 @@ import { getMalUrl } from '../../../util/Constants.js';
 
 class AnimeAPI {
   url: string = 'https://animixplay.to/';
-  api_url: string = 'https://kitsu.io/api/edge/anime';
+  api_url: string = 'https://api.myanimelist.net/v2/anime';
 
 
   async getLatest(count: number = 20): Promise<SimpleAnime[]> {
@@ -54,7 +54,12 @@ class AnimeAPI {
 
   async getRawVideoData(title: string): Promise<AnimeI | undefined> {
 
-    const searchParams = new URLSearchParams([['filter[text]', title]]);
+    const searchParams = new URLSearchParams([
+      ['q', title], 
+      ['limit', '10'], 
+      ['fields', 'id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,media_type,status,genres,my_list_status,num_episodes'],
+      ['nsfw', 'true']
+    ]);
     
     //@ts-expect-error typescript is being dumb :P
     const { body } = await got(this.api_url, {searchParams});

@@ -177,12 +177,19 @@ export interface SimpleAnime {
 }
 
 export interface AnimeI {
-  id: string;
-  type: string;
+  id: number;
+  title: string;
   links: { self: string };
-  attributes: AnimeAttr;
+  main_picture: AnimeMainPicture;
   relationships: AnimeRelationships;
+  alternative_titles: AnimeAltTitles;
 }
+
+type AnimeMainPicture = {
+  medium: string,
+  large: string
+}
+
 interface AnimeRelationships {
   genres: AnimeRelationshipsLink,
   categories: AnimeRelationshipsLink,
