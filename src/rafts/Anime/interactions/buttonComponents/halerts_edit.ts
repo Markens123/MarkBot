@@ -158,7 +158,6 @@ class HAlertsEditInteraction extends BaseInteraction {
         }
       } else {
 
-        
         client.halerts.set(interaction.guild.id, {
           channel: newchannel || config.channel,
           mentions: newmen.includes('NONE') ? [] : newmen.length === 0 ? config.mentions : newmen,

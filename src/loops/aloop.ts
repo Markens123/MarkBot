@@ -1,6 +1,5 @@
 import { TextChannel } from 'discord.js';
 import Enmap from 'enmap';
-import { SimpleAnime } from '../../lib/interfaces/Main.js';
 import AnimeAPI from '../rafts/Anime/apis/anime.js';
 import { ChunkEmbeds } from '../util/Constants.js';
 import BaseLoop from  './BaseLoop.js';
@@ -9,7 +8,7 @@ class ALoop extends BaseLoop {
   constructor(boat) {
     const options = {
       name: 'animeloop',
-      active: true,
+      active: false,
       time: 12*3600,
       dev: false
     };
@@ -21,7 +20,12 @@ class ALoop extends BaseLoop {
     
     const oldLatest = client.animealerts.get('latest') as Enmap;
     const api = new AnimeAPI()
-    const newLatest = await api.getLatest();
+    const newLatest = await api.getLatest(15);
+
+    if (!newLatest) {
+      return this.boat.log.error('Animeloop', 'Process token not provided')
+    }
+
     let diff: { id: string, eps: number }[] = [];
     let oldArr: { id: string, eps: number }[] = [];
     let newArr: { id: string, eps: number }[] = [];
@@ -56,7 +60,7 @@ class ALoop extends BaseLoop {
 
       client.animealerts.forEach(async (g, i) => {
         if (i !== 'latest') {
-          const animeToPost = newAnime.filter(x => g.animes.some(i => x.alt_titles.includes(i.toLowerCase())));
+          const animeToPost = newAnime.filter(x => g.animes.some(i => x.alt_titles.map(y => y.toLowerCase()).includes(i.toLowerCase())));
 
           if (animeToPost.length != 0) {
             const embeds = api.genEmbeds(animeToPost);
@@ -66,7 +70,7 @@ class ALoop extends BaseLoop {
             let ids = [];
             
             for (const p in g.mentions)  {
-              const search = animeToPost.filter(x => x.alt_titles.includes(p.toLowerCase()))
+              const search = animeToPost.filter(x => x.alt_titles.map(y => y.toLowerCase()).includes(p.toLowerCase()))
               if (search.length != 0) {
                 ids.push(...g.mentions[p])
               }

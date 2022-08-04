@@ -171,18 +171,41 @@ export interface SimpleAnime {
   id: string;
   title: string;
   mal_url: string;
+  url: string;
   image: string;
   eps: number;
   alt_titles: string[];
+  genres: string[];
+  type: AnimeMediaType;
 }
 
 export interface AnimeI {
   id: number;
   title: string;
-  links: { self: string };
   main_picture: AnimeMainPicture;
-  relationships: AnimeRelationships;
+  media_type: AnimeMediaType;
+  genres: AnimeGenres[];
   alternative_titles: AnimeAltTitles;
+}
+
+enum AnimeMediaType {
+  tv = 'tv',
+  ona = 'ona',
+  ova = 'ova',
+  movie = 'movie',
+  special = 'special',
+  music = 'music'
+}
+
+type AnimeGenres = {
+  id: number,
+  name: string
+}
+
+type AnimeAltTitles = {
+  synonyms: string[],
+  en: string,
+  ja: string
 }
 
 type AnimeMainPicture = {
@@ -190,134 +213,6 @@ type AnimeMainPicture = {
   large: string
 }
 
-interface AnimeRelationships {
-  genres: AnimeRelationshipsLink,
-  categories: AnimeRelationshipsLink,
-  castings: AnimeRelationshipsLink,
-  installments: AnimeRelationshipsLink,
-  mappings: AnimeRelationshipsLink,
-  reviews: AnimeRelationshipsLink,
-  mediaRelationships: AnimeRelationshipsLink,
-  characters: AnimeRelationshipsLink,
-  staff: AnimeRelationshipsLink,
-  productions: AnimeRelationshipsLink,
-  quotes: AnimeRelationshipsLink,
-  episodes: AnimeRelationshipsLink,
-  streamingLinks: AnimeRelationshipsLink,
-  animeProductions: AnimeRelationshipsLink,
-  animeCharacters: AnimeRelationshipsLink,
-  animeStaff: AnimeRelationshipsLink
-}
-
-type AnimeRelationshipsLink = {
-  links: {
-    self: string,
-    related: string
-  }
-}
-
-interface AnimeAttr {
-  createdAt: string;
-  updatedAt: string;
-  slug: string;
-  synopsis: string;
-  titles: AnimeTitles;
-  canonicalTitle: string;
-  abbreviatedTitles: string[];
-  averageRating: string;
-  ratingFrequencies: AnimeRatingFrequencies;
-  userCount: number;
-  favoritesCount: number;
-  startDate: string;
-  endDate: string;
-  popularityRank: number;
-  ratingRank: number;
-  ageRating: AnimeAgeRating;
-  ageRatingGuide: string;
-  subtype: AnimeSubType;
-  status: AnimeStatus;
-  tba: string;
-  posterImage: AnimePosterImage;
-  coverImage: AnimeCoverImage;
-  episodeCount: number;
-  episodeLength: number;
-  youtubeVideoId: string;
-  nsfw: boolean;
-}
-
-type AnimeTitles = {
-  en: string,
-  en_jp: string,
-  ja_jp: string,
-  [key: string]: string,
-}
-
-type AnimeRatingFrequencies = {
-  [key: number]: string,
-}
-
-enum AnimeAgeRating {
-  G = 'G',
-  PG = 'PG',
-  R = 'R',
-  R18 = 'R18'
-}
-
-enum AnimeSubType {
-  ONA = "ONA",
-  OVA = "OVA",
-  TV = "TV",
-  movie = "movie",
-  music = "music",
-  special = "special"
-}
-
-enum AnimeStatus {
-  current = 'current',
-  finished = 'finished',
-  tba = 'tba',
-  unreleased = 'unreleased',
-  upcoming = "upcoming"
-}
-
-type AnimePosterImage = {
-  tiny: string,
-  small: string,
-  medium: string,
-  large: string,
-  original: string,
-  meta: PosterImageMeta
-}
-
-type AnimeCoverImage = {
-  tiny: string,
-  small: string,
-  large: string,
-  original: string,
-  meta: CoverImageMeta
-}
-
-type WH = {
-  width: string,
-  height: string
-}
-
-type CoverImageMeta = {
-  dimensions: {
-    tiny: WH,
-    small: WH,
-    large: WH
-  }
-}
-
-type PosterImageMeta = {
-  dimensions: {
-    tiny: WH,
-    small: WH,
-    medium: WH,
-    large: WH
-  }
-}
 
 export interface Loop {
   active: boolean;

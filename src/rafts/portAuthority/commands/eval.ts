@@ -9,7 +9,8 @@ import { fileURLToPath } from 'url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import { loop } from '../../../util/Constants.js'
+import { loop } from '../../../util/Constants.js';
+import Anime from '../../Anime/apis/anime.js';
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
@@ -87,6 +88,8 @@ class EvalCommand extends BaseCommand {
       readFile,
       readfile: readFile,
       loop,
+      Anime,
+      shorten
     };
   
     if (!args.toLowerCase().includes('return')) {
@@ -108,6 +111,7 @@ class EvalCommand extends BaseCommand {
       }
     } catch (err) {
       evaluated = err;
+      message.reactions.cache.get('1002621741127958578')?.remove();
     }
     let e = evaluated instanceof Error;
     if (evaluated === this.boat) {
@@ -188,5 +192,9 @@ function readFile(path, text = false, newname = undefined) {
   else return new AttachmentBuilder(Buffer.from(file), {name: newname ?? basename(filepath)});
 }
 
+function shorten(str, maxLen, separator = ' ') {
+  if (str.length <= maxLen) return str;
+  return str.substr(0, str.lastIndexOf(separator, maxLen));
+}
 
 export default EvalCommand;
