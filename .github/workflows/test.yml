@@ -17,8 +17,4 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Typecheck
-        uses: Arhia/action-check-typescript@v2.0
-        with:
-          use-check: true
-          check-fail-mode: added
-
+        uses: gozala/typescript-error-reporter-action@v1.0.7
