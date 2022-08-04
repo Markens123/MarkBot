@@ -17,4 +17,8 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Typecheck
-        uses: andoshin11/typescript-error-reporter-action@v1.0.2
+        uses: Arhia/action-check-typescript@v2.0
+        with:
+          use-check: true
+          check-fail-mode: added
+
