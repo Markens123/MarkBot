@@ -153,13 +153,8 @@ function parseArgs(thing, w) {
 }
 
 function removeFlags(msg: string[], args: ArgI[]) {
-  args = args.filter(x => x.type === 'flag')
-  let arr = [];
-  for (let i = 0; i < args.length; i++) {
-    arr.push(...args[i].flags);
-  }
-
-  const flags = new Set(arr);
+  args = args.filter(x => x.type === 'flag');
+  const flags = new Set(args.map(x => x.flags).flat());
 
   const newArr = msg.filter(x => !flags.has(x))
 
