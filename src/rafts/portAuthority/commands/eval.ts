@@ -95,7 +95,7 @@ class EvalCommand extends BaseCommand {
     if (!args.toLowerCase().includes('return')) {
       if (args.split(';').length > 2) {
         const last = args.split(';').filter(Boolean).pop();
-        args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
+        args = args.replace(`;${last}`, `; return ${last}`).replace(/\s\s+/g, ' ');
       }
     }
     if (!args.toLowerCase().includes('return')) args = `return ${args}`;
