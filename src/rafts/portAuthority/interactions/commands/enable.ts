@@ -1,4 +1,4 @@
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class EnableInteraction extends BaseInteraction {
@@ -93,26 +93,25 @@ function getDefinition() {
     })  
   }
   
-  return {
-    name: 'enable',
-    description: 'Enables certian bot things',
-    options: [
-      {
-          name: 'type',
-          description: 'The type of thing to enable',
-          type: 3,
-          choices,
-          required: true
-      },
-      {
-        name: 'thing',
-        description: 'The thing to enable',
-        type: 3,
-        autocomplete: true,
-        required: true
-      }
-    ]  
-  }
+
+  return new SlashCommandBuilder()
+  .setName('enable')
+  .setDescription('Enables certian bot things')
+  .addStringOption(option =>
+    option
+      .setName('type')
+      .setDescription('The type of thing to enable')
+      .addChoices(...choices)
+      .setRequired(true)
+  )
+  .addStringOption(option =>
+    option
+      .setName('thing')
+      .setDescription('The thing to enable')
+      .setAutocomplete(true)
+      .setRequired(true)
+  )
+  .toJSON();
 }
 
 export default EnableInteraction;

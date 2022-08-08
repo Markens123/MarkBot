@@ -1,6 +1,6 @@
 import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
-import { CommandInteraction, CommandInteractionOption, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { CommandInteraction, CommandInteractionOption, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { ModalComponents, ModalFunctions } from '../../../../util/Constants.js';
 const definition = getDefinition()
 
@@ -51,71 +51,51 @@ class TestInteraction extends BaseInteraction {
 }
 
 function getDefinition() {
-  return {
-  name: "test",
-  description: "Test stuff",
-  options: [
-      {
-          name: "string",
-          description: "Sequence of characters",
-          type: 3,
-          required: false
-      },
-      {
-          name: "integer",
-          description: "Whole numbers",
-          type: 4,
-          required: false
-      },
-      {
-          name: "boolean",
-          description: "True or false",
-          type: 5,
-          required: false
-      },
-      {
-          name: "user",
-          description: "User that is in this server",
-          type: 6,
-          required: false
-      },
-      {
-          name: "channel",
-          description: "Channel that is in this server",
-          type: 7,
-          required: false
-      },
-      {
-          name: "role",
-          description: "Role that is in this server",
-          type: 8,
-          required: false
-      },
-      {
-          name: "mentionable",
-          description: "Anything that you can mention",
-          type: 9,
-          required: false
-      },
-      {
-        name: "number",
-        description: "A number",
-        type: 10,
-        required: false
-      },
-      {
-        name: "response",
-        description: "The response",
-        type: 3,
-        required: false,
-        choices: [
-          {
-            name: "Modal",
-            value: "modal"
-          }
-        ]
-      }
-    ] 
-    } 
+  return new SlashCommandBuilder()
+    .setName('test')
+    .setDescription('Test stuff')
+    .addStringOption(option =>
+      option
+        .setDescription('Sequence of characters')
+    )
+    .addIntegerOption(option =>
+      option
+        .setDescription('Whole numbers')
+    )
+    .addBooleanOption(option => 
+      option
+        .setDescription('True or false')
+    )
+    .addUserOption(option => 
+      option
+        .setDescription('Any user (can use id)')
+    )
+    .addChannelOption(option => 
+      option
+        .setDescription('Channel that is in this server')
+    )
+    .addRoleOption(option =>
+       option
+        .setDescription('Role that is in this server')
+    )
+    .addMentionableOption(option =>
+      option
+        .setDescription('Anything that you can mention')
+    )
+    .addNumberOption(option =>
+      option
+        .setDescription('Any number')
+    )
+    .addAttachmentOption(option =>
+      option
+      .setDescription('An attachment')
+    )
+    .addStringOption(option =>
+      option
+        .setDescription('The response')
+        .addChoices({ name: 'Modal', value: 'modal' })
+    )
+    .toJSON();
 }
+
 export default TestInteraction;

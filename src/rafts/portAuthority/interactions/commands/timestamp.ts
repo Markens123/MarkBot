@@ -84,8 +84,9 @@ function getDefinition() {
       .setName('timezone')
       .setDescription('The timezone for the timestamp')
       .setRequired(false)
-      .addChoices(...choices))
-    .toJSON()
+      .addChoices(...choices)
+    )
+    .toJSON();
 }
 
 export default TimestampInteraction;

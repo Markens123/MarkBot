@@ -1,4 +1,4 @@
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { RaftI } from '../../../../../lib/interfaces/Main.js';
 import glob from 'glob';
@@ -189,27 +189,25 @@ function getDefinition() {
       value: types[i].toLowerCase()
     })  
   }
-  
-  return {
-    name: 'reload',
-    description: 'Reloads certian bot things',
-    options: [
-      {
-          name: 'type',
-          description: 'The type of thing to reload',
-          type: 3,
-          choices,
-          required: true
-      },
-      {
-        name: 'thing',
-        description: 'The thing to reload',
-        type: 3,
-        autocomplete: true,
-        required: true
-      }
-      ]  
-  }
+
+  return new SlashCommandBuilder()
+    .setName('reload')
+    .setDescription('Reloads certian bot things')
+    .addStringOption(option =>
+      option
+        .setName('type')
+        .setDescription('The type of thing to reload')
+        .addChoices(...choices)
+        .setRequired(true)
+    )
+    .addStringOption(option =>
+      option
+        .setName('thing')
+        .setDescription('The thing to reload')
+        .setAutocomplete(true)
+        .setRequired(true)
+    )
+    .toJSON();
 }
 
 export default ReloadInteraction;
