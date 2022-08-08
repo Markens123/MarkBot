@@ -1,5 +1,5 @@
 import BaseInteraction from '../../../BaseInteraction.js';
-import { CommandInteraction, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 
 import fetcher from 'discord-build-fetcher-js';
 //import gplay from 'google-play-scraper';
@@ -21,7 +21,7 @@ class DiscordVerInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
     interaction.reply(`Checking Versions...`);
 
     const stable = await fetcher(`stable`).then(data => {

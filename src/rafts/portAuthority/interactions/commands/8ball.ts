@@ -1,5 +1,5 @@
 import ball from '8ball.js';
-import { CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -27,7 +27,7 @@ class EBallInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
     interaction.reply(ball());
   }
 }

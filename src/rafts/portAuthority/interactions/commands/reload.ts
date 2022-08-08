@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import { RaftI } from '../../../../../lib/interfaces/Main.js';
 import glob from 'glob';
@@ -18,7 +18,7 @@ class ReloadInteraction extends BaseInteraction {
     super(raft, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
     if (!this.boat.owners.includes(interaction.user.id)) {
       this.boat.log.warn('#', `Non owner used reload command. Id: \`${interaction.user.id}\``)
       return interaction.reply({ content: 'no', ephemeral: true })

@@ -1,4 +1,4 @@
-import { CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -25,7 +25,7 @@ class EphemeralInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction, args: any) {
+  async run(interaction: ChatInputCommandInteraction, args: any) {
     let c = args.find(arg => arg.name === `content`).value;
 
     interaction.reply({ content: c, ephemeral: true });

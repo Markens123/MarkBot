@@ -1,4 +1,4 @@
-import { APIApplicationCommandOptionChoice, CommandInteraction, SlashCommandBuilder, Formatters } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction, SlashCommandBuilder, Formatters } from 'discord.js';
 import { DateTime } from 'luxon';
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -13,7 +13,7 @@ class TimestampInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
     const date = interaction.options.get('date', true).value.toString().replace('rd ', ' ').replace('st ', ' ').replace('th ', ' ').replace('nd ', ' ');
     let time = interaction.options.get('time', true).value.toString();
     const tz = interaction.options.get('timezone', false)?.value.toString() ?? 'America/New_York';

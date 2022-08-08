@@ -1,5 +1,5 @@
 import BaseInteraction from '../../../BaseInteraction.js';
-import { CommandInteraction, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { checkTF } from '../../../../util/Constants.js';
 
 const definition = {
@@ -18,7 +18,7 @@ class CheckTFInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
 
     interaction.reply(`Checking TestFlight...`);
     let url = 'https://testflight.apple.com/join/gdE4pRzI'

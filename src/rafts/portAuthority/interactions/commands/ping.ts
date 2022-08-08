@@ -1,4 +1,4 @@
-import { CommandInteraction, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -17,7 +17,7 @@ class PingInteraction extends BaseInteraction {
     super(raft, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
     const client = this.boat.client;
     const description = `🏓 API offset: ${Date.now() - interaction.createdTimestamp}ms. Heartbeat: ${Math.round(client.ws.ping)}ms.`;
     let embed = new EmbedBuilder();

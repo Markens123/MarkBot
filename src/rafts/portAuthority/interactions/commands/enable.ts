@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class EnableInteraction extends BaseInteraction {
@@ -12,7 +12,7 @@ class EnableInteraction extends BaseInteraction {
     super(raft, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
     if (!this.boat.owners.includes(interaction.user.id)) {
       this.boat.log.warn('#', `Non owner used enable command. Id: \`${interaction.user.id}\``)
       return interaction.reply({ content: 'no', ephemeral: true })
