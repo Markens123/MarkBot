@@ -67,9 +67,9 @@ class AnimeAPI {
       ['limit', '10'], 
       ['fields', 'id,title,main_picture,media_type,genres,alternative_titles'],
       ['nsfw', 'true'],
-    ]);    
+    ]);
     
-    const { body } = await got(`${this.api_url}?${searchParams.toString()}`, { 
+    const { body } = await got(this.api_url, { 
       //@ts-expect-error typescript is being dumb :P
       searchParams, 
       headers: {
