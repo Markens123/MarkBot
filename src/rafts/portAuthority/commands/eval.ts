@@ -10,7 +10,7 @@ import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { loop } from '../../../util/Constants.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const delay = s => new Promise(res => setTimeout(res, s*1000));
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
