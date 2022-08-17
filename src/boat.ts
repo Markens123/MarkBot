@@ -21,7 +21,7 @@ var module = __filename;
  * The main entry point for any instance of this bot.
  */
 class Boat implements BoatI {
-  options: BoatOption;
+  options: BoatOptions;
   client: ClientI;
   owners: Snowflake[];
   prefix: string;
