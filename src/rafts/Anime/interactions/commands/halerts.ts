@@ -1,4 +1,4 @@
-import { CommandInteraction, Message, ActionRowBuilder, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, Message, ActionRowBuilder, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class HAlertsInteraction extends BaseInteraction {
@@ -12,7 +12,7 @@ class HAlertsInteraction extends BaseInteraction {
     super(raft, info);
   }
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction) {
     const client = this.boat.client;
 
     const filter = (msg: Message) => msg.author.id === interaction.user.id;

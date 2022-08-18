@@ -1,4 +1,4 @@
-import { CommandInteraction, CommandInteractionOption, EmbedBuilder, User } from 'discord.js';
+import { ChatInputCommandInteraction, CommandInteractionOption, EmbedBuilder, User } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -24,7 +24,7 @@ class BannerInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction, args: CommandInteractionOption[]) {
+  async run(interaction: ChatInputCommandInteraction, args: CommandInteractionOption[]) {
     const client = this.boat.client;
 
     let user = args[0].value as string;

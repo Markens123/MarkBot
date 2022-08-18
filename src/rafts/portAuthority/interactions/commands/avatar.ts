@@ -1,4 +1,4 @@
-import { CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
@@ -25,7 +25,7 @@ class AvatarInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction, args: any) {
+  async run(interaction: ChatInputCommandInteraction, args: any) {
     const client = this.boat.client;
     let user = args?.find(arg => arg.name === `user`)?.value;
     let res = await client.users.fetch(user).then(myUser => {

@@ -1,20 +1,19 @@
 import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
-import { CommandInteraction, CommandInteractionOption, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ChatInputCommandInteraction, CommandInteractionOption, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { ModalComponents, ModalFunctions } from '../../../../util/Constants.js';
-const definition = getDefinition()
 
 class TestInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'test',
       enabled: true,      
-      definition,
+      definition: getDefinition(),
     };
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction, args: CommandInteractionOption[]) {
+  async run(interaction: ChatInputCommandInteraction, args: CommandInteractionOption[]) {
     const resp = args?.find(arg => arg.name === `response`)?.value;
     const client = interaction.client;
 
@@ -51,71 +50,61 @@ class TestInteraction extends BaseInteraction {
 }
 
 function getDefinition() {
-  return {
-  name: "test",
-  description: "Test stuff",
-  options: [
-      {
-          name: "string",
-          description: "Sequence of characters",
-          type: 3,
-          required: false
-      },
-      {
-          name: "integer",
-          description: "Whole numbers",
-          type: 4,
-          required: false
-      },
-      {
-          name: "boolean",
-          description: "True or false",
-          type: 5,
-          required: false
-      },
-      {
-          name: "user",
-          description: "User that is in this server",
-          type: 6,
-          required: false
-      },
-      {
-          name: "channel",
-          description: "Channel that is in this server",
-          type: 7,
-          required: false
-      },
-      {
-          name: "role",
-          description: "Role that is in this server",
-          type: 8,
-          required: false
-      },
-      {
-          name: "mentionable",
-          description: "Anything that you can mention",
-          type: 9,
-          required: false
-      },
-      {
-        name: "number",
-        description: "A number",
-        type: 10,
-        required: false
-      },
-      {
-        name: "response",
-        description: "The response",
-        type: 3,
-        required: false,
-        choices: [
-          {
-            name: "Modal",
-            value: "modal"
-          }
-        ]
-      }
-    ] 
-    } 
+  return new SlashCommandBuilder()
+    .setName('test')
+    .setDescription('Test stuff')
+    .addStringOption(option =>
+      option
+        .setName('string')
+        .setDescription('Sequence of characters')
+    )
+    .addIntegerOption(option =>
+      option
+        .setName('integer')
+        .setDescription('Whole numbers')
+    )
+    .addBooleanOption(option => 
+      option
+        .setName('boolean')
+        .setDescription('True or false')
+    )
+    .addUserOption(option => 
+      option
+        .setName('user')
+        .setDescription('Any user (can use id)')
+    )
+    .addChannelOption(option => 
+      option
+        .setName('channel')
+        .setDescription('Channel that is in this server')
+    )
+    .addRoleOption(option =>
+       option
+        .setName('role')
+        .setDescription('Role that is in this server')
+    )
+    .addMentionableOption(option =>
+      option
+        .setName('mentionable')
+        .setDescription('Anything that you can mention')
+    )
+    .addNumberOption(option =>
+      option
+        .setName('number')
+        .setDescription('Any number')
+    )
+    .addAttachmentOption(option =>
+      option
+      .setName('attachment')
+      .setDescription('An attachment')
+    )
+    .addStringOption(option =>
+      option
+        .setName('response')
+        .setDescription('The response')
+        .addChoices({ name: 'Modal', value: 'modal' })
+    )
+    .toJSON();
 }
+
 export default TestInteraction;

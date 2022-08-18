@@ -1,6 +1,6 @@
 import BaseInteraction from '../../../BaseInteraction.js';
 import got from 'got';
-import { CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 
 const definition = {
   name: 'atol',
@@ -26,7 +26,7 @@ class AtolInteraction extends BaseInteraction {
     super(boat, info);
   }
 
-  async run(interaction: CommandInteraction, args: any) {
+  async run(interaction: ChatInputCommandInteraction, args: any) {
     let hash = args?.find(arg => arg.name === `hash`)?.value;
 
     const res = await (async () => {

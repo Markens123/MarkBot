@@ -7,10 +7,10 @@ const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 import path, { basename } from 'path';
 import { fileURLToPath } from 'url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import { loop } from '../../../util/Constants.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import { loop } from '../../../util/Constants.js';
-import Anime from '../../Anime/apis/anime.js';
+const delay = s => new Promise(res => setTimeout(res, s*1000));
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
@@ -88,8 +88,8 @@ class EvalCommand extends BaseCommand {
       readFile,
       readfile: readFile,
       loop,
-      Anime,
-      shorten
+      shorten,
+      delay
     };
   
     if (!args.toLowerCase().includes('return')) {

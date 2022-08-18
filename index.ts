@@ -25,6 +25,7 @@ const botconfig: BoatOptions = {
     commandPrefix: process.env.DISCORD_PREFIX,
     tokens: {
       nasa: process.env.NASA_API_KEY,
+      ocr: process.env.OCR_API_KEY,
     },
   };
 

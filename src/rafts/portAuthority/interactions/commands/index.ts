@@ -16,5 +16,6 @@ commands.banner = (await import('./banner.js')).default;
 commands.enable = (await import('./enable.js')).default;
 commands.disable = (await import('./disable.js')).default;
 commands.timestamp = (await import('./timestamp.js')).default;
+commands.ocr = (await import('./ocr.js')).default;
 
 export default commands;

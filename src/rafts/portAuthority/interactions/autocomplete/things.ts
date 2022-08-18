@@ -14,7 +14,7 @@ class ThingsInteraction extends BaseInteraction {
     const client = this.boat.client;
     const cv = interaction.options.getFocused() as string;
     let arr: string[];
-  
+
     switch(interaction.options.getString('type')) {
       case 'command':
         arr = Array.from(this.boat.commands.keys());
