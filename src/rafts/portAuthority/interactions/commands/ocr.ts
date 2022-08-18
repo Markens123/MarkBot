@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
-import Tesseract from 'tesseract.js';
+import { ocrSpace } from 'ocr-space-api-wrapper';
 
 class OCRInteraction extends BaseInteraction {
   constructor(boat) {
@@ -15,9 +15,18 @@ class OCRInteraction extends BaseInteraction {
 
   async run(interaction: ChatInputCommandInteraction) {
 	  const attachment = interaction.options.getAttachment('attachment');
+    const boat = this.boat;
     interaction.deferReply({ ephemeral: true });
+
+    if (!boat.options.tokens.ocr) {
+      boat.log.error('Interactions/OCR', 'OCR Token not provided!!')
+      return interaction.editReply('An internal error has occured please contact the bot owner.')
+    }
+
     
-    const req = await Tesseract.recognize(attachment.url, 'eng');
+    const req = await ocrSpace(attachment.url, { apiKey: boat.options.tokens.ocr })
+
+    return interaction.editReply('Nothing to see here...');
 
     const obj = toObj(req.data.text.trim());
 
