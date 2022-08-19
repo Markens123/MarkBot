@@ -39,8 +39,8 @@ class StarsCommand extends BaseCommand {
     const height = 730;
     const canvas = createCanvas(width, height);
     const context = canvas.getContext('2d');
-    const stars = args.stars ?? Math.floor(Math.random() * 101) + 75;
-    const lines = args.lines ?? Math.floor(Math.random() * 4) + 3;
+    const stars = args.stars || Math.floor(Math.random() * 101) + 75;
+    const lines = args.lines || Math.floor(Math.random() * 4) + 3;
     let a = [];
 
     context.fillStyle = 'black';
