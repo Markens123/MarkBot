@@ -12,8 +12,14 @@ export default async (boat: BoatI, interaction: Interaction) => {
   if (
     interaction.type === InteractionType.ApplicationCommand 
     && interaction.commandType === ApplicationCommandType.ChatInput
-    ) {
-    handler = boat.interactions.commands.get(interaction.commandName);
+  ) {
+    handler = boat.interactions.commands.get(interaction.commandName)
+    if (handler.subcommands) {
+      let scname = interaction.options.getSubcommand(false); 
+      if (scname) {
+       handler = boat.interactions.subcommands.get(interaction.commandName).get(scname)
+      }
+    }
   }
 
   if (interaction.type === InteractionType.ModalSubmit) {
