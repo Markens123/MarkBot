@@ -23,7 +23,7 @@ class ALoop extends BaseLoop {
     const newLatest = await api.getLatest(15);
 
     if (!newLatest) {
-      return this.boat.log.error('Animeloop', 'Process token not provided')
+      return this.boat.log.error('Animeloop', 'New anime not found')
     }
 
     let diff: { id: string, eps: number }[] = [];
