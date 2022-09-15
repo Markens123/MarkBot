@@ -85,7 +85,8 @@ class HAlertsInteraction extends BaseInteraction {
       ]);
 
     const reset = this.boat.interactions.buttonComponents.get('HALERTS_RESET').definition();
-    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(reset);
+    const edit = this.boat.interactions.buttonComponents.get('HALERTS_EDIT').definition();
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(edit, reset);
 
     interaction.reply({ embeds: [embed], components: [row] });
   }

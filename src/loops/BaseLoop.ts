@@ -19,7 +19,7 @@ class BaseLoop {
   constructor(boat, options) {
     /**
      * The boat that handles this loop
-     * @name BaseRaft#boat
+     * @name BaseLoop#boat
      * @type {Boat}
      */
     Object.defineProperty(this, 'boat', { value: boat });

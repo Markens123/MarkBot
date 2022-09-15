@@ -41,7 +41,7 @@ class EmojiCommand extends BaseCommand {
       }
     }
 
-    const resp = await YesNo(message, 'Are you sure that you want to make these attachments into emojis?')
+    const resp = await YesNo({ message, content: 'Are you sure that you want to make these attachments into emojis?' })
 
     if (!resp) return;
 

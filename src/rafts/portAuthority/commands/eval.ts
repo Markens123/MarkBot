@@ -88,13 +88,14 @@ class EvalCommand extends BaseCommand {
       readFile,
       readfile: readFile,
       loop,
+      shorten,
       delay
     };
   
     if (!args.toLowerCase().includes('return')) {
       if (args.split(';').length > 2) {
         const last = args.split(';').filter(Boolean).pop();
-        args = args.replace(`;${last}`, `; return ${last}`).replace('  ', ' ');
+        args = args.replace(`;${last}`, `; return ${last}`).replace(/\s\s+/g, ' ');
       }
     }
     if (!args.toLowerCase().includes('return')) args = `return ${args}`;
@@ -104,10 +105,13 @@ class EvalCommand extends BaseCommand {
         ? await new AsyncFunction(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope))
         : new Function(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope));
       if (isPromise(evaluated)) {
+        message.react('1002621741127958578');
         evaluated = await evaluated;
+        message.reactions.cache.get('1002621741127958578')?.remove();
       }
     } catch (err) {
       evaluated = err;
+      message.reactions.cache.get('1002621741127958578')?.remove();
     }
     let e = evaluated instanceof Error;
     if (evaluated === this.boat) {
@@ -188,5 +192,9 @@ function readFile(path, text = false, newname = undefined) {
   else return new AttachmentBuilder(Buffer.from(file), {name: newname ?? basename(filepath)});
 }
 
+function shorten(str, maxLen, separator = ' ') {
+  if (str.length <= maxLen) return str;
+  return str.substr(0, str.lastIndexOf(separator, maxLen));
+}
 
 export default EvalCommand;

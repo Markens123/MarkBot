@@ -1,12 +1,12 @@
 import { TextChannel } from 'discord.js';
 import { HAnime } from '../../lib/interfaces/Main.js';
-import AnimeAPI from '../rafts/Anime/apis/hen.js';
+import HAnimeAPI from '../rafts/Anime/apis/hen.js';
 import BaseLoop from  './BaseLoop.js';
 
 class HLoop extends BaseLoop {
   constructor(boat) {
     const options = {
-      name: 'test',
+      name: 'hentailoop',
       active: true,
       every: 'half-hour',
       dev: false
@@ -18,7 +18,7 @@ class HLoop extends BaseLoop {
     const client = this.boat.client;
     
     const oldLatest = client.halerts.get('latest') as HAnime[];
-    const api = new AnimeAPI()
+    const api = new HAnimeAPI()
     const newLatest = await api.getLatest(10);
     let diff = [];
     let oldArr = [];

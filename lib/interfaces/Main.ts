@@ -1,4 +1,4 @@
-import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable } from 'discord.js'
+import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable, Message } from 'discord.js'
 import Enmap from 'enmap'
 import BaseLoop from '../../src/loops/BaseLoop'
 import BaseInteraction from '../../src/rafts/BaseInteraction'
@@ -8,6 +8,7 @@ export interface ClientI extends Client {
   maldata?: Enmap;
   reminders?: Enmap<Snowflake, Reminder[]>;
   halerts?: Enmap;
+  animealerts?: Enmap;
   loops?: Collection<string, Loop>;
 }
 
@@ -37,7 +38,7 @@ export interface BoatI {
     listen: any;
 }
 
-interface InteractionsI {
+export interface InteractionsI {
   commands: Collection<string, BaseInteraction>;
   buttonComponents: Collection<string, BaseInteraction>;
   selectMenuComponents: Collection<string, BaseInteraction>;
@@ -88,7 +89,7 @@ export interface RaftI {
 type ArgDefault = {
   name: string;
   default?: any,
-  validation?: ({arg: any, message: Message, boat: BoatI}) => any;
+  validation?: ({ arg, message, boat }: { arg: any, message: Message, boat: BoatI }) => any;
   required?: boolean,
   index?: number,
   error?: string
@@ -165,6 +166,53 @@ export interface HAnime {
   created_at: number;
   released_at: number;
 }
+
+export interface SimpleAnime {
+  id: string;
+  title: string;
+  mal_url: string;
+  url: string;
+  image: string;
+  eps: number;
+  alt_titles: string[];
+  genres: string[];
+  type: AnimeMediaType;
+}
+
+export interface AnimeI {
+  id: number;
+  title: string;
+  main_picture: AnimeMainPicture;
+  media_type: AnimeMediaType;
+  genres: AnimeGenres[];
+  alternative_titles: AnimeAltTitles;
+}
+
+enum AnimeMediaType {
+  tv = 'tv',
+  ona = 'ona',
+  ova = 'ova',
+  movie = 'movie',
+  special = 'special',
+  music = 'music'
+}
+
+type AnimeGenres = {
+  id: number,
+  name: string
+}
+
+type AnimeAltTitles = {
+  synonyms: string[],
+  en: string,
+  ja: string
+}
+
+type AnimeMainPicture = {
+  medium: string,
+  large: string
+}
+
 
 export interface Loop {
   active: boolean;

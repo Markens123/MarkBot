@@ -1,5 +1,6 @@
 const loops: any = {};
 
-loops.test = (await import('./hloop.js')).default;
+loops.hentai = (await import('./hloop.js')).default;
+loops.anime = (await import('./aloop.js')).default;
 
 export default loops;
