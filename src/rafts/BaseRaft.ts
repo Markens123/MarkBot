@@ -81,8 +81,19 @@ class BaseRaft {
         category,
         ((interaction, name) => {
           if (!(this.interactions[catName] instanceof Collection)) this.interactions[catName] = new Collection();
-          const instance = new interaction(this);
-          this.interactions[catName].set(name, instance);
+          if (catName === 'subcommands') {
+            util.objForEach(
+              interaction,
+              ((subcmdint, scname) => {
+                const instance = new subcmdint(this);
+                if (!(this.interactions[catName].get(name) instanceof Collection)) this.interactions[catName].set(name, new Collection());
+                this.interactions[catName].get(name).set(scname, instance);
+              }).bind(this)
+            )
+          } else {
+            const instance = new interaction(this);
+            this.interactions[catName].set(name, instance);
+          }
         }).bind(this),
       );
     });

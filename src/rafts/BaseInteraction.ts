@@ -2,20 +2,15 @@ import { CommandInteraction, Interaction, MessageComponentInteraction, SelectMen
 import BaseCommand from './BaseCommand.js';
 
 class BaseInteraction extends BaseCommand {
-  guild?: Snowflake | Snowflake[];
   definition: any;
   commands: string[];
+  subcommands: boolean;
+  bcommand: string | false;
 
   constructor(boat, options) {
     super(boat, options);
 
     this.owner = undefined;
-
-    /**
-     * The guild, if any, that this interaction is specific too
-     * @type {(Snowflake|Snowflake[])?}
-     */
-    this.guild = options.guild;
 
     /**
      * The definition for this interaction that gets passed to discord to register / send it
@@ -27,7 +22,13 @@ class BaseInteraction extends BaseCommand {
      * The commands that autocomplete uses
      * @type {string[]}
      */
-     this.commands = options.commands;       
+     this.commands = options.commands;
+
+    /**
+     * Does this command have subcommands
+     * @type {boolean}
+     */
+     this.subcommands = options.subcommands;
   }
 
   /**

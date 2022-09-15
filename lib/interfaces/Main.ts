@@ -9,6 +9,8 @@ export interface ClientI extends Client {
   reminders?: Enmap<Snowflake, Reminder[]>;
   halerts?: Enmap;
   animealerts?: Enmap;
+  tasksdata?: Enmap;
+
   loops?: Collection<string, Loop>;
 }
 
@@ -46,6 +48,7 @@ export interface InteractionsI {
   messageContextMenuComponents: Collection<string, BaseInteraction>;
   autocomplete: Collection<string, BaseInteraction>;
   modals: Collection<string, BaseInteraction>;
+  subcommands: Collection<string, Collection<string, BaseInteraction>>;
 }
 
 export interface CommandOptions {
@@ -59,7 +62,7 @@ export interface CommandOptions {
   dev?: boolean | 'only';
   args?: ArgI[] | false;
   channels?: Snowflake[] | false;
-  guilds?: Snowflake[] | false;
+  guild?: Snowflake[] | Snowflake | false;
   aliases?: string[] | false;
   cooldown?: number | false;
   permissions?: PermissionResolvable | false;

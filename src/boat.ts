@@ -122,6 +122,7 @@ class Boat implements BoatI {
       messageContextMenuComponents: new Collection(),
       autocomplete: new Collection(),
       modals: new Collection(),
+      subcommands: new Collection(),
     };
 
     /**
