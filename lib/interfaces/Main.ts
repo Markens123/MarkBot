@@ -1,4 +1,4 @@
-import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable } from 'discord.js'
+import { ClientOptions, Snowflake, Collection, Client, PermissionResolvable, Message } from 'discord.js'
 import Enmap from 'enmap'
 import BaseLoop from '../../src/loops/BaseLoop'
 import BaseInteraction from '../../src/rafts/BaseInteraction'
@@ -89,7 +89,7 @@ export interface RaftI {
 type ArgDefault = {
   name: string;
   default?: any,
-  validation?: ({arg: any, message: Message, boat: BoatI}) => any;
+  validation?: ({ arg, message, boat }: { arg: any, message: Message, boat: BoatI }) => any;
   required?: boolean,
   index?: number,
   error?: string
