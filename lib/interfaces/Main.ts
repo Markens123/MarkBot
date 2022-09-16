@@ -10,8 +10,7 @@ export interface ClientI extends Client {
   halerts?: Enmap;
   animealerts?: Enmap;
   tasksdata?: Enmap;
-
-  loops?: Collection<string, Loop>;
+  loops?: Collection<string, LoopI>;
 }
 
 export interface Reminder {
@@ -40,15 +39,17 @@ export interface BoatI {
     listen: any;
 }
 
+type InteractionCollection = Collection<string, BaseInteraction>;
+
 export interface InteractionsI {
-  commands: Collection<string, BaseInteraction>;
-  buttonComponents: Collection<string, BaseInteraction>;
-  selectMenuComponents: Collection<string, BaseInteraction>;
-  userContextMenuComponents: Collection<string, BaseInteraction>;
-  messageContextMenuComponents: Collection<string, BaseInteraction>;
-  autocomplete: Collection<string, BaseInteraction>;
-  modals: Collection<string, BaseInteraction>;
-  subcommands: Collection<string, Collection<string, BaseInteraction>>;
+  commands: InteractionCollection;
+  buttonComponents: InteractionCollection;
+  selectMenuComponents: InteractionCollection;
+  userContextMenuComponents: InteractionCollection;
+  messageContextMenuComponents: InteractionCollection;
+  autocomplete: InteractionCollection;
+  modals: InteractionCollection;
+  subcommands: Collection<string, InteractionCollection>;
 }
 
 export interface CommandOptions {
@@ -76,9 +77,8 @@ export interface BoatOptions {
   dev?: boolean;
   commandPrefix?: string;
   log?: LogOptions;
-  basepath?: any;
+  basepath?: string;
   tokens?: any;
-  channels?: any;
 }
 
 export interface RaftI {
@@ -217,7 +217,7 @@ type AnimeMainPicture = {
 }
 
 
-export interface Loop {
+export interface LoopI {
   active: boolean;
   boat: BoatI;
   name: string;
