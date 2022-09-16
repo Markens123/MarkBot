@@ -47,6 +47,7 @@ class FractalCommand extends BaseCommand {
     const magnificationFactor = 2000;
     const panX = Math.random() * 2;
     const panY = Math.random() * 1;
+    const color = Math.floor(Math.random() * (360 - 1 + 1) + 1);
     for (let x = 0; x < canvas.width; x++) {
       await util.nonBlockLoop(
         canvas.height,
@@ -57,12 +58,12 @@ class FractalCommand extends BaseCommand {
             // Draw a black pixel
             args.ctx.fillRect(args.x, iteration, 1, 1);
           } else {
-            args.ctx.fillStyle = `hsl(165, 100%, ${belongsToSet}%)`;
+            args.ctx.fillStyle = `hsl(${color}, 100%, ${belongsToSet}%)`;
             // Draw a colorful pixel
             args.ctx.fillRect(args.x, iteration, 1, 1);
           }
         },
-        { ctx, magnificationFactor, panX, panY, x, checkBelongs: checkIfBelongsToMandelbrotSet },
+        { ctx, magnificationFactor, panX, panY, x, checkBelongs: checkIfBelongsToMandelbrotSet, color },
       );
     }
     ctx.translate(width / 2, height / 2);
