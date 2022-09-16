@@ -36,7 +36,7 @@ class Util {
    * @param {boolean} args.break when set true, the for loop will break and resolve the promise with the rest of the returned object
    * @returns {Promise<*>}
    */
-   static async nonBlockLoop(iterations, func, args) {
+   static async nonBlockLoop<T>(iterations: number, func: (i: number, {}: T) => any, args: (T & { break?: boolean })): Promise<any> {
     let blockedSince = Date.now();
 
     // Handle unblocking if necessary
