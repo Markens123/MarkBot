@@ -36,11 +36,7 @@ export default async (boat: BoatI, message: Message) => {
     return;
   }
 
-  if (!(
-    (message.channel.type === ChannelType.GuildText) 
-    || (message.channel.type === ChannelType.DM)
-    || (message.channel.type === ChannelType.GuildVoice)
-    )) return;
+  if (!message.channel.isTextBased()) return;
 
   if (!handler.enabled) return;
 
