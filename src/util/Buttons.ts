@@ -178,6 +178,7 @@ export const YesNo = async ({ message, content, user_id = message.author.id }:
   }
 
   try {
+    //@ts-expect-error
     const int = await msg.awaitMessageComponent(options);
 
     if (!(int instanceof Error)) {
