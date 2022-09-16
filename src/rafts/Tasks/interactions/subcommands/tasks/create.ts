@@ -1,6 +1,6 @@
 import BaseInteraction from '../../../../BaseInteraction.js';
 import * as util from 'util';
-import { ChatInputCommandInteraction, CommandInteractionOption, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ChannelType, ChatInputCommandInteraction, CommandInteractionOption, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { ModalComponents, ModalFunctions } from '../../../../../util/Constants.js';
 
 class TaskCreateInteraction extends BaseInteraction {
@@ -13,7 +13,13 @@ class TaskCreateInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction, args: CommandInteractionOption[]) {
-    console.log('IT WORKLS!!!')
+    let channel = interaction.options.getChannel('channel', false);
+    if (!channel) interaction.reply("No");
+
+    channel = await interaction.guild.channels.fetch(channel.id);
+
+    
+    
 
   }
 }
