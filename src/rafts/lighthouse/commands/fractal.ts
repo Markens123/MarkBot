@@ -11,13 +11,20 @@ class FractalCommand extends BaseCommand {
   constructor(raft) {
     const options: CommandOptions = {
       name: 'fractal',
-      owner: false,
       enabled: true,
+      args: [
+        {
+          name: 'hcolor',
+          type: 'str',
+          validation: ({ arg }) => !isNaN(Colors[arg]),
+          error: 'The color you provided is invalid'
+        }
+      ]
     };
     super(raft, options);
   }
 
-  async run(message: Message) {
+  async run(message: Message, { hcolor }) {
     const responseMsg = await message.channel.send('Generating Fractal');
     const startTime = Date.now();
     const width = 1200;
@@ -47,7 +54,7 @@ class FractalCommand extends BaseCommand {
     const magnificationFactor = 2000;
     const panX = Math.random() * 2;
     const panY = Math.random() * 1;
-    const color = Math.floor(Math.random() * (360 - 1 + 1) + 1);
+    const color = Colors[hcolor] ?? Math.floor(Math.random() * (360 - 1 + 1) + 1);
     for (let x = 0; x < canvas.width; x++) {
       await util.nonBlockLoop(
         canvas.height,
@@ -80,6 +87,16 @@ class FractalCommand extends BaseCommand {
     if (responseMsg.deletable) responseMsg.delete();
     message.channel.send({embeds: [embed], files: [attachment]});
   }
+}
+
+const Colors = {
+  yellow: 60,
+  blue: 240,
+  pink: 300,
+  purple: 255,
+  cyan: 180,
+  red: 0,
+  green: 120
 }
 
 export default FractalCommand;
