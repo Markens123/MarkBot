@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 import BaseCommand from '../rafts/BaseCommand.js';
 const __filename = fileURLToPath(import.meta.url);
 var module = __filename;
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
 export default async (boat: BoatI, message: Message) => {
   // Ignore bots
@@ -131,6 +133,7 @@ export default async (boat: BoatI, message: Message) => {
     await handler.run(message, args, ogargs);
   } catch (err) {
     boat.log.warn(module, `Error occurred during command call ${handler.name}: ${util.formatWithOptions({}, err)}`);
+    Sentry.captureException(err);
   }
 };
 
