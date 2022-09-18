@@ -33,6 +33,16 @@ class TaskOptionsInteraction extends BaseInteraction {
       return interaction.showModal(modal);
     }
 
+    if (selected === 'add_item') {
+      const modal = boat.interactions.modals.get('ITEM_ADD').definition(id);
+
+      return interaction.showModal(modal);
+    }
+
+    if (selected === 'close_task') {
+      console.log(task)
+    }
+
     return interaction.deferUpdate()
   }
 
@@ -58,11 +68,16 @@ class TaskOptionsInteraction extends BaseInteraction {
               label: "Remove item",
               description: "Remove item from todo list",
               value: 'remove_item',
-            },               
+            },          
             {
               label: "Edit item",
               description: "Edit item from todo list",
               value: 'edit_item',
+            },
+            {
+              label: "Mark item",
+              description: "Mark item as completed or not",
+              value: 'mark_item',
             },
             {
               label: "Close task",

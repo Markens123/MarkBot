@@ -28,16 +28,4 @@ class TaskSetupInteraction extends BaseInteraction {
   }
 }
 
-
-const demo_ta = {
-  '816098833054302208': { // Guild id
-    config: {
-      channel: '1019638215017238588'
-    }, 
-    tasks: [
-      
-    ] // Array of tasks
-  }
-}
-
 export default TaskSetupInteraction;

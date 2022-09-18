@@ -69,16 +69,4 @@ class TaskEditModalInteraction extends BaseInteraction {
   }
 }
 
-const demo_ta = {
-  '816098833054302208': { // Guild id
-    config: {
-      channel: '1019638215017238588'
-    }, 
-    tasks: {
-
-    } // object of tasks with id as key
-  }
-}
-
-
 export default TaskEditModalInteraction;

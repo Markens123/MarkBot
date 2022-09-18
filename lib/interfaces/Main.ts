@@ -28,6 +28,10 @@ interface TasksObj extends Object {
   [key: string]: any | Task; 
 }
 
+export interface ItemsObj extends Object {
+  [key: string]: any | Item; 
+}
+
 export interface Reminder {
   content: string;
   timestamp: number | string;
@@ -39,7 +43,7 @@ export interface Task {
   body: string,
   open: boolean,
   author: Snowflake,
-  items: Item[],
+  items: ItemsObj,
   id: string,
   message_id?: string,
 }
@@ -48,6 +52,7 @@ export interface Item {
   completed: boolean,
   body: string,
   id: string,
+  task_id: string,
 }
 
 export interface BoatI {

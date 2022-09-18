@@ -1,7 +1,7 @@
 import { ActionRowBuilder, EmbedBuilder, TextInputBuilder } from 'discord.js';
 import { JSDOM } from 'jsdom';
 import got from 'got';
-import { Item } from '../../lib/interfaces/Main';
+import { Item, ItemsObj } from '../../lib/interfaces/Main';
 
 export const AniQueue = (arr: string[] | []): string => {
   let content = '';
@@ -16,15 +16,16 @@ export const AniQueue = (arr: string[] | []): string => {
   return content;
 }
 
-export const TaskMessage = (body: string, id: string, items: Item[] | undefined = undefined) => {
+export const TaskMessage = (body: string, id: string, items: any = undefined) => {
   let todo = ''
-  if (!items || items.length === 0) {
+  if (!items || Object.keys(items).length === 0) {
     todo = '\nNone'
   } else {
-    items.forEach((i) => {
-      let emoji = i.completed ? Emojis['greentick'] : Emojis['greytick']; 
-      todo += `\n${emoji} ${i.body}`
-    })
+    for (const x in items) {
+      const i = items[x] as Item;
+      let emoji = i.completed ? Emojis.greentick : Emojis.greytick; 
+      todo += `\n${emoji} ${i.body}`      
+    }
   }
 
   return `${body}\n--------------------\nTODO:${todo}\n--------------------\nID: ${id}`
@@ -106,11 +107,22 @@ export const DiscordColors = {
   DEEP_GOLD: 0xffab32,
 };
 
-export const ComponentFunctions = createEnum(
-  ['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER', 'HALERTS_EDIT', 'HALERTS_RESET', 'TASK_OPTIONS']
-);
+export const ComponentFunctions = createEnum([
+  'DELETE', 
+  'AQUEUE_ADD', 
+  'AQUEUE_DELETE', 
+  'AQUEUE_REORDER', 
+  'HALERTS_EDIT', 
+  'HALERTS_RESET', 
+  'TASK_OPTIONS',
+]);
 
-export const ModalFunctions = createEnum(['TEST', 'TASK_CREATE', 'TASK_EDIT']);
+export const ModalFunctions = createEnum([
+  'TEST', 
+  'TASK_CREATE', 
+  'TASK_EDIT', 
+  'ITEM_ADD',
+]);
 
 function createEnum(keys) {
   const obj = {};

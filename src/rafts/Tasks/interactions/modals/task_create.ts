@@ -18,6 +18,7 @@ class TaskCreateModalInteraction extends BaseInteraction {
     const client = boat.client;
     const title = interaction.fields.getTextInputValue('title');
     const body = interaction.fields.getTextInputValue('body');
+    const items = interaction.fields.getTextInputValue('items');
     const fourm = await interaction.guild.channels.fetch(client.tasksdata.get(interaction.guild.id).config.channel) as ForumChannel;
 
     client.tasksdata.ensure(interaction.guild.id, {}, 'tasks');
@@ -28,13 +29,29 @@ class TaskCreateModalInteraction extends BaseInteraction {
       title,
       id: Math.floor(Date.now() * Math.random()).toString(),
       open: true,
-      items: [],
+      items: {},
     }
+
+    const iobj = {};
+    
+    items.split('\n').forEach(i => {
+      if (i) {
+        let tmp = {
+          body: i,
+          completed: false,
+          id: Math.floor(Date.now() * Math.random()).toString(),
+          task_id: task.id
+        }
+        iobj[tmp.id] = tmp;
+      }
+    })
+
+    task.items = iobj;
     
     const channel = await fourm.threads.create({
       name: task.title,
       message: {
-        content: TaskMessage(task.body, task.id, []),
+        content: TaskMessage(task.body, task.id, task.items),
         components: [boat.interactions.selectMenuComponents.get('TASK_OPTIONS').definition(interaction.guild.id, task.id)]
       },
     })
@@ -58,28 +75,23 @@ class TaskCreateModalInteraction extends BaseInteraction {
       .setStyle(TextInputStyle.Short);
 
       const bodyInput = new TextInputBuilder()
-      .setCustomId('body')
-      .setLabel('Body')
-      .setPlaceholder('Super cool stuff to do')
-      .setRequired(true)
-      .setStyle(TextInputStyle.Paragraph);
+        .setCustomId('body')
+        .setLabel('Body')
+        .setPlaceholder('Super cool stuff to do')
+        .setRequired(true)
+        .setStyle(TextInputStyle.Paragraph);
 
-      modal.addComponents(...ModalComponents([titleInput, bodyInput]));
+      const itemsInput = new TextInputBuilder()
+        .setCustomId('items')
+        .setLabel('Items')
+        .setPlaceholder('Step 1 to coolness\nStep 2 to coolness')
+        .setRequired(false)
+        .setStyle(TextInputStyle.Paragraph);
+
+      modal.addComponents(...ModalComponents([titleInput, bodyInput, itemsInput]));
 
       return modal;
   }
 }
-
-const demo_ta = {
-  '816098833054302208': { // Guild id
-    config: {
-      channel: '1019638215017238588'
-    }, 
-    tasks: [
-      
-    ] // Array of tasks
-  }
-}
-
 
 export default TaskCreateModalInteraction;
