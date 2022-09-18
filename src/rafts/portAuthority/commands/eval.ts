@@ -1,5 +1,5 @@
 import * as util from 'util';
-import Discord, { EmbedBuilder, AttachmentBuilder } from 'discord.js';
+import Discord, { EmbedBuilder, AttachmentBuilder, ActionRowBuilder } from 'discord.js';
 import BaseCommand from '../../BaseCommand.js';
 import glob from 'glob';
 import * as fs from 'fs';
@@ -76,7 +76,6 @@ class EvalCommand extends BaseCommand {
       client,
       boat: this.boat,
       cmd: this,
-      Discord,
       args: ogargs,
       me: message.member ?? message.author,
       guild: message.guild,
@@ -89,7 +88,8 @@ class EvalCommand extends BaseCommand {
       readfile: readFile,
       loop,
       shorten,
-      delay
+      delay,
+      ...Discord,
     };
   
     if (!args.toLowerCase().includes('return')) {
@@ -119,6 +119,18 @@ class EvalCommand extends BaseCommand {
     }
 
     if (canary) client.options.rest.api = 'https://discord.com/api';
+
+    if (evaluated instanceof ActionRowBuilder) {
+      try {
+        let content = 'Message'
+        let msg = await message.channel.send({ content, components: [evaluated] });
+        e = false;
+        evaluated = msg;
+      } catch (err) {
+        e = true;
+        evaluated = err;
+      }
+    }
 
     if (evaluated instanceof AttachmentBuilder || evaluated instanceof EmbedBuilder) {
       try {
