@@ -9,8 +9,23 @@ export interface ClientI extends Client {
   reminders?: Enmap<Snowflake, Reminder[]>;
   halerts?: Enmap;
   animealerts?: Enmap;
-  tasksdata?: Enmap;
+  tasksdata?: TaskDB;
   loops?: Collection<string, LoopI>;
+}
+
+export interface TaskDB extends Enmap<string, TaskGuilds> {
+  [key: string]: any | TaskGuilds;
+}
+
+interface TaskGuilds {
+  config?: {
+    channel: string
+  },
+  tasks?: TasksObj
+}
+
+interface TasksObj extends Object {
+  [key: string]: any | Task; 
 }
 
 export interface Reminder {
@@ -25,7 +40,8 @@ export interface Task {
   open: boolean,
   author: Snowflake,
   items: Item[],
-  id: string
+  id: string,
+  message_id?: string,
 }
 
 export interface Item {

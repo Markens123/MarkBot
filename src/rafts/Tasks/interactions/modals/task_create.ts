@@ -1,7 +1,7 @@
-import { AttachmentBuilder, ForumChannel, ModalSubmitInteraction } from 'discord.js';
+import { ForumChannel, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
-import * as util from 'util';
 import { Task } from '../../../../../lib/interfaces/Main.js';
+import { ModalComponents, ModalFunctions, TaskMessage } from '../../../../util/Constants.js';
 
 class TaskCreateModalInteraction extends BaseInteraction {
   constructor(raft) {
@@ -10,15 +10,17 @@ class TaskCreateModalInteraction extends BaseInteraction {
       enabled: true,
     };
     super(raft, info);
+    this.definition = this.generateDefinition.bind(this);
   }
 
   async run(interaction: ModalSubmitInteraction) {
-    const client = this.boat.client;
+    const boat = this.boat;
+    const client = boat.client;
     const title = interaction.fields.getTextInputValue('title');
     const body = interaction.fields.getTextInputValue('body');
     const fourm = await interaction.guild.channels.fetch(client.tasksdata.get(interaction.guild.id).config.channel) as ForumChannel;
 
-    client.tasksdata.ensure(interaction.guild.id, [], 'tasks');
+    client.tasksdata.ensure(interaction.guild.id, {}, 'tasks');
 
     const task: Task = {
       author: interaction.user.id,
@@ -28,21 +30,43 @@ class TaskCreateModalInteraction extends BaseInteraction {
       open: true,
       items: [],
     }
-
-    client.tasksdata.push(interaction.guild.id, task, 'tasks');
     
     const channel = await fourm.threads.create({
       name: task.title,
       message: {
-        content: `${task.body}\n--------------------\nID: ${task.id}`
+        content: TaskMessage(task.body, task.id, []),
+        components: [boat.interactions.selectMenuComponents.get('TASK_OPTIONS').definition(interaction.guild.id, task.id)]
       },
     })
 
-    await channel.members.add(interaction.user)
+    task.message_id = channel.id;
+    
+    client.tasksdata.set(interaction.guild.id, task, `tasks.${task.id}`);
+    await channel.members.add(interaction.user);
 
-    interaction.reply({ content: `New task created! ${channel.toString()}`, ephemeral: true })
+    interaction.reply({ content: `New task created! ${channel.toString()}`, ephemeral: true });
+  }
 
+  generateDefinition(): ModalBuilder {
+    const modal = new ModalBuilder().setCustomId(`${ModalFunctions[this.name]}:`).setTitle('Create Task');
 
+    const titleInput = new TextInputBuilder()
+      .setCustomId('title')
+      .setLabel('Title')
+      .setPlaceholder('This is a super cool title')
+      .setRequired(true)
+      .setStyle(TextInputStyle.Short);
+
+      const bodyInput = new TextInputBuilder()
+      .setCustomId('body')
+      .setLabel('Body')
+      .setPlaceholder('Super cool stuff to do')
+      .setRequired(true)
+      .setStyle(TextInputStyle.Paragraph);
+
+      modal.addComponents(...ModalComponents([titleInput, bodyInput]));
+
+      return modal;
   }
 }
 

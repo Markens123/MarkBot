@@ -5,7 +5,6 @@ class BaseInteraction extends BaseCommand {
   definition: any;
   commands: string[];
   subcommands: boolean;
-  bcommand: string | false;
 
   constructor(boat, options) {
     super(boat, options);

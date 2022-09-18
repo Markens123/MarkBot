@@ -1,7 +1,5 @@
 import BaseInteraction from '../../../BaseInteraction.js';
-import * as util from 'util';
-import { ChannelType, ChatInputCommandInteraction, CommandInteractionOption, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
-import { ModalComponents, ModalFunctions } from '../../../../util/Constants.js';
+import { SlashCommandBuilder } from 'discord.js';
 
 class TaskInteraction extends BaseInteraction {
   constructor(boat) {
@@ -72,7 +70,7 @@ return {
           name_localizations: undefined,
           description: 'The task id to edit',
           description_localizations: undefined,
-          required: false,
+          required: true,
           max_length: undefined,
           min_length: undefined
         }
