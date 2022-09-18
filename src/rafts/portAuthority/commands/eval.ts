@@ -61,7 +61,7 @@ class EvalCommand extends BaseCommand {
     const client = this.boat.client;
     if (canary) client.options.rest.api = 'https://canary.discord.com/api';
 
-    depth = parseInt(depth)
+    depth = parseInt(depth);
 
     let args = msg.join(' ');
     if (args.slice(-1) !== ';') args = args.concat(';');
@@ -89,6 +89,7 @@ class EvalCommand extends BaseCommand {
       loop,
       shorten,
       delay,
+      Discord,
       ...Discord,
     };
   
