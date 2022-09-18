@@ -1,7 +1,7 @@
 import { ActionRowBuilder, EmbedBuilder, TextInputBuilder } from 'discord.js';
 import { JSDOM } from 'jsdom';
 import got from 'got';
-import { Item, ItemsObj } from '../../lib/interfaces/Main';
+import { Item, ItemsObj, Task } from '../../lib/interfaces/Main';
 
 export const AniQueue = (arr: string[] | []): string => {
   let content = '';
@@ -16,8 +16,14 @@ export const AniQueue = (arr: string[] | []): string => {
   return content;
 }
 
-export const TaskMessage = (body: string, id: string, items: any = undefined) => {
-  let todo = ''
+export const TaskMessage = (task: Task) => {
+  const body = task.body;
+  const id = task.id;
+  const items = task.items ?? {};
+  const completed = Object.values(items).filter(x => x.completed).length;
+  let todo = '';
+  let count = '';
+
   if (!items || Object.keys(items).length === 0) {
     todo = '\nNone'
   } else {
@@ -26,9 +32,10 @@ export const TaskMessage = (body: string, id: string, items: any = undefined) =>
       let emoji = i.completed ? Emojis.greentick : Emojis.greytick; 
       todo += `\n${emoji} ${i.body}`      
     }
+    count = ` (${completed}/${Object.keys(items).length})`
   }
 
-  return `${body}\n--------------------\nTODO:${todo}\n--------------------\nID: ${id}`
+  return `${body}\n--------------------\nTODO${count}:${todo}\n--------------------\nID: ${id}`
 }
 
 export const Emojis = {
@@ -115,6 +122,7 @@ export const ComponentFunctions = createEnum([
   'HALERTS_EDIT', 
   'HALERTS_RESET', 
   'TASK_OPTIONS',
+  'ITEM_SELECT',
 ]);
 
 export const ModalFunctions = createEnum([

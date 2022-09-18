@@ -39,7 +39,7 @@ class TaskEditModalInteraction extends BaseInteraction {
 
     await channel.edit({ name: ntask.title })
 
-    await (await channel.messages.fetch(ntask.message_id)).edit({ content: TaskMessage(ntask.body, ntask.id, ntask.items) })
+    await (await channel.messages.fetch(ntask.message_id)).edit({ content: TaskMessage(ntask) })
 
     client.tasksdata.set(interaction.guild.id, ntask, `tasks.${ntask.id}`);
 

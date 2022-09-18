@@ -37,7 +37,7 @@ class ItemAddModalInteraction extends BaseInteraction {
 
     const channel = await interaction.guild.channels.fetch(task.message_id) as ThreadChannel;
     
-    await (await channel.messages.fetch(task.message_id)).edit({ content: TaskMessage(ntask.body, ntask.id, ntask.items) })
+    await (await channel.messages.fetch(task.message_id)).edit({ content: TaskMessage(ntask) })
     
     interaction.reply({ content: `Item has been added! ${channel.toString()}`, ephemeral: true })
   }

@@ -51,7 +51,7 @@ class TaskCreateModalInteraction extends BaseInteraction {
     const channel = await fourm.threads.create({
       name: task.title,
       message: {
-        content: TaskMessage(task.body, task.id, task.items),
+        content: TaskMessage(task),
         components: [boat.interactions.selectMenuComponents.get('TASK_OPTIONS').definition(interaction.guild.id, task.id)]
       },
     })

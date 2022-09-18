@@ -237,4 +237,4 @@ export const InteractionYesNo = async ({ interaction, content, editReply = false
     if (!editReply) msg.delete().catch(() => {});
     return null
   }
-}
+} 

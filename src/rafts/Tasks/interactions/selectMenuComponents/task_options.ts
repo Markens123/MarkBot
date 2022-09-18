@@ -39,6 +39,12 @@ class TaskOptionsInteraction extends BaseInteraction {
       return interaction.showModal(modal);
     }
 
+    if (selected === 'mark_item') {
+      const row = boat.interactions.selectMenuComponents.get('ITEM_SELECT').definition(task.id, Object.values(task.items), 'mark')
+      
+      return interaction.reply({ components: [row], ephemeral: true })
+    }
+
     if (selected === 'close_task') {
       console.log(task)
     }
@@ -65,6 +71,11 @@ class TaskOptionsInteraction extends BaseInteraction {
               value: 'add_item',
             },
             {
+              label: "Mark item",
+              description: "Mark item as completed or not",
+              value: 'mark_item',
+            },            
+            {
               label: "Remove item",
               description: "Remove item from todo list",
               value: 'remove_item',
@@ -73,11 +84,6 @@ class TaskOptionsInteraction extends BaseInteraction {
               label: "Edit item",
               description: "Edit item from todo list",
               value: 'edit_item',
-            },
-            {
-              label: "Mark item",
-              description: "Mark item as completed or not",
-              value: 'mark_item',
             },
             {
               label: "Close task",
