@@ -4,6 +4,8 @@ import { BoatI } from '../../lib/interfaces/Main.js';
 import { ComponentFunctions, ModalFunctions } from '../util/Constants.js';
 import { fileURLToPath } from 'url';
 const module = fileURLToPath(import.meta.url);
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
 export default async (boat: BoatI, interaction: Interaction) => {
   let handler;
@@ -82,6 +84,7 @@ export default async (boat: BoatI, interaction: Interaction) => {
     await handler.run(interaction, interaction.options?.data);
   } catch (err) {
     boat.log.warn(module, `Error occurred during interaction call ${handler.name}: ${util.formatWithOptions({}, err)}`);
+    Sentry.captureException(err);
   }
 };
 
