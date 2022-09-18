@@ -70,7 +70,6 @@ class AnimeAPI {
     ]);
     
     const { body } = await got(this.api_url, { 
-      //@ts-expect-error typescript is being dumb :P
       searchParams, 
       headers: {
         "X-MAL-CLIENT-ID": process.env.MAL_CLIENT_ID

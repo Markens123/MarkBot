@@ -29,7 +29,17 @@ return {
       name_localizations: undefined,
       description: 'Setup tasks for this server',
       description_localizations: undefined,
-      options: []
+      options: [        
+        {
+        channel_types: [ 15 ],
+        name: 'channel',
+        name_localizations: undefined,
+        description: 'Channel to make tasks fourm',
+        description_localizations: undefined,
+        required: false,
+        type: 7
+        }
+      ]
     },
     {
       type: 1,
@@ -45,17 +55,7 @@ return {
       name_localizations: undefined,
       description: 'Creates a new task',
       description_localizations: undefined,
-      options: [
-        {
-          channel_types: [ 15 ],
-          name: 'channel',
-          name_localizations: undefined,
-          description: 'Channel to make tasks fourm',
-          description_localizations: undefined,
-          required: false,
-          type: 7
-        }
-      ]
+      options: []
     },
     {
       type: 1,

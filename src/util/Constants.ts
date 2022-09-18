@@ -86,10 +86,10 @@ export const DiscordColors = {
 };
 
 export const ComponentFunctions = createEnum(
-    ['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER', 'HALERTS_EDIT', 'HALERTS_RESET']
-  );
+  ['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER', 'HALERTS_EDIT', 'HALERTS_RESET']
+);
 
-export const ModalFunctions = createEnum(['TEST']);
+export const ModalFunctions = createEnum(['TEST', 'TASK_CREATE']);
 
 function createEnum(keys) {
   const obj = {};

@@ -19,6 +19,21 @@ export interface Reminder {
   id: number;
 }
 
+export interface Task {
+  title: string,
+  body: string,
+  open: boolean,
+  author: Snowflake,
+  items: Item[],
+  id: string
+}
+
+export interface Item {
+  completed: boolean,
+  body: string,
+  id: string,
+}
+
 export interface BoatI {
     options: BoatOptions;
     client: ClientI;
