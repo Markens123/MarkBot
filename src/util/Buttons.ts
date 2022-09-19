@@ -197,7 +197,7 @@ export const YesNo = async ({ message, content, user_id = message.author.id }:
 
 export const InteractionYesNo = async ({ interaction, content, editReply = false, user_id = interaction.user.id }: 
   {
-    interaction: ChatInputCommandInteraction | ButtonInteraction, 
+    interaction: ChatInputCommandInteraction | ButtonInteraction | SelectMenuInteraction, 
     content: string,
     editReply?: boolean,
     user_id?: string | Snowflake 
@@ -224,7 +224,7 @@ export const InteractionYesNo = async ({ interaction, content, editReply = false
     const int = await interaction.channel.awaitMessageComponent(options);
 
     if (!(int instanceof Error)) {
-      int.deferUpdate()
+      if (!int.replied) int.deferUpdate()
       if (!editReply) msg.delete().catch(() => {});
       
 

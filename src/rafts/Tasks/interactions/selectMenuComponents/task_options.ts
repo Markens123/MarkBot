@@ -22,7 +22,7 @@ class TaskOptionsInteraction extends BaseInteraction {
     const selected = interaction.values[0];
     const task = guildtasks[id];
 
-    interaction.message.edit({ components: [this.generateDefinition(interaction.guild.id, id)] })
+    await interaction.message.edit({ components: [this.generateDefinition(interaction.guild.id, id)] })
     
     if (guild !== interaction.guild.id || !task) {
       return interaction.reply({ content: 'This task does not exist', ephemeral: true });
@@ -41,13 +41,21 @@ class TaskOptionsInteraction extends BaseInteraction {
     }
 
     if (selected === TaskOptions.toggleItem) {
-      const row = boat.interactions.selectMenuComponents.get('ITEM_SELECT').definition(task.id, Object.values(task.items), TaskOptions.toggleItem)
+      if (Object.values(task.items).length !== 0) {
+        const row = boat.interactions.selectMenuComponents.get('ITEM_SELECT').definition(task.id, Object.values(task.items), TaskOptions.toggleItem)
+        
+        return interaction.reply({ content: 'Toggle item completed status', components: [row], ephemeral: true })
+      } else return interaction.reply({ content: 'There are no items on this task to toggle!', ephemeral: true })
       
-      return interaction.reply({ content: 'Toggle item completed status', components: [row], ephemeral: true })
+  
     }
 
     if (selected === TaskOptions.removeItem) {
-
+      if (Object.values(task.items).length !== 0) {
+        const row = boat.interactions.selectMenuComponents.get('ITEM_SELECT').definition(task.id, Object.values(task.items), TaskOptions.removeItem)
+  
+        return interaction.reply({ content: 'Remove item', components: [row], ephemeral: true })
+      } else return interaction.reply({ content: 'There are no items on this task to remove!', ephemeral: true })
     }
 
     if (selected === TaskOptions.closeTask) {

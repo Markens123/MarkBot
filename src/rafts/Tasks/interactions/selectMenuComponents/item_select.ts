@@ -1,5 +1,6 @@
 import { ActionRowBuilder, SelectMenuBuilder, SelectMenuComponentOptionData, SelectMenuInteraction, ThreadChannel } from 'discord.js';
 import { Item, Task, TaskOptions } from '../../../../../lib/interfaces/Main.js';
+import { InteractionYesNo } from '../../../../util/Buttons.js';
 import { ComponentFunctions, TaskMessage } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -27,6 +28,7 @@ class ItemSelectInteraction extends BaseInteraction {
     }
 
     const item = task.items[selected] as Item;
+    const channel = await interaction.guild.channels.fetch(task.message_id) as ThreadChannel;
 
     if (next === TaskOptions.toggleItem) {
       await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
@@ -37,21 +39,51 @@ class ItemSelectInteraction extends BaseInteraction {
 
       client.tasksdata.set(interaction.guild.id, newitem, `tasks.${task.id}.items.${item.id}`);
 
-      const channel = await interaction.guild.channels.fetch(task.message_id) as ThreadChannel;
-
       const newtask = client.tasksdata.get(interaction.guild.id).tasks[id];
+
+      interaction.editReply({ content: 'Item status toggled\n Select new item to toggle:' });
     
       return await (await channel.messages.fetch(task.message_id)).edit({ content: TaskMessage(newtask) });
+    }
+    
+    if (next === TaskOptions.removeItem) {
+      if (Object.values(task.items).length !== 0) {
+        await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
+      } else {
+        await interaction.update({ content: 'No more items present. Add some with the menu above!', components: null });
+      }
+
+      const resp = await InteractionYesNo({
+        interaction,
+        content: `Are you sure that you want to delete the item \`${item.body}\`?`,
+        editReply: false
+      });
+
+      if (resp) {
+        client.tasksdata.delete(interaction.guild.id, `tasks.${task.id}.items.${item.id}`);
+      
+        interaction.editReply({ content: 'Item removed\n Select new item to remove:' });
+    
+        const newtask = client.tasksdata.get(interaction.guild.id).tasks[id];
+
+        await (await channel.messages.fetch(task.message_id)).edit({ content: TaskMessage(newtask) });
+p
+        if (Object.values(newtask.items).length !== 0) {
+          return interaction.editReply({ components: [this.generateDefinition(id, Object.values(newtask.items), next)] })
+        } else return interaction.editReply({ content: 'No more items present. Add some with the menu above!', components: [] });
+  
+      } else {
+        return interaction.editReply({ content: 'Operation canceled\n Select new item to remove:' });
+      }
     }
 
     return interaction.deferUpdate()
   }
 
-  generateDefinition(task_id: string, items: Item[], next: string): ActionRowBuilder<SelectMenuBuilder> {
+  generateDefinition(task_id: string, items: Item[], next: TaskOptions): ActionRowBuilder<SelectMenuBuilder> {
     const customId = `${ComponentFunctions[this.name]}:${task_id}:${next}`;
     const options: SelectMenuComponentOptionData[] = [];
 
-  
     items.forEach(i => {
       options.push({
         label: i.body,
