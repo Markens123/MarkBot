@@ -67,7 +67,7 @@ class ItemSelectInteraction extends BaseInteraction {
         const newtask = client.tasksdata.get(interaction.guild.id).tasks[id];
 
         await (await channel.messages.fetch(task.message_id)).edit({ content: TaskMessage(newtask) });
-p
+
         if (Object.values(newtask.items).length !== 0) {
           return interaction.editReply({ components: [this.generateDefinition(id, Object.values(newtask.items), next)] })
         } else return interaction.editReply({ content: 'No more items present. Add some with the menu above!', components: [] });
