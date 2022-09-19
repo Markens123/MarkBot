@@ -32,6 +32,15 @@ export interface ItemsObj extends Object {
   [key: string]: any | Item; 
 }
 
+export enum TaskOptions {
+  editTask = '0',
+  addItem = '1',
+  toggleItem = '2',
+  removeItem = '3',
+  editItem = '4',
+  closeTask = '5'
+}
+
 export interface Reminder {
   content: string;
   timestamp: number | string;

@@ -1,5 +1,5 @@
 import { ActionRowBuilder, SelectMenuBuilder, SelectMenuComponentOptionData, SelectMenuInteraction, ThreadChannel } from 'discord.js';
-import { Item, Task } from '../../../../../lib/interfaces/Main.js';
+import { Item, Task, TaskOptions } from '../../../../../lib/interfaces/Main.js';
 import { ComponentFunctions, TaskMessage } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -26,11 +26,10 @@ class ItemSelectInteraction extends BaseInteraction {
       return interaction.reply({ content: 'This task does not exist', ephemeral: true });
     }
 
-    await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
-    
     const item = task.items[selected] as Item;
 
-    if (next === 'mark') {
+    if (next === TaskOptions.toggleItem) {
+      await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
       let newitem: Item = {
         ...item,
         completed: !item.completed

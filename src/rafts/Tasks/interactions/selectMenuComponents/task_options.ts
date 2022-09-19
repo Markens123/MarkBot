@@ -1,4 +1,5 @@
 import { ActionRowBuilder, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
+import { TaskOptions } from '../../../../../lib/interfaces/Main.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -27,25 +28,29 @@ class TaskOptionsInteraction extends BaseInteraction {
       return interaction.reply({ content: 'This task does not exist', ephemeral: true });
     }
 
-    if (selected === 'edit_task') {
+    if (selected === TaskOptions.editTask) {
       const modal = boat.interactions.modals.get('TASK_EDIT').definition(id);
 
       return interaction.showModal(modal);
     }
 
-    if (selected === 'add_item') {
+    if (selected === TaskOptions.addItem) {
       const modal = boat.interactions.modals.get('ITEM_ADD').definition(id);
 
       return interaction.showModal(modal);
     }
 
-    if (selected === 'mark_item') {
-      const row = boat.interactions.selectMenuComponents.get('ITEM_SELECT').definition(task.id, Object.values(task.items), 'mark')
+    if (selected === TaskOptions.toggleItem) {
+      const row = boat.interactions.selectMenuComponents.get('ITEM_SELECT').definition(task.id, Object.values(task.items), TaskOptions.toggleItem)
       
-      return interaction.reply({ components: [row], ephemeral: true })
+      return interaction.reply({ content: 'Toggle item completed status', components: [row], ephemeral: true })
     }
 
-    if (selected === 'close_task') {
+    if (selected === TaskOptions.removeItem) {
+
+    }
+
+    if (selected === TaskOptions.closeTask) {
       console.log(task)
     }
 
@@ -63,32 +68,32 @@ class TaskOptionsInteraction extends BaseInteraction {
             {
               label: 'Edit task',
               description: 'Edit task body or title',
-              value: 'edit_task',
+              value: TaskOptions.editTask,
             },
             {
               label: "Add item",
               description: "Add item from todo list",
-              value: 'add_item',
+              value: TaskOptions.addItem,
             },
             {
-              label: "Mark item",
-              description: "Mark item as completed or not",
-              value: 'mark_item',
+              label: "Toggle item",
+              description: "Toggle item completed status",
+              value: TaskOptions.toggleItem,
             },            
             {
               label: "Remove item",
               description: "Remove item from todo list",
-              value: 'remove_item',
+              value: TaskOptions.removeItem,
             },          
             {
               label: "Edit item",
               description: "Edit item from todo list",
-              value: 'edit_item',
+              value: TaskOptions.editItem,
             },
             {
               label: "Close task",
               description: "Closes task",
-              value: 'close_task',
+              value: TaskOptions.closeTask,
             },
           ]),
       ],
