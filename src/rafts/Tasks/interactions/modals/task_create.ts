@@ -52,7 +52,7 @@ class TaskCreateModalInteraction extends BaseInteraction {
       name: task.title,
       message: {
         content: TaskMessage(task),
-        components: [boat.interactions.selectMenuComponents.get('TASK_OPTIONS').definition(interaction.guild.id, task.id)]
+        components: [boat.interactions.selectMenuComponents.get('TASK_OPTIONS').definition(interaction.guild.id, task)]
       },
     })
 

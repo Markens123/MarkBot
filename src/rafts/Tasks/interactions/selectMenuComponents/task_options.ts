@@ -1,5 +1,5 @@
 import { ActionRowBuilder, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
-import { TaskOptions } from '../../../../../lib/interfaces/Main.js';
+import { Task, TaskOptions } from '../../../../../lib/interfaces/Main.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -22,7 +22,7 @@ class TaskOptionsInteraction extends BaseInteraction {
     const selected = interaction.values[0];
     const task = guildtasks[id];
 
-    await interaction.message.edit({ components: [this.generateDefinition(interaction.guild.id, id)] })
+    await interaction.message.edit({ components: [this.generateDefinition(interaction.guild.id, task)] })
     
     if (guild !== interaction.guild.id || !task) {
       return interaction.reply({ content: 'This task does not exist', ephemeral: true });
@@ -65,8 +65,26 @@ class TaskOptionsInteraction extends BaseInteraction {
     return interaction.deferUpdate()
   }
 
-  generateDefinition(guild: string, id: string): ActionRowBuilder<SelectMenuBuilder> {
-    const customId = `${ComponentFunctions[this.name]}:${guild}:${id}`;
+  generateDefinition(guild: string, task: Task): ActionRowBuilder<SelectMenuBuilder> {
+    const customId = `${ComponentFunctions[this.name]}:${guild}:${task.id}`;
+
+    if (!task.open) {
+      return new ActionRowBuilder({
+        components: [
+          new SelectMenuBuilder()
+            .setCustomId(customId)
+            .setPlaceholder('Nothing selected')
+            .addOptions([
+              {
+                label: "Open task",
+                description: "Opens task",
+                value: TaskOptions.openTask,
+              },
+            ]),
+        ],
+      });
+    }
+
     return new ActionRowBuilder({
       components: [
         new SelectMenuBuilder()

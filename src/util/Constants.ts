@@ -23,6 +23,7 @@ export const TaskMessage = (task: Task) => {
   const completed = Object.values(items).filter(x => x.completed).length;
   let todo = '';
   let count = '';
+  let closed = task.open ? '' : '\nTASK CLOSED';
 
   if (!items || Object.keys(items).length === 0) {
     todo = '\nNone'
@@ -35,7 +36,7 @@ export const TaskMessage = (task: Task) => {
     count = ` (${completed}/${Object.keys(items).length})`
   }
 
-  return `${body}\n--------------------\nTODO${count}:${todo}\n--------------------\nID: ${id}`
+  return `${body}\n--------------------\nTODO${count}:${todo}\n--------------------\nID: ${id}${closed}`
 }
 
 export const Emojis = {

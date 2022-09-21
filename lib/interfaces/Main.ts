@@ -38,7 +38,8 @@ export enum TaskOptions {
   toggleItem = '2',
   removeItem = '3',
   editItem = '4',
-  closeTask = '5'
+  closeTask = '5',
+  openTask = '6',
 }
 
 export interface Reminder {
