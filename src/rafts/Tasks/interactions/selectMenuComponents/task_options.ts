@@ -22,7 +22,7 @@ class TaskOptionsInteraction extends BaseInteraction {
     const selected = interaction.values[0];
     const task = guildtasks[id];
 
-    await interaction.message.edit({ components: [this.generateDefinition(interaction.guild.id, task)] })
+    interaction.message.edit({ components: [this.generateDefinition(interaction.guild.id, task)] })
     
     if (guild !== interaction.guild.id || !task) {
       return interaction.reply({ content: 'This task does not exist', ephemeral: true });

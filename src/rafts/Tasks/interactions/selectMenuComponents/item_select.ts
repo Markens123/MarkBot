@@ -31,7 +31,12 @@ class ItemSelectInteraction extends BaseInteraction {
     const channel = await interaction.guild.channels.fetch(task.message_id) as ThreadChannel;
 
     if (next === TaskOptions.toggleItem) {
-      await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
+      if (Object.values(task.items).length !== 0) {
+        await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
+      } else {
+        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: null });
+      }
+      
       let newitem: Item = {
         ...item,
         completed: !item.completed
@@ -50,7 +55,7 @@ class ItemSelectInteraction extends BaseInteraction {
       if (Object.values(task.items).length !== 0) {
         await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
       } else {
-        await interaction.update({ content: 'No more items present. Add some with the menu above!', components: null });
+        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: null });
       }
 
       const resp = await InteractionYesNo({
@@ -75,6 +80,16 @@ class ItemSelectInteraction extends BaseInteraction {
       } else {
         return interaction.editReply({ content: 'Operation canceled\n Select new item to remove:' });
       }
+    }
+
+    if (next === TaskOptions.editItem) {
+      if (Object.values(task.items).length !== 0) {
+        await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
+      } else {
+        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: null });
+      }
+
+      
     }
 
     return interaction.deferUpdate()
