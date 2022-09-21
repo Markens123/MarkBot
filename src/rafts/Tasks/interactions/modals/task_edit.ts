@@ -18,8 +18,7 @@ class TaskEditModalInteraction extends BaseInteraction {
     const title = interaction.fields.getTextInputValue('title');
     const body = interaction.fields.getTextInputValue('body');
     const id = interaction.customId.split(':')[1];
-    const guildtasks = client.tasksdata.get(interaction.guild.id).tasks;
-    const task = guildtasks[id];
+    const task = client.tasksdata.get(interaction.guild.id).tasks[id];
 
     if (!body && !title) {
       return interaction.reply({ content: 'You must edit one of the fields!' ,ephemeral: true})

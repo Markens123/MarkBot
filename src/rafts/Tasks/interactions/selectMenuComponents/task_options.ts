@@ -46,8 +46,7 @@ class TaskOptionsInteraction extends BaseInteraction {
         
         return interaction.reply({ content: 'Toggle item completed status', components: [row], ephemeral: true })
       } else return interaction.reply({ content: 'There are no items on this task to toggle!', ephemeral: true })
-      
-  
+    
     }
 
     if (selected === TaskOptions.removeItem) {
@@ -57,6 +56,14 @@ class TaskOptionsInteraction extends BaseInteraction {
         return interaction.reply({ content: 'Remove item', components: [row], ephemeral: true })
       } else return interaction.reply({ content: 'There are no items on this task to remove!', ephemeral: true })
     }
+
+    if (selected === TaskOptions.editItem) {
+      if (Object.values(task.items).length !== 0) {
+        const row = boat.interactions.selectMenuComponents.get('ITEM_SELECT').definition(task.id, Object.values(task.items), TaskOptions.editItem)
+  
+        return interaction.reply({ content: 'Edit item', components: [row], ephemeral: true })
+      } else return interaction.reply({ content: 'There are no items on this task to edit!', ephemeral: true })
+    }    
 
     if (selected === TaskOptions.closeTask) {
       console.log(task)

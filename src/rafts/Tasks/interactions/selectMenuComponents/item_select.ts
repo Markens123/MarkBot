@@ -83,13 +83,16 @@ class ItemSelectInteraction extends BaseInteraction {
     }
 
     if (next === TaskOptions.editItem) {
-      if (Object.values(task.items).length !== 0) {
-        await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
-      } else {
-        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: null });
-      }
+      const modal = boat.interactions.modals.get('ITEM_EDIT').definition(task.id, item.id, item.body);
 
-      
+      await interaction.showModal(modal);
+
+      if (Object.values(task.items).length !== 0) {
+        await interaction.editReply({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
+      } else {
+       await interaction.editReply({ content: 'No items present. Add some with the menu above!', components: null });
+      }
+      return      
     }
 
     return interaction.deferUpdate()
