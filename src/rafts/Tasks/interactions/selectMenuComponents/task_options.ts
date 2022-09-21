@@ -98,7 +98,7 @@ class TaskOptionsInteraction extends BaseInteraction {
             },
             {
               label: "Add item",
-              description: "Add item from todo list",
+              description: "Add item to todo list",
               value: TaskOptions.addItem,
             },
             {
@@ -113,7 +113,7 @@ class TaskOptionsInteraction extends BaseInteraction {
             },          
             {
               label: "Edit item",
-              description: "Edit item from todo list",
+              description: "Edit todo list item",
               value: TaskOptions.editItem,
             },
             {
