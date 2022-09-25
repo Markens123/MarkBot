@@ -1,6 +1,7 @@
-import { ActionRowBuilder, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
-import { Task, TaskOptions } from '../../../../../lib/interfaces/Main.js';
-import { ComponentFunctions } from '../../../../util/Constants.js';
+import { ActionRowBuilder, SelectMenuBuilder, SelectMenuInteraction, ThreadChannel } from 'discord.js';
+import { Item, Task, TaskOptions } from '../../../../../lib/interfaces/Main.js';
+import { InteractionYesNo } from '../../../../util/Buttons.js';
+import { ComponentFunctions, TaskMessage } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class TaskOptionsInteraction extends BaseInteraction {
@@ -17,10 +18,9 @@ class TaskOptionsInteraction extends BaseInteraction {
     const boat = this.boat;
     const client = boat.client;
     const guild = interaction.customId.split(':')[1];
-    const guildtasks = client.tasksdata.get(guild).tasks;
     const id = interaction.customId.split(':')[2];
     const selected = interaction.values[0];
-    const task = guildtasks[id];
+    const task: Task = client.tasksdata.get(guild).tasks[id];
 
     interaction.message.edit({ components: [this.generateDefinition(interaction.guild.id, task)] })
     
@@ -66,8 +66,53 @@ class TaskOptionsInteraction extends BaseInteraction {
     }    
 
     if (selected === TaskOptions.closeTask) {
-      console.log(task)
+      await interaction.reply({ content: '‎', ephemeral: true }); 
+      if (Object.values(task.items).filter((x: Item) => x.completed).length !== Object.values(task.items).length) {
+        const resp = await InteractionYesNo({ 
+          interaction, 
+          content: 'Are you sure that you want to close this task? (Some items are not completed)', 
+          editReply: true 
+        })
+        if (!resp) return interaction.editReply({ content: 'Close canceled!', components: [] })
+      }
+      const ntask: Task = {
+        ...task,
+        open: false
+      }
+      const channel = await interaction.guild.channels.fetch(ntask.message_id) as ThreadChannel;
+
+      await (await channel.messages.fetch(ntask.message_id)).edit({ 
+        content: TaskMessage(ntask), 
+        components: [this.generateDefinition(interaction.guild.id, ntask)] 
+      })
+
+      client.tasksdata.set(interaction.guild.id, ntask, `tasks.${task.id}`);
+
+      await interaction.editReply({ content: 'Task closed!', components: [] })
+
+      return interaction.channel.send({ content: `Task closed by ${interaction.user.toString()}`});
     }
+
+    if (selected === TaskOptions.openTask) {
+      if (task.open) {
+        return interaction.reply({content: 'This task is already opened!', ephemeral: true})
+      }
+
+      const ntask: Task = {
+        ...task,
+        open: true
+      }
+      const channel = await interaction.guild.channels.fetch(ntask.message_id) as ThreadChannel;
+
+      await (await channel.messages.fetch(ntask.message_id)).edit({ 
+        content: TaskMessage(ntask), 
+        components: [this.generateDefinition(interaction.guild.id, ntask)] 
+      })
+
+      client.tasksdata.set(interaction.guild.id, ntask, `tasks.${task.id}`);
+
+      return interaction.reply({ content: `Task opened by ${interaction.user.toString()}`});
+    } 
 
     return interaction.deferUpdate()
   }
