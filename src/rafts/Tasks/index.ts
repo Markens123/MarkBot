@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 const module = fileURLToPath(import.meta.url);
 
 /**
- * Image commands raft for this boat.
+ * Tasks raft for this boat.
  * @extends {BaseRaft}
  */
 class Tasks extends BaseRaft {
