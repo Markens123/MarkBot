@@ -20,6 +20,8 @@ class TaskInteraction extends BaseInteraction {
  
 function tempDef() { 
 return {
+  name: 'tasks',
+  description: 'Tasks stuff',
   options: [
     {
       type: 1,
@@ -27,15 +29,13 @@ return {
       name_localizations: undefined,
       description: 'Setup tasks for this server',
       description_localizations: undefined,
-      options: [        
+      options: [
         {
-        channel_types: [ 15 ],
-        name: 'channel',
-        name_localizations: undefined,
-        description: 'Channel to make tasks fourm',
-        description_localizations: undefined,
-        required: false,
-        type: 7
+          required: false,
+          type: 7,
+          name: 'channel',
+          channel_types: [ 15 ],
+          description: 'Channel to make tasks fourm'
         }
       ]
     },
@@ -45,7 +45,15 @@ return {
       name_localizations: undefined,
       description: 'Edit the tasks config for this server',
       description_localizations: undefined,
-      options: []
+      options: [
+        {
+          required: false,
+          type: 7,
+          name: 'channel',
+          channel_types: [ 15 ],
+          description: 'Channel to make tasks fourm'
+        }
+      ]
     },
     {
       type: 1,
@@ -63,24 +71,14 @@ return {
       description_localizations: undefined,
       options: [
         {
-          choices: undefined,
-          autocomplete: undefined,
+          required: false,
           type: 3,
           name: 'id',
-          name_localizations: undefined,
-          description: 'The task id to edit',
-          description_localizations: undefined,
-          required: true,
-          max_length: undefined,
-          min_length: undefined
+          description: 'The task id to edit'
         }
       ]
     }
   ],
-  name: 'tasks',
-  name_localizations: undefined,
-  description: 'Tasks stuff',
-  description_localizations: undefined,
   default_permission: undefined,
   default_member_permissions: undefined,
   dm_permission: undefined
@@ -95,23 +93,30 @@ function getDefinition() {
       subcommand
         .setName('setup')
         .setDescription('Setup tasks for this server')
-    )
-    .addSubcommand(subcommand =>
-      subcommand
-        .setName('config')
-        .setDescription('Edit the tasks config for this server')
-    )    
-    .addSubcommand(subcommand =>
-      subcommand
-        .setName('create')
-        .setDescription('Creates a new task')
         .addChannelOption(option =>
           option
             .setName('channel')
             .addChannelTypes(0) //TODO: Make it Channel.Type.Fourm whatever it is when they fix this
             .setRequired(false)
             .setDescription('Channel to make tasks fourm')
-        )
+        )        
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('config')
+        .setDescription('Edit the tasks config for this server')
+        .addChannelOption(option =>
+          option
+            .setName('channel')
+            .addChannelTypes(0) //TODO: Make it Channel.Type.Fourm whatever it is when they fix this
+            .setRequired(false)
+            .setDescription('Channel to make tasks fourm')
+        )         
+    )    
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('create')
+        .setDescription('Creates a new task')
     )
     .addSubcommand(subcommand =>
       subcommand

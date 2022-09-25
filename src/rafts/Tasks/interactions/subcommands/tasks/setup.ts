@@ -6,18 +6,18 @@ import { ModalComponents, ModalFunctions } from '../../../../../util/Constants.j
 class TaskSetupInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
-      name: 'create',
+      name: 'setup',
       enabled: true,
     };
     super(boat, info);
   }
 
-  async run(interaction: ChatInputCommandInteraction, args: CommandInteractionOption[]) {
+  async run(interaction: ChatInputCommandInteraction) {
     const boat = this.boat;
     const client = boat.client;
 
-    let channel = interaction.options.getChannel('channel', false);
-    if (!channel) return interaction.reply("No");
+    let channel: any = interaction.options.getChannel('channel', false);
+    if (!channel) channel = interaction.guild.channels.create({ name: 'tasks', type: ChannelType.GuildForum });
 
     const fourm = await interaction.guild.channels.fetch(channel.id) as ForumChannel;
     
