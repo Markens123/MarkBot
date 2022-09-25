@@ -14,7 +14,7 @@ class TaskInteraction extends BaseInteraction {
   }
 
   async run() {
-    throw new Error(`tasks.ts was ran but should never be run`)
+    throw new Error('tasks.ts was ran but should never be run')
   }
 }
  
