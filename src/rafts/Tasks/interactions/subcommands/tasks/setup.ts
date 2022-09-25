@@ -22,7 +22,7 @@ class TaskSetupInteraction extends BaseInteraction {
     const forum = await interaction.guild.channels.fetch(channel.id) as ForumChannel;
     
     client.tasksdata.set(interaction.guild.id, forum.id, 'config.channel');
-    client.tasksdata.set(interaction.guild.id, [], 'tasks');
+    client.tasksdata.set(interaction.guild.id, {}, 'tasks');
 
     interaction.reply({ content: `The tasks channel has been set to ${forum.toString()}`, ephemeral: true })
   }
