@@ -36,11 +36,7 @@ export default async (boat: BoatI, message: Message) => {
     return;
   }
 
-  if (!(
-    (message.channel.type === ChannelType.GuildText) 
-    || (message.channel.type === ChannelType.DM)
-    || (message.channel.type === ChannelType.GuildVoice)
-    )) return;
+  if (!message.channel.isTextBased()) return;
 
   if (!handler.enabled) return;
 
@@ -64,7 +60,12 @@ export default async (boat: BoatI, message: Message) => {
 
   if (handler.channels && !handler.channels.includes(message.channel.id)) return;
 
-  if (handler.guilds && !handler.guilds.includes(message.guild.id)) return;
+  if (handler.guild) {
+    if (typeof handler.guild === 'string') {
+      if (message.guild.id !== handler.guild) return;
+    }  
+    else if (!handler.guild.includes(message.guild.id)) return;
+  }
 
   if (!handler.dev && boat.options.dev) return;
 

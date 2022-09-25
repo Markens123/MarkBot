@@ -9,13 +9,60 @@ export interface ClientI extends Client {
   reminders?: Enmap<Snowflake, Reminder[]>;
   halerts?: Enmap;
   animealerts?: Enmap;
-  loops?: Collection<string, Loop>;
+  tasksdata?: TaskDB;
+  loops?: Collection<string, LoopI>;
+}
+
+export interface TaskDB extends Enmap<string, TaskGuilds> {
+  [key: string]: any | TaskGuilds;
+}
+
+interface TaskGuilds {
+  config?: {
+    channel: string
+  },
+  tasks?: TasksObj
+}
+
+interface TasksObj extends Object {
+  [key: string]: any | Task; 
+}
+
+export interface ItemsObj extends Object {
+  [key: string]: any | Item; 
+}
+
+export enum TaskOptions {
+  editTask = '0',
+  addItem = '1',
+  toggleItem = '2',
+  removeItem = '3',
+  editItem = '4',
+  closeTask = '5',
+  openTask = '6',
 }
 
 export interface Reminder {
   content: string;
   timestamp: number | string;
   id: number;
+}
+
+export interface Task {
+  title: string,
+  body: string,
+  open: boolean,
+  author: Snowflake,
+  items: ItemsObj,
+  id: string,
+  message_id?: string,
+}
+
+export interface Item {
+  completed: boolean,
+  body: string,
+  id: string,
+  task_id: string,
 }
 
 export interface BoatI {
@@ -38,14 +85,17 @@ export interface BoatI {
     listen: any;
 }
 
+type InteractionCollection = Collection<string, BaseInteraction>;
+
 export interface InteractionsI {
-  commands: Collection<string, BaseInteraction>;
-  buttonComponents: Collection<string, BaseInteraction>;
-  selectMenuComponents: Collection<string, BaseInteraction>;
-  userContextMenuComponents: Collection<string, BaseInteraction>;
-  messageContextMenuComponents: Collection<string, BaseInteraction>;
-  autocomplete: Collection<string, BaseInteraction>;
-  modals: Collection<string, BaseInteraction>;
+  commands: InteractionCollection;
+  buttonComponents: InteractionCollection;
+  selectMenuComponents: InteractionCollection;
+  userContextMenuComponents: InteractionCollection;
+  messageContextMenuComponents: InteractionCollection;
+  autocomplete: InteractionCollection;
+  modals: InteractionCollection;
+  subcommands: Collection<string, InteractionCollection>;
 }
 
 export interface CommandOptions {
@@ -59,7 +109,7 @@ export interface CommandOptions {
   dev?: boolean | 'only';
   args?: ArgI[] | false;
   channels?: Snowflake[] | false;
-  guilds?: Snowflake[] | false;
+  guild?: Snowflake[] | Snowflake | false;
   aliases?: string[] | false;
   cooldown?: number | false;
   permissions?: PermissionResolvable | false;
@@ -73,9 +123,8 @@ export interface BoatOptions {
   dev?: boolean;
   commandPrefix?: string;
   log?: LogOptions;
-  basepath?: any;
+  basepath?: string;
   tokens?: any;
-  channels?: any;
 }
 
 export interface RaftI {
@@ -214,7 +263,7 @@ type AnimeMainPicture = {
 }
 
 
-export interface Loop {
+export interface LoopI {
   active: boolean;
   boat: BoatI;
   name: string;

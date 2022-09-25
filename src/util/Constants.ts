@@ -1,6 +1,7 @@
 import { ActionRowBuilder, EmbedBuilder, TextInputBuilder } from 'discord.js';
 import { JSDOM } from 'jsdom';
 import got from 'got';
+import { Item, ItemsObj, Task } from '../../lib/interfaces/Main';
 
 export const AniQueue = (arr: string[] | []): string => {
   let content = '';
@@ -13,6 +14,35 @@ export const AniQueue = (arr: string[] | []): string => {
   }
 
   return content;
+}
+
+export const TaskMessage = (task: Task) => {
+  const body = task.body;
+  const id = task.id;
+  const items = task.items ?? {};
+  const completed = Object.values(items).filter(x => x.completed).length;
+  let todo = '';
+  let count = '';
+  let closed = task.open ? '' : '\nTASK CLOSED';
+
+  if (!items || Object.keys(items).length === 0) {
+    todo = '\nNone'
+  } else {
+    for (const x in items) {
+      const i = items[x] as Item;
+      let emoji = i.completed ? Emojis.greentick : Emojis.greytick; 
+      todo += `\n${emoji} ${i.body}`      
+    }
+    count = ` (${completed}/${Object.keys(items).length})`
+  }
+
+  return `${body}\n--------------------\nTODO${count}:${todo}\n--------------------\nID: ${id}${closed}`
+}
+
+export const Emojis = {
+  greentick: '<:greentick:1021079237488287896>',
+  redtick: '<:redtick:1021079236833972294>',
+  greytick: '<:greytick:1021079238943711292>'
 }
 
 export const getMalUrl = async (dburl: string): Promise<string | null> => {
@@ -85,11 +115,24 @@ export const DiscordColors = {
   DEEP_GOLD: 0xffab32,
 };
 
-export const ComponentFunctions = createEnum(
-    ['DELETE', 'AQUEUE_ADD', 'AQUEUE_DELETE', 'AQUEUE_REORDER', 'HALERTS_EDIT', 'HALERTS_RESET']
-  );
+export const ComponentFunctions = createEnum([
+  'DELETE', 
+  'AQUEUE_ADD', 
+  'AQUEUE_DELETE', 
+  'AQUEUE_REORDER', 
+  'HALERTS_EDIT', 
+  'HALERTS_RESET', 
+  'TASK_OPTIONS',
+  'ITEM_SELECT',
+]);
 
-export const ModalFunctions = createEnum(['TEST']);
+export const ModalFunctions = createEnum([
+  'TEST', 
+  'TASK_CREATE', 
+  'TASK_EDIT', 
+  'ITEM_ADD',
+  'ITEM_EDIT',
+]);
 
 function createEnum(keys) {
   const obj = {};

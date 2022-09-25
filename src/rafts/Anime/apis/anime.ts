@@ -69,7 +69,7 @@ class AnimeAPI {
       ['nsfw', 'true'],
     ]);
     
-    const { body } = await got(this.api_url, { 
+    const { body } = await got(this.api_url, {
       //@ts-expect-error typescript is being dumb :P
       searchParams, 
       headers: {

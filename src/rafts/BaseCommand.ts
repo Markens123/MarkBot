@@ -14,7 +14,7 @@ class BaseCommand {
   dev: boolean | 'only';
   args: ArgI[] | false;
   channels: Snowflake[] | false;
-  guilds: Snowflake[] | false;
+  guild?: Snowflake | Snowflake[] | false;
   aliases: string[] | false;
   cooldown: number | false;
   permissions: PermissionResolvable | false;
@@ -108,10 +108,10 @@ class BaseCommand {
     this.channels = options.channels ?? false;
 
     /**
-     * Which guilds can use this command
-     * @type {Snowflake[]}
+     * The guild(s), if any, that this command is specific too
+     * @type {(Snowflake|Snowflake[])?}
      */
-     this.guilds = options.guilds ?? false;
+    this.guild = options.guild ?? false;
 
 
     /**
