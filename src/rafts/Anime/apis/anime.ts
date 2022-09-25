@@ -1,7 +1,7 @@
-import got from 'got';
 import * as cheerio from 'cheerio';
-import { AnimeI, SimpleAnime } from '../../../../lib/interfaces/Main';
 import { EmbedBuilder } from 'discord.js';
+import got from 'got';
+import { AnimeI, SimpleAnime } from '../../../../lib/interfaces/Main';
 
 class AnimeAPI {
   url: string = 'https://animixplay.to/';

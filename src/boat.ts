@@ -1,17 +1,17 @@
 // Import dependencies
-import { Client, Collection, Snowflake, Routes } from 'discord.js';
-import { REST } from '@discordjs/rest'
-import events from './events/index.js';
-import rafts from './rafts/index.js';
-import BaseRaft from './rafts/BaseRaft.js';
-import loops from './loops/index.js';
-import logBuilder from './rafts/captainsLog/LogRouter.js';
-import { util } from './util/index.js';
-import databases from './databases.js';
-import { BoatI, BoatOptions, ClientI, InteractionsI } from '../lib/interfaces/Main.js'
+import { REST } from '@discordjs/rest';
+import { Client, Collection, Routes, Snowflake } from 'discord.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { BoatI, BoatOptions, ClientI, InteractionsI } from '../lib/interfaces/Main.js';
+import databases from './databases.js';
+import events from './events/index.js';
 import BaseLoop from './loops/BaseLoop.js';
+import loops from './loops/index.js';
+import BaseRaft from './rafts/BaseRaft.js';
+import logBuilder from './rafts/captainsLog/LogRouter.js';
+import rafts from './rafts/index.js';
+import { util } from './util/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

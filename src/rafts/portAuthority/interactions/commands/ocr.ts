@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
 import { ocrSpace } from 'ocr-space-api-wrapper';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class OCRInteraction extends BaseInteraction {
   constructor(boat) {

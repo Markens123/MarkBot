@@ -1,6 +1,6 @@
-import { ButtonInteraction, ButtonBuilder, Message, EmbedBuilder, MessageComponentInteraction, SnowflakeUtil, SelectMenuBuilder, ActionRowBuilder, SelectMenuInteraction, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, Message, MessageActionRowComponentBuilder, MessageComponentInteraction, SelectMenuBuilder, SelectMenuInteraction, SnowflakeUtil } from 'discord.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class HAlertsEditInteraction extends BaseInteraction {
   definition: () => ButtonBuilder;

@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 
-import BaseCommand from  '../../BaseCommand.js';
+import BaseCommand from '../../BaseCommand.js';
 
 class DelReminderCommand extends BaseCommand {
   constructor(boat) {

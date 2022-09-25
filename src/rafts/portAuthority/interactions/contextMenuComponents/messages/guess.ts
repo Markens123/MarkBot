@@ -1,7 +1,7 @@
-import { ContextMenuCommandInteraction, EmbedBuilder, Snowflake, Message, SnowflakeUtil, ButtonInteraction, ComponentType } from 'discord.js';
-import BaseInteraction from '../../../../BaseInteraction.js';
-import Identify from '../../../../../util/Identify.js';
+import { ButtonInteraction, ComponentType, ContextMenuCommandInteraction, EmbedBuilder, Message, Snowflake, SnowflakeUtil } from 'discord.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
+import Identify from '../../../../../util/Identify.js';
+import BaseInteraction from '../../../../BaseInteraction.js';
 class GuessInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {

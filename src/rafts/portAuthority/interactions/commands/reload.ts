@@ -1,11 +1,10 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
-import { RaftI } from '../../../../../lib/interfaces/Main.js';
 import glob from 'glob';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { RaftI } from '../../../../../lib/interfaces/Main.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 class ReloadInteraction extends BaseInteraction {
   constructor(raft) {

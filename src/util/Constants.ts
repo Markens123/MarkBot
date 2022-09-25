@@ -1,7 +1,7 @@
 import { ActionRowBuilder, EmbedBuilder, TextInputBuilder } from 'discord.js';
-import { JSDOM } from 'jsdom';
 import got from 'got';
-import { Item, ItemsObj, Task } from '../../lib/interfaces/Main';
+import { JSDOM } from 'jsdom';
+import { Item, Task } from '../../lib/interfaces/Main';
 
 export const AniQueue = (arr: string[] | []): string => {
   let content = '';

@@ -1,4 +1,4 @@
-import { CommandInteraction, Interaction, MessageComponentInteraction, SelectMenuInteraction, Snowflake } from 'discord.js';
+import { CommandInteraction, Interaction, MessageComponentInteraction, SelectMenuInteraction } from 'discord.js';
 import BaseCommand from './BaseCommand.js';
 
 class BaseInteraction extends BaseCommand {

@@ -1,6 +1,6 @@
-import BaseInteraction from '../../../BaseInteraction.js';
-import got from 'got';
 import { ChatInputCommandInteraction } from 'discord.js';
+import got from 'got';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
   name: 'atol',

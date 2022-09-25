@@ -1,8 +1,7 @@
 import { Message } from 'discord.js';
+import parse from 'parse-duration';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import parse from 'parse-duration'
-
-import BaseCommand from  '../../BaseCommand.js';
+import BaseCommand from '../../BaseCommand.js';
 
 class RemindCommand extends BaseCommand {
   constructor(boat) {

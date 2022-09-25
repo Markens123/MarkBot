@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Message, ActionRowBuilder, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
+import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, Message, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class HAlertsInteraction extends BaseInteraction {

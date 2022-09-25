@@ -1,6 +1,6 @@
-import { ButtonInteraction, ButtonBuilder, EmbedBuilder, SnowflakeUtil, SelectMenuBuilder, ActionRowBuilder, SelectMenuInteraction, MessageComponentInteraction, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, MessageActionRowComponentBuilder, MessageComponentInteraction, SelectMenuBuilder, SelectMenuInteraction, SnowflakeUtil } from 'discord.js';
 import { AniQueue, ComponentFunctions } from '../../../../util/Constants.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class AQueueReorderInteraction extends BaseInteraction {
   definition: () => ButtonBuilder;

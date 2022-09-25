@@ -1,6 +1,6 @@
 import { AttachmentBuilder, ModalSubmitInteraction } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
 import * as util from 'util';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class TestInteraction extends BaseInteraction {
   constructor(raft) {
@@ -17,6 +17,5 @@ class TestInteraction extends BaseInteraction {
     interaction.reply({ files: [attachment] });
   }
 }
-
 
 export default TestInteraction;

@@ -1,8 +1,8 @@
-import {  ActionRow, ApplicationCommandType, ComponentType, Interaction, InteractionType, MessageActionRowComponent } from 'discord.js';
+import { ActionRow, ApplicationCommandType, ComponentType, Interaction, InteractionType, MessageActionRowComponent } from 'discord.js';
+import { fileURLToPath } from 'url';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { ComponentFunctions, ModalFunctions } from '../util/Constants.js';
-import { fileURLToPath } from 'url';
 const module = fileURLToPath(import.meta.url);
 
 export default async (boat: BoatI, interaction: Interaction) => {

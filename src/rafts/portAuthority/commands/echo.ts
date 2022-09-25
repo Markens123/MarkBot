@@ -1,7 +1,6 @@
-import { Message, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-
-import BaseCommand from  '../../BaseCommand.js';
+import BaseCommand from '../../BaseCommand.js';
 
 class EchoCommand extends BaseCommand {
   constructor(boat) {

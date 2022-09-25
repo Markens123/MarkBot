@@ -1,12 +1,11 @@
-import BaseCommand from '../../BaseCommand.js';
-import glob from 'glob';
 import { Message } from 'discord.js';
+import glob from 'glob';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import BaseCommand from '../../BaseCommand.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 
 class ReloadCommandCommand extends BaseCommand {
   constructor(boat) {

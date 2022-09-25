@@ -1,5 +1,5 @@
+import { ChatInputCommandInteraction, ForumChannel } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
-import { ChatInputCommandInteraction, CommandInteractionOption, ForumChannel } from 'discord.js';
 
 class TaskConfigInteraction extends BaseInteraction {
   constructor(boat) {

@@ -1,10 +1,8 @@
 import pkg from 'canvas';
 const { createCanvas } = pkg;
-
 import { AttachmentBuilder, Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { util } from '../../../util/index.js';
-
 import BaseCommand from '../../BaseCommand.js';
 
 class AbstractCommand extends BaseCommand {

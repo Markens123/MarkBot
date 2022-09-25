@@ -1,7 +1,7 @@
-import BaseInteraction from '../../../BaseInteraction.js';
-import * as util from 'util';
 import { ChatInputCommandInteraction, CommandInteractionOption, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import * as util from 'util';
 import { ModalComponents, ModalFunctions } from '../../../../util/Constants.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class TestInteraction extends BaseInteraction {
   constructor(boat) {

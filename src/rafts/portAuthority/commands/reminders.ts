@@ -1,7 +1,7 @@
-import { Message, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
-import BaseCommand from  '../../BaseCommand.js';
+import BaseCommand from '../../BaseCommand.js';
 
 class RemindersCommand extends BaseCommand {
   constructor(boat) {

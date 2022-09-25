@@ -4,8 +4,6 @@ import { fileURLToPath } from 'url';
 import { BoatI } from '../../lib/interfaces/Main.js';
 var module = fileURLToPath(import.meta.url);
 
-
-
 export default (boat: BoatI) => {
   const client = boat.client;
 

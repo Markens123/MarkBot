@@ -1,7 +1,7 @@
-import { ButtonInteraction, ButtonBuilder, ButtonStyle } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
-import { ComponentFunctions } from '../../../../util/Constants.js';
+import { ButtonBuilder, ButtonInteraction, ButtonStyle } from 'discord.js';
 import { InteractionYesNo } from '../../../../util/Buttons.js';
+import { ComponentFunctions } from '../../../../util/Constants.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class HAlertsResetInteraction extends BaseInteraction {
   definition: () => ButtonBuilder;

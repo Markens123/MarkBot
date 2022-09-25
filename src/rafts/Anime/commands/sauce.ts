@@ -1,10 +1,10 @@
-import { EmbedBuilder, Message, ButtonInteraction, SnowflakeUtil, Snowflake, ComponentType } from 'discord.js';
-import nsauce from 'node-sauce';
-import BaseCommand from '../../BaseCommand.js';
+import { ButtonInteraction, ComponentType, EmbedBuilder, Message, SnowflakeUtil } from 'discord.js';
 import isImageUrl from 'is-image-url';
+import nsauce from 'node-sauce';
 import { BoatI, CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
 import { getMalUrl } from '../../../util/Constants.js';
+import BaseCommand from '../../BaseCommand.js';
 
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 

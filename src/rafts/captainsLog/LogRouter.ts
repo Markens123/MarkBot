@@ -1,6 +1,6 @@
 const noop = () => {};
 const reflectors = ['toString', 'valueOf', 'inspect', 'constructor', Symbol.toPrimitive, Symbol.for('nodejs.util.inspect.custom')];
-import { LogLevels } from './index.js'
+import { LogLevels } from './index.js';
 
 const levels = Object.keys(LogLevels.console);
 

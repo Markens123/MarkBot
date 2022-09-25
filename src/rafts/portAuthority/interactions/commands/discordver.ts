@@ -1,5 +1,5 @@
-import BaseInteraction from '../../../BaseInteraction.js';
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 import fetcher from 'discord-build-fetcher-js';
 //import gplay from 'google-play-scraper';

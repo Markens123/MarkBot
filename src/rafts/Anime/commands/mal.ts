@@ -1,7 +1,7 @@
-import { EmbedBuilder, Message, ButtonInteraction, ColorResolvable } from 'discord.js';
-import BaseCommand from '../../BaseCommand.js';
+import { ButtonInteraction, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
 import { ClientI, CommandOptions, RaftI } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
+import BaseCommand from '../../BaseCommand.js';
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
@@ -63,7 +63,6 @@ class MALCommand extends BaseCommand {
       //@ts-expect-error
       let data = await this.raft.apis.list.getList(client.maldata.get(message.author.id, 'AToken'), sort, status, message.channel.nsfw)
       if (offset + 1 > data.data.length) return error(message, rmsg, `Error: You only have **${data.data.length}** items in your list`);
-
 
       rmsg.delete().catch(() => {});
       const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;

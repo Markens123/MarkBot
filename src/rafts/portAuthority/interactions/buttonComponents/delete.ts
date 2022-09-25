@@ -1,6 +1,6 @@
-import { ButtonInteraction, Snowflake, ButtonBuilder, ButtonStyle } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
+import { ButtonBuilder, ButtonInteraction, ButtonStyle, Snowflake } from 'discord.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class DeleteInteraction extends BaseInteraction {
   

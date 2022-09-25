@@ -2,7 +2,7 @@ import { TextChannel } from 'discord.js';
 import Enmap from 'enmap';
 import AnimeAPI from '../rafts/Anime/apis/anime.js';
 import { ChunkEmbeds } from '../util/Constants.js';
-import BaseLoop from  './BaseLoop.js';
+import BaseLoop from './BaseLoop.js';
 
 class ALoop extends BaseLoop {
   constructor(boat) {

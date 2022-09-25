@@ -1,6 +1,6 @@
-import { ButtonInteraction, ButtonBuilder, Message, EmbedBuilder, ButtonStyle } from 'discord.js';
-import BaseInteraction from '../../../BaseInteraction.js';
+import { ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, Message } from 'discord.js';
 import { AniQueue, ComponentFunctions } from '../../../../util/Constants.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 class AQueueAddInteraction extends BaseInteraction {
   definition: () => ButtonBuilder;

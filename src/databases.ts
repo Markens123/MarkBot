@@ -1,5 +1,5 @@
-import Enmap from 'enmap';
 import { Collection } from 'discord.js';
+import Enmap from 'enmap';
 
 const databases: any = {};
 

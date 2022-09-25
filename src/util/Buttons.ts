@@ -1,4 +1,4 @@
-import { ButtonInteraction, InteractionCollectorOptions, Message, ActionRowBuilder, ButtonBuilder, SnowflakeUtil, CommandInteraction, User, MessageActionRowComponentBuilder, ButtonStyle, MessageComponentCollectorOptions, SelectMenuInteraction, MessageComponentType, ComponentType, Interaction, ChatInputCommandInteraction, Snowflake } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, CommandInteraction, InteractionCollectorOptions, Message, MessageActionRowComponentBuilder, MessageComponentCollectorOptions, SelectMenuInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
 import { BoatI } from '../../lib/interfaces/Main.js';
 
 export const Paginator = async ({boat, message, data, offset = 0, length = 1, callback, options}: {

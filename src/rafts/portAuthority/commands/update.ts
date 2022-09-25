@@ -1,8 +1,8 @@
 import { exec } from 'child_process';
-import { Message, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
+import { fileURLToPath } from 'url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
-import { fileURLToPath } from 'url';
 var module = fileURLToPath(import.meta.url);
 
 class UpdateCommand extends BaseCommand {

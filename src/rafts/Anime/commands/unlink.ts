@@ -1,4 +1,4 @@
-import { ComponentType, Message, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageActionRowComponentBuilder, ButtonInteraction } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, Message, MessageActionRowComponentBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
 

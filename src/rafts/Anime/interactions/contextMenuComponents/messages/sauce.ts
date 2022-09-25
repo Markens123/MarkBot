@@ -1,9 +1,9 @@
-import { ButtonInteraction, Message, EmbedBuilder, SnowflakeUtil, Snowflake, MessageContextMenuCommandInteraction, ComponentType } from 'discord.js';
+import { ButtonInteraction, ComponentType, EmbedBuilder, Message, MessageContextMenuCommandInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
 import nsauce from 'node-sauce';
-import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import { InteractionPaginator } from '../../../../../util/Buttons.js';
 import { getMalUrl } from '../../../../../util/Constants.js';
+import BaseInteraction from '../../../../BaseInteraction.js';
 
 const sauce = new nsauce(process.env.SAUCE_API_KEY);
 

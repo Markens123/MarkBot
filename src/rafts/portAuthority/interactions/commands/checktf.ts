@@ -1,6 +1,6 @@
-import BaseInteraction from '../../../BaseInteraction.js';
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { checkTF } from '../../../../util/Constants.js';
+import BaseInteraction from '../../../BaseInteraction.js';
 
 const definition = {
   name: 'checktf',

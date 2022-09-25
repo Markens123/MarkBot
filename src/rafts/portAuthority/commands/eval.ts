@@ -1,13 +1,13 @@
-import * as util from 'util';
-import Discord, { EmbedBuilder, AttachmentBuilder, ActionRowBuilder } from 'discord.js';
-import BaseCommand from '../../BaseCommand.js';
-import glob from 'glob';
+import Discord, { ActionRowBuilder, AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import * as fs from 'fs';
-const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+import glob from 'glob';
 import path, { basename } from 'path';
 import { fileURLToPath } from 'url';
+import * as util from 'util';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import { loop } from '../../../util/Constants.js'
+import { loop } from '../../../util/Constants.js';
+import BaseCommand from '../../BaseCommand.js';
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const delay = s => new Promise(res => setTimeout(res, s*1000));

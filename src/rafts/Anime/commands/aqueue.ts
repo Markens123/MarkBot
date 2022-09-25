@@ -1,4 +1,4 @@
-import { Message, ActionRowBuilder, EmbedBuilder, createComponent, MessageActionRowComponentBuilder } from 'discord.js';
+import { ActionRowBuilder, EmbedBuilder, Message, MessageActionRowComponentBuilder } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { AniQueue } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';

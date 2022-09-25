@@ -1,11 +1,9 @@
 import pkg from 'canvas';
-const { createCanvas } = pkg;
-
-import { Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { util } from '../../../util/index.js';
-
 import BaseCommand from '../../BaseCommand.js';
+const { createCanvas } = pkg;
 
 class FractalCommand extends BaseCommand {
   constructor(raft) {

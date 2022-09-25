@@ -1,4 +1,4 @@
-import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction, SlashCommandBuilder, Formatters } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction, Formatters, SlashCommandBuilder } from 'discord.js';
 import { DateTime } from 'luxon';
 import BaseInteraction from '../../../BaseInteraction.js';
 

@@ -1,8 +1,8 @@
 import { GatewayIntentBits, Partials } from 'discord.js';
+import 'dotenv/config';
 import express from 'express';
-import 'dotenv/config'
-import shipyard from './src/boat.js';
 import { BoatOptions } from './lib/interfaces/Main.js';
+import shipyard from './src/boat.js';
 
 
 

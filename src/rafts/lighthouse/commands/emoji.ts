@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
-import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import BaseCommand from '../../BaseCommand.js';
 import isImageUrl from 'is-image-url';
-import { YesNo } from '../../../util/Buttons.js'
+import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import { YesNo } from '../../../util/Buttons.js';
+import BaseCommand from '../../BaseCommand.js';
 
 class EmojiCommand extends BaseCommand {
   constructor(raft) {

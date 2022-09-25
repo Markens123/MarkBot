@@ -1,7 +1,7 @@
-import { Message, EmbedBuilder, AttachmentBuilder } from 'discord.js';
-import BaseCommand from '../../BaseCommand.js';
 import { exec } from 'child_process';
+import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import BaseCommand from '../../BaseCommand.js';
 
 class CEvalCommand extends BaseCommand {
   constructor(raft) {
