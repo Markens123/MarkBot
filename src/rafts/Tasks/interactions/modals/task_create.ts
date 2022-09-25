@@ -19,7 +19,7 @@ class TaskCreateModalInteraction extends BaseInteraction {
     const title = interaction.fields.getTextInputValue('title');
     const body = interaction.fields.getTextInputValue('body');
     const items = interaction.fields.getTextInputValue('items');
-    const fourm = await interaction.guild.channels.fetch(client.tasksdata.get(interaction.guild.id).config.channel) as ForumChannel;
+    const forum = await interaction.guild.channels.fetch(client.tasksdata.get(interaction.guild.id).config.channel) as ForumChannel;
 
     client.tasksdata.ensure(interaction.guild.id, {}, 'tasks');
 
@@ -48,7 +48,7 @@ class TaskCreateModalInteraction extends BaseInteraction {
 
     task.items = iobj;
     
-    const channel = await fourm.threads.create({
+    const channel = await forum.threads.create({
       name: task.title,
       message: {
         content: TaskMessage(task),

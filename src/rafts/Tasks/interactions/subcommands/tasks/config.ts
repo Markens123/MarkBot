@@ -27,9 +27,9 @@ class TaskConfigInteraction extends BaseInteraction {
     if (!channel) {
       return interaction.reply({ content: 'No options provided to edit!', ephemeral: true })
     } else {
-    const fourm = await interaction.guild.channels.fetch(channel.id) as ForumChannel;
+    const forum = await interaction.guild.channels.fetch(channel.id) as ForumChannel;
 
-    client.tasksdata.set(interaction.guild.id, fourm.id, 'config.channel');
+    client.tasksdata.set(interaction.guild.id, forum.id, 'config.channel');
     }
 
     return interaction.reply({content: 'Config Updated!', ephemeral: true})

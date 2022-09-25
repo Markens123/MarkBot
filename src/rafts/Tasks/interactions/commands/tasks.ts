@@ -35,7 +35,7 @@ return {
           type: 7,
           name: 'channel',
           channel_types: [ 15 ],
-          description: 'Channel to make tasks fourm'
+          description: 'Channel to make tasks forum'
         }
       ]
     },
@@ -51,7 +51,7 @@ return {
           type: 7,
           name: 'channel',
           channel_types: [ 15 ],
-          description: 'Channel to make tasks fourm'
+          description: 'Channel to make tasks forum'
         }
       ]
     },
@@ -96,9 +96,9 @@ function getDefinition() {
         .addChannelOption(option =>
           option
             .setName('channel')
-            .addChannelTypes(0) //TODO: Make it Channel.Type.Fourm whatever it is when they fix this
+            .addChannelTypes(0) //TODO: Make it Channel.Type.forum whatever it is when they fix this
             .setRequired(false)
-            .setDescription('Channel to make tasks fourm')
+            .setDescription('Channel to make tasks forum')
         )        
     )
     .addSubcommand(subcommand =>
@@ -108,9 +108,9 @@ function getDefinition() {
         .addChannelOption(option =>
           option
             .setName('channel')
-            .addChannelTypes(0) //TODO: Make it Channel.Type.Fourm whatever it is when they fix this
+            .addChannelTypes(0) //TODO: Make it Channel.Type.forum whatever it is when they fix this
             .setRequired(false)
-            .setDescription('Channel to make tasks fourm')
+            .setDescription('Channel to make tasks forum')
         )         
     )    
     .addSubcommand(subcommand =>
