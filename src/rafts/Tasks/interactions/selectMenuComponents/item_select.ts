@@ -21,7 +21,7 @@ class ItemSelectInteraction extends BaseInteraction {
     const id = data[1];
     const next = data[2];
     const selected = interaction.values[0];
-    const task = client.tasksdata.get(interaction.guild.id).tasks[id] as Task;
+    const task: Task = client.tasksdata.get(interaction.guild.id).tasks[id];
 
     if (!task) {
       return interaction.reply({ content: 'This task does not exist', ephemeral: true });
