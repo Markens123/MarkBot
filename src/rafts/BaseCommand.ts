@@ -108,7 +108,7 @@ class BaseCommand {
     this.channels = options.channels ?? false;
 
     /**
-     * The guild, if any, that this command is specific too
+     * The guild(s), if any, that this command is specific too
      * @type {(Snowflake|Snowflake[])?}
      */
     this.guild = options.guild ?? false;

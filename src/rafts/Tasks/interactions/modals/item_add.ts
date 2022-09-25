@@ -17,8 +17,7 @@ class ItemAddModalInteraction extends BaseInteraction {
     const client = this.boat.client;
     const body = interaction.fields.getTextInputValue('body');
     const id = interaction.customId.split(':')[1];
-    const guildtasks = client.tasksdata.get(interaction.guild.id).tasks;
-    const task: Task = guildtasks[id];
+    const task: Task = client.tasksdata.get(interaction.guild.id).tasks[id];
 
     if (!task) {
       return interaction.reply({ content: 'That task does not exist', ephemeral: true })
