@@ -173,8 +173,8 @@ class EvalCommand extends BaseCommand {
       return text
         .replace(/` /g, `\`${String.fromCharCode(8203)}`)
         .replace(/@/g, `@${String.fromCharCode(8203)}`)
-        .replace(this.boat.token, 'Redacted')
-        .replace(this.boat.options.log.webhookToken, 'Redacted');
+        .replaceAll(this.boat.token, 'Redacted')
+        .replaceAll(this.boat.options.log.webhookToken, 'Redacted');
     }
     return text;
   }
