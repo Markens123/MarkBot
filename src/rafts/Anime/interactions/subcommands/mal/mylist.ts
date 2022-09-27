@@ -21,11 +21,11 @@ class MyListInteraction extends BaseInteraction {
     let offset = interaction.options.getInteger('page', false) - 1 ?? 0;
     if (offset < 0) offset = 0;
 
-    await interaction.deferReply()
-
     if (!client.maldata.has(interaction.user.id) || !client.maldata.has(interaction.user.id, 'AToken')) {
       return interaction.reply({ content: 'Error: You did not link your MAL account yet!', ephemeral: true });
     }
+
+    await interaction.deferReply()
 
     // Token refresh
     if (Date.now() >= client.maldata.get(interaction.user.id, 'EXPD')) {
