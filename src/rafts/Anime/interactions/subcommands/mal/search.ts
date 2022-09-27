@@ -20,7 +20,6 @@ class SearchInteraction extends BaseInteraction {
     const query = interaction.options.getString('query');
     let use_client = true;
     let token = false;
-
     let offset = 0;
 
     await interaction.deferReply()
