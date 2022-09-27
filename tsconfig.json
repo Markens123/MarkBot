@@ -12,7 +12,7 @@
       "importHelpers": true,
       "forceConsistentCasingInFileNames": true,
       "lib": [
-        "ES2020",
+        "ES2021",
       ],
       "moduleResolution": "node"
     },

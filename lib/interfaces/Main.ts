@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Collection, Message, PermissionResolvable, Snowflake } from 'discord.js';
+import { ButtonInteraction, Client, ClientOptions, Collection, CommandInteraction, InteractionCollectorOptions, Message, MessageComponentCollectorOptions, PermissionResolvable, Snowflake } from 'discord.js';
 import Enmap from 'enmap';
 import BaseLoop from '../../src/loops/BaseLoop';
 import BaseInteraction from '../../src/rafts/BaseInteraction';
@@ -25,11 +25,11 @@ interface TaskGuilds {
 }
 
 interface TasksObj extends Object {
-  [key: string]: any | Task; 
+  [key: string]: any | Task;
 }
 
 export interface ItemsObj extends Object {
-  [key: string]: any | Item; 
+  [key: string]: any | Item;
 }
 
 export enum TaskOptions {
@@ -66,23 +66,23 @@ export interface Item {
 }
 
 export interface BoatI {
-    options: BoatOptions;
-    client: ClientI;
-    owners: Snowflake[];
-    prefix: string;
-    events: any;
-    rafts: any;
-    commands: any;
-    loops: Collection<string, BaseLoop>;
-    interactions: InteractionsI;
-    token: string;
-    debug: boolean;
-    ending: boolean;
-    log: any;
-    end(code: any): Promise<void>;
-    readonly toJSON: any;
-    launchRaft: any;
-    listen: any;
+  options: BoatOptions;
+  client: ClientI;
+  owners: Snowflake[];
+  prefix: string;
+  events: any;
+  rafts: any;
+  commands: any;
+  loops: Collection<string, BaseLoop>;
+  interactions: InteractionsI;
+  token: string;
+  debug: boolean;
+  ending: boolean;
+  log: any;
+  end(code: any): Promise<void>;
+  readonly toJSON: any;
+  launchRaft: any;
+  listen: any;
 }
 
 type InteractionCollection = Collection<string, BaseInteraction>;
@@ -145,18 +145,18 @@ type ArgDefault = {
 }
 
 type ArgMainOption = {
-    type: 'int' | 'integer' | 'string' | 'str' | 'msg',
-    flags?: never,
-    match?: 'codeblock'
+  type: 'int' | 'integer' | 'string' | 'str' | 'msg',
+  flags?: never,
+  match?: 'codeblock'
 }
 
 type ArgFlagOption = {
-    type: 'flag',
-    flags: [`--${string}`, `-${string}`],
-    match?: never
+  type: 'flag',
+  flags: [`--${string}`, `-${string}`],
+  match?: never
 }
 
-export type ArgI = (ArgDefault  & ArgMainOption ) | (ArgDefault  & ArgFlagOption);
+export type ArgI = (ArgDefault & ArgMainOption) | (ArgDefault & ArgFlagOption);
 
 export interface LogOptions {
   maxLevel?: LogLevel;
@@ -167,17 +167,17 @@ export interface LogOptions {
 
 export type LogLevel = {
   console: {
-      critical: 0,
-      error: 1,
-      warn: 2,
-      info: 3,
-      debug: 4,
-      verbose: 5,
-    },
-    webhook: {
-      error: 'BRIGHT_RED',
-      warn: 'DEEP_GOLD',
-    }
+    critical: 0,
+    error: 1,
+    warn: 2,
+    info: 3,
+    debug: 4,
+    verbose: 5,
+  },
+  webhook: {
+    error: 'BRIGHT_RED',
+    warn: 'DEEP_GOLD',
+  }
 }
 
 export interface UpdatesFile {
@@ -274,4 +274,25 @@ export interface LoopI {
   stop: () => void;
   start: () => void;
   run: () => void;
+}
+
+export type InteractionPaginatorOptions = {
+  boat: BoatI,
+  interaction: any,
+  data: any,
+  offset?: number,
+  length?: number,
+  callback: ({ data, offset, interaction }: { data: any, offset: number, interaction?: CommandInteraction }) => any,
+  options: InteractionCollectorOptions<ButtonInteraction>,
+  editreply?: boolean
+}
+
+export type PaginatorOptions = {
+  boat: BoatI,
+  message: Message,
+  data: any,
+  offset?: number,
+  length?: number,
+  callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any,
+  options: MessageComponentCollectorOptions<ButtonInteraction>
 }

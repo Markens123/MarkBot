@@ -7,6 +7,7 @@ import * as util from 'util';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { loop } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';
+import { shorten } from '../../../util/Constants.js';
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,11 +66,6 @@ class EvalCommand extends BaseCommand {
 
     let args = msg.join(' ');
     if (args.slice(-1) !== ';') args = args.concat(';');
-
-    if (args.toLowerCase().includes('token') || args.toLowerCase().includes('secret')) {
-      message.channel.send(`Error: Execution of command refused`);
-      return message.channel.send('https://media.tenor.com/images/59de4445b8319b9936377ec90dc5b9dc/tenor.gif');
-    }
     
     const scope = {
       message,
@@ -178,8 +174,8 @@ class EvalCommand extends BaseCommand {
       return text
         .replace(/` /g, `\`${String.fromCharCode(8203)}`)
         .replace(/@/g, `@${String.fromCharCode(8203)}`)
-        .replace(this.boat.token, 'Redacted')
-        .replace(this.boat.options.log.webhookToken, 'Redacted');
+        .replaceAll(this.boat.token, 'Redacted')
+        .replaceAll(this.boat.options.log.webhookToken, 'Redacted');
     }
     return text;
   }
@@ -203,11 +199,6 @@ function readFile(path, text = false, newname = undefined) {
 
   if (text) return file;
   else return new AttachmentBuilder(Buffer.from(file), {name: newname ?? basename(filepath)});
-}
-
-function shorten(str, maxLen, separator = ' ') {
-  if (str.length <= maxLen) return str;
-  return str.substr(0, str.lastIndexOf(separator, maxLen));
 }
 
 export default EvalCommand;

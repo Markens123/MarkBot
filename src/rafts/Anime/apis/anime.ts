@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 import { EmbedBuilder } from 'discord.js';
 import got from 'got';
 import { AnimeI, SimpleAnime } from '../../../../lib/interfaces/Main';
+import { shorten } from '../../../util/Constants.js';
 
 class AnimeAPI {
   url: string = 'https://animixplay.to/';
@@ -108,11 +109,6 @@ function parseEps(str: string): number {
 
   if (!num) return 1
   else return num
-}
-
-function shorten(str, maxLen, separator = ' ') {
-  if (str.length <= maxLen) return str;
-  return str.substr(0, str.lastIndexOf(separator, maxLen));
 }
 
 export default AnimeAPI;

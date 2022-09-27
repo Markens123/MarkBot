@@ -1,5 +1,5 @@
 import { EmbedBuilder, Message } from 'discord.js';
-import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import { CommandOptions, PaginatorOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
 import BaseCommand from '../../BaseCommand.js';
 
@@ -27,7 +27,7 @@ class RemindersCommand extends BaseCommand {
     a = chunckarr(a, 2);
 
     const filter = (interaction) => interaction.user.id === message.author.id;
-    const o = {
+    const o: PaginatorOptions = {
       boat: this.boat,
       message,
       data: a,

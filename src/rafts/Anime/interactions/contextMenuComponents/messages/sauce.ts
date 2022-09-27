@@ -1,6 +1,6 @@
 import { ButtonInteraction, ComponentType, EmbedBuilder, Message, MessageContextMenuCommandInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
 import nsauce from 'node-sauce';
-import { BoatI } from '../../../../../../lib/interfaces/Main.js';
+import { BoatI, InteractionPaginatorOptions } from '../../../../../../lib/interfaces/Main.js';
 import { InteractionPaginator } from '../../../../../util/Buttons.js';
 import { getMalUrl } from '../../../../../util/Constants.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
@@ -60,7 +60,7 @@ class SauceInteraction extends BaseInteraction {
 
     if (!out.length) return interaction.editReply('No sauce found for that image')
     
-    const o = {
+    const o: InteractionPaginatorOptions = {
       boat: this.boat,
       interaction,
       data: out,

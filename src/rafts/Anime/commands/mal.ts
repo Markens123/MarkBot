@@ -1,7 +1,8 @@
-import { ButtonInteraction, ColorResolvable, EmbedBuilder, Message } from 'discord.js';
-import { ClientI, CommandOptions, RaftI } from '../../../../lib/interfaces/Main.js';
+import { ButtonInteraction, EmbedBuilder, Message } from 'discord.js';
+import { CommandOptions, PaginatorOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
 import BaseCommand from '../../BaseCommand.js';
+import { genEmbed } from '../util/index.js';
 
 class MALCommand extends BaseCommand {
   constructor(boat) {
@@ -22,7 +23,7 @@ class MALCommand extends BaseCommand {
 
     // Token refresh
     if (Date.now() >= client.maldata.get(message.author.id, 'EXPD')) {
-      await refreshtoken(this.raft, message, client.maldata.get(message.author.id, 'RToken'), client);
+      await this.refreshtoken(message, client.maldata.get(message.author.id, 'RToken'));
     }
 
     if (args[0] === 'mylist' || args[0] === 'ml') {
@@ -62,18 +63,18 @@ class MALCommand extends BaseCommand {
 
       //@ts-expect-error
       let data = await this.raft.apis.list.getList(client.maldata.get(message.author.id, 'AToken'), sort, status, message.channel.nsfw)
-      if (offset + 1 > data.data.length) return error(message, rmsg, `Error: You only have **${data.data.length}** items in your list`);
+      if (offset + 1 > data.data.length) return error(rmsg, `Error: You only have **${data.data.length}** items in your list`);
 
       rmsg.delete().catch(() => {});
       const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
       
-      const o = {
+      const o: PaginatorOptions = {
         boat: this.boat,
         message,
         data,
         offset,
         length: data.data.length,
-        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        callback: ({ data, offset, message }) => genEmbed(data, message.author, offset),
         options: { filter, idle: 15000 }
       }
 
@@ -86,20 +87,20 @@ class MALCommand extends BaseCommand {
       if (!q) return message.channel.send('You must enter a title to search for!');
       const rmsg = await message.channel.send('Loading data...');
 
-      // @ts-ignore
-      let data = await this.raft.apis.list.search(client.maldata.get(message.author.id, 'AToken'), q, message.channel.nsfw);
-      if (data.data.length === 0) return error(message, rmsg, 'No results found');
+      // @ts-expect-error
+      let data = await this.raft.apis.list.search({token: client.maldata.get(message.author.id, 'AToken'), query: q, nsfw: message.channel.nsfw});
+      if (data.data.length === 0) return error(rmsg, 'No results found');
 
       rmsg.delete().catch(() => {});
       const filter = interaction => interaction.user.id === message.author.id;
 
-      const o = {
+      const o: PaginatorOptions = {
         boat: this.boat,
         message,
         data,
         offset,
         length: data.data.length,
-        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        callback: ({ data, offset, message }) => genEmbed(data, message.author, offset),
         options: { filter, idle: 15000 }
       }
 
@@ -113,21 +114,21 @@ class MALCommand extends BaseCommand {
       const rmsg = await message.channel.send('Loading data...');
 
       // @ts-ignore
-      let data = await this.raft.apis.list.getAnime(client.maldata.get(message.author.id, 'AToken'), args[1]);
-      if (data.response && data.response.statusText === 'Not Found') return error(message, rmsg, 'No results found');
+      let data = await this.raft.apis.list.getAnime({token: client.maldata.get(message.author.id, 'AToken'), id: args[1]});
+      if (data.response && data.response.statusText === 'Not Found') return error(rmsg, 'No results found');
       data = { data: [{ node: data }] };
 
 
       rmsg.delete().catch(() => {});
       const filter = interaction => interaction.user.id === message.author.id;
 
-      const o = {
+      const o: PaginatorOptions = {
         boat: this.boat,
         message,
         data,
         offset,
         length: data.data.length,
-        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        callback: ({ data, offset, message }) => genEmbed(data, message.author, offset),
         options: { filter, idle: 15000 }
       }
 
@@ -145,80 +146,24 @@ class MALCommand extends BaseCommand {
 
     message.channel.send({ embeds: [embed] });
   }
+
+  async refreshtoken(message: Message, rtoken: string): Promise<Message | null> {
+    const client = this.boat.client;
+    const raft = this.raft;
+
+    const out = await raft.apis.oauth.refreshToken(rtoken).catch(() => undefined);
+  
+    if (!out?.access_token) return message.channel.send("An error has occured please relink your account, if there's still an issue please contact the bot dev!");
+  
+    client.maldata.set(message.author.id, out.access_token, 'AToken');
+    client.maldata.set(message.author.id, out.refresh_token, 'RToken');
+    client.maldata.set(message.author.id, Date.now() + out.expires_in * 1000, 'EXPD');
+  }  
 }
 
-function gencolor(status: string): ColorResolvable  {
-  if (status === 'watching') return '#32CD32';
-  if (status === 'completed') return '#000080';
-  if (status === 'on_hold') return '#E7B715';
-  if (status === 'dropped') return '#A12F31';
-  if (status === 'plan_to_watch') return '#8F8F8F';
-  return '#000001';
-}
-
-function hreadable(text) {
-  const str = text.split('_').join(' ');
-  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-}
-
-function error(message, rmsg, emsgtext) {
-  if (rmsg.deletable) rmsg.delete();
-  message.channel.send(emsgtext);
-}
-
-function genscore(score) {
-  if (score == 0) return 'None given';
-  if (score == 1) return '1 (Appalling)';
-  if (score == 2) return '2 (Horrible)';
-  if (score == 3) return '3 (Very Bad)';
-  if (score == 4) return '4 (Bad)';
-  if (score == 5) return '5 (Average)';
-  if (score == 6) return '6 (Fine)';
-  if (score == 7) return '7 (Good)';
-  if (score == 8) return '8 (Very Good)';
-  if (score == 9) return '9 (Great)';
-  if (score == 10) return '10 (Masterpiece)';
-}
-
-function genEmbed(data, message, offset) {
-  const anime = data.data[offset].node;
-
-  const synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis;
-  if (!anime.my_list_status) {
-    anime.my_list_status = {};
-    anime.my_list_status.status = 'not_watched';
-    anime.my_list_status.score = 0;
-    anime.my_list_status.num_episodes_watched = 0;
-  }
-
-  return new EmbedBuilder()
-    .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()})
-    .setColor(gencolor(anime.my_list_status.status))
-    .setTitle(anime.title)
-    .setURL(`https://myanimelist.net/anime/${anime.id}`)
-    .setThumbnail(anime.main_picture.medium)
-    .setFooter({text: `${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${anime.genres.map(a => a.name).join(', ')}`})
-    .addFields([
-      {name: 'Status', value: hreadable(anime.my_list_status.status)},
-      {name: 'Score given', value: genscore(anime.my_list_status.score)},
-      {
-        name: 'Info',
-        value: `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? `#${anime.rank}` : 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(
-          anime.num_list_users,
-        ).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`,
-      },
-      {name: 'Synopsis', value: synopsis}
-      ]);
-}
-
-async function refreshtoken(raft: RaftI, message: Message, rtoken: string, client: ClientI): Promise<Message | null> {
-  const out = await raft.apis.oauth.refreshToken(rtoken).catch(() => undefined);
-
-  if (!out?.access_token) return message.channel.send("An error has occured please relink your account, if there's still an issue please contact the bot dev!");
-
-  await client.maldata.set(message.author.id, out.access_token, 'AToken');
-  await client.maldata.set(message.author.id, out.refresh_token, 'RToken');
-  await client.maldata.set(message.author.id, Date.now() + out.expires_in * 1000, 'EXPD');
+function error(rmsg: Message, emsgtext: string) {
+  if (rmsg.deletable) rmsg.delete().catch(() => {});
+  rmsg.channel.send(emsgtext);
 }
 
 export default MALCommand;
