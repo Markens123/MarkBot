@@ -1,4 +1,5 @@
 import BaseAPI from '../../BaseAPI.js';
+
 class OauthAPI extends BaseAPI {
   constructor(raft) {
     const params = new URLSearchParams();
