@@ -168,4 +168,9 @@ export const ChunkEmbeds = (embeds: EmbedBuilder[], callback: (e: EmbedBuilder[]
   )
 }
 
+export const shorten = (str, maxLen, separator = ' ') => {
+  if (str.length <= maxLen) return str;
+  return str.substr(0, str.lastIndexOf(separator, maxLen));
+}
+
 export const range = (start: number, stop: number, step: number): number[] => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));

@@ -7,6 +7,7 @@ import * as util from 'util';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { loop } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';
+import { shorten } from '../../../util/Constants.js';
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -198,11 +199,6 @@ function readFile(path, text = false, newname = undefined) {
 
   if (text) return file;
   else return new AttachmentBuilder(Buffer.from(file), {name: newname ?? basename(filepath)});
-}
-
-function shorten(str, maxLen, separator = ' ') {
-  if (str.length <= maxLen) return str;
-  return str.substr(0, str.lastIndexOf(separator, maxLen));
 }
 
 export default EvalCommand;

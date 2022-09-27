@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 import { EmbedBuilder } from 'discord.js';
 import got from 'got';
 import { HAnime } from '../../../../lib/interfaces/Main';
+import { shorten } from '../../../util/Constants.js';
 
 class AnimeAPI {
   url: string = 'https://hanime.tv';
@@ -67,11 +68,6 @@ class AnimeAPI {
     return arr;
   }
 
-}
-
-function shorten(str, maxLen, separator = ' ') {
-  if (str.length <= maxLen) return str;
-  return str.substr(0, str.lastIndexOf(separator, maxLen));
 }
 
 export default AnimeAPI;
