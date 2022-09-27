@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction } from 'discord.js';
 import { InteractionYesNo } from '../../../../../util/Buttons.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 
-class UnLinkInteraction extends BaseInteraction {
+class UnlinkInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'unlink',
@@ -29,4 +29,4 @@ class UnLinkInteraction extends BaseInteraction {
 }
 
 
-export default UnLinkInteraction;
+export default UnlinkInteraction;
