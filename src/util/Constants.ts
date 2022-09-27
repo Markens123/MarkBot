@@ -30,8 +30,8 @@ export const TaskMessage = (task: Task) => {
   } else {
     for (const x in items) {
       const i = items[x] as Item;
-      let emoji = i.completed ? Emojis.greentick : Emojis.greytick; 
-      todo += `\n${emoji} ${i.body}`      
+      let emoji = i.completed ? Emojis.greentick : Emojis.greytick;
+      todo += `\n${emoji} ${i.body}`
     }
     count = ` (${completed}/${Object.keys(items).length})`
   }
@@ -68,11 +68,11 @@ export const getMalUrl = async (dburl: string): Promise<string | null> => {
 export const checkTF = async (url: string): Promise<{ full: boolean; title: string; }> => {
   const { body } = await got(url)
   const dom = new JSDOM(body);
-  
-  let title = dom.window.document.title;
-  title = title.slice(9).replace(' beta - TestFlight - Apple','');
 
-  return {full: body.includes("This beta is full."), title}
+  let title = dom.window.document.title;
+  title = title.slice(9).replace(' beta - TestFlight - Apple', '');
+
+  return { full: body.includes("This beta is full."), title }
 }
 
 export const ModalComponents = (arr: TextInputBuilder[]): ActionRowBuilder<TextInputBuilder>[] | null => {
@@ -116,20 +116,20 @@ export const DiscordColors = {
 };
 
 export const ComponentFunctions = createEnum([
-  'DELETE', 
-  'AQUEUE_ADD', 
-  'AQUEUE_DELETE', 
-  'AQUEUE_REORDER', 
-  'HALERTS_EDIT', 
-  'HALERTS_RESET', 
+  'DELETE',
+  'AQUEUE_ADD',
+  'AQUEUE_DELETE',
+  'AQUEUE_REORDER',
+  'HALERTS_EDIT',
+  'HALERTS_RESET',
   'TASK_OPTIONS',
   'ITEM_SELECT',
 ]);
 
 export const ModalFunctions = createEnum([
-  'TEST', 
-  'TASK_CREATE', 
-  'TASK_EDIT', 
+  'TEST',
+  'TASK_CREATE',
+  'TASK_EDIT',
   'ITEM_ADD',
   'ITEM_EDIT',
 ]);
@@ -157,18 +157,15 @@ export const getCodeblockMatch = (argument) => {
 }
 
 export const loop = (num: number, func: (j: number) => void, start: number = 1): void => {
-  for (let index = start; index < num+start; index++) {
+  for (let index = start; index < num + start; index++) {
     func(index)
   }
 }
 
 export const ChunkEmbeds = (embeds: EmbedBuilder[], callback: (e: EmbedBuilder[]) => void): void => {
-  
   callback(
     [].concat(...embeds.map((elem, i) => (i % 10 ? [] : embeds.slice(i, i + 10))))
   )
-  
-
 }
 
-export const range = (start: number, stop: number, step: number): number[] => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
+export const range = (start: number, stop: number, step: number): number[] => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
