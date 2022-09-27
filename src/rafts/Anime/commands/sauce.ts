@@ -1,7 +1,7 @@
 import { ButtonInteraction, ComponentType, EmbedBuilder, Message, SnowflakeUtil } from 'discord.js';
 import isImageUrl from 'is-image-url';
 import nsauce from 'node-sauce';
-import { BoatI, CommandOptions } from '../../../../lib/interfaces/Main.js';
+import { BoatI, CommandOptions, PaginatorOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
 import { getMalUrl } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';
@@ -61,7 +61,7 @@ class SauceCommand extends BaseCommand {
 
     const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
     
-    const o = {
+    const o: PaginatorOptions = {
       boat: this.boat,
       message,
       data: out,

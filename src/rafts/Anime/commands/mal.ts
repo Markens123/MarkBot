@@ -94,13 +94,13 @@ class MALCommand extends BaseCommand {
       rmsg.delete().catch(() => {});
       const filter = interaction => interaction.user.id === message.author.id;
 
-      const o = {
+      const o: PaginatorOptions = {
         boat: this.boat,
         message,
         data,
         offset,
         length: data.data.length,
-        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        callback: ({ data, offset, message }) => genEmbed(data, message.author, offset),
         options: { filter, idle: 15000 }
       }
 
@@ -122,13 +122,13 @@ class MALCommand extends BaseCommand {
       rmsg.delete().catch(() => {});
       const filter = interaction => interaction.user.id === message.author.id;
 
-      const o = {
+      const o: PaginatorOptions = {
         boat: this.boat,
         message,
         data,
         offset,
         length: data.data.length,
-        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        callback: ({ data, offset, message }) => genEmbed(data, message.author, offset),
         options: { filter, idle: 15000 }
       }
 
