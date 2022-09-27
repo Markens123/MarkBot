@@ -45,7 +45,7 @@ class SearchInteraction extends BaseInteraction {
       offset,
       length: data.data.length,
       callback: ({ data, offset, interaction }) => genEmbedI(data, interaction, offset, use_client),
-      options: { filter, idle: 15000 },
+      options: { filter, idle: 60000 },
       editreply: true
     }
 
