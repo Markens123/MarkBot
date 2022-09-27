@@ -6,7 +6,6 @@ class MALInteraction extends BaseInteraction {
     const info = {
       name: 'mal',
       enabled: true,
-      guild: '816098833054302208',
       subcommands: true,
       definition: getDefinition(),
     };
