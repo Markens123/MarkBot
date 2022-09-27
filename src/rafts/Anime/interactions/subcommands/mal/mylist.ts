@@ -2,7 +2,7 @@ import { ButtonInteraction, ChatInputCommandInteraction } from 'discord.js';
 import { InteractionPaginatorOptions } from '../../../../../../lib/interfaces/Main.js';
 import { InteractionPaginator } from '../../../../../util/Buttons.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
-import { genEmbedI } from '../../../util/index.js';
+import { genEmbed } from '../../../util/index.js';
 
 class MyListInteraction extends BaseInteraction {
   constructor(boat) {
@@ -44,7 +44,7 @@ class MyListInteraction extends BaseInteraction {
       data,
       offset,
       length: data.data.length,
-      callback: ({ data, offset, interaction }) => genEmbedI(data, interaction, offset),
+      callback: ({ data, offset, interaction }) => genEmbed(data, interaction.user, offset),
       options: { filter, idle: 60000 },
       editreply: true
     }

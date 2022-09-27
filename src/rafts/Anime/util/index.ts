@@ -1,6 +1,6 @@
-import { ColorResolvable, CommandInteraction, EmbedBuilder, Message } from "discord.js";
+import { ColorResolvable, EmbedBuilder, User } from "discord.js";
 
-export const genEmbedI = (data, interaction: CommandInteraction, offset: number, client: boolean = false) => {
+export const genEmbed = (data, user: User, offset: number, client: boolean = false) => {
   const anime = data.data[offset].node;
 
   const synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis;
@@ -13,7 +13,7 @@ export const genEmbedI = (data, interaction: CommandInteraction, offset: number,
 
   if (client) {
     return new EmbedBuilder()
-    .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
+    .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
     .setColor('Random')
     .setTitle(anime.title)
     .setURL(`https://myanimelist.net/anime/${anime.id}`)
@@ -23,7 +23,7 @@ export const genEmbedI = (data, interaction: CommandInteraction, offset: number,
       {
         name: 'Info',
         value: `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? `#${anime.rank}` : 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(
-          anime.num_list_users,
+          anime.num_list_users
         ).toLocaleString('en-US')}`,
       },
       { name: 'Synopsis', value: synopsis }
@@ -31,7 +31,7 @@ export const genEmbedI = (data, interaction: CommandInteraction, offset: number,
   }
 
   return new EmbedBuilder()
-    .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
+    .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
     .setColor(genColor(anime.my_list_status.status))
     .setTitle(anime.title)
     .setURL(`https://myanimelist.net/anime/${anime.id}`)
@@ -43,44 +43,12 @@ export const genEmbedI = (data, interaction: CommandInteraction, offset: number,
       {
         name: 'Info',
         value: `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? `#${anime.rank}` : 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(
-          anime.num_list_users,
+          anime.num_list_users
         ).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`,
       },
       { name: 'Synopsis', value: synopsis }
     ]);
 }
-
-export const genEmbed = (data, message: Message, offset: number) => {
-  const anime = data.data[offset].node;
-
-  const synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis;
-  if (!anime.my_list_status) {
-    anime.my_list_status = {};
-    anime.my_list_status.status = 'not_watched';
-    anime.my_list_status.score = 0;
-    anime.my_list_status.num_episodes_watched = 0;
-  }
-
-  return new EmbedBuilder()
-    .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
-    .setColor(genColor(anime.my_list_status.status))
-    .setTitle(anime.title)
-    .setURL(`https://myanimelist.net/anime/${anime.id}`)
-    .setThumbnail(anime.main_picture.medium)
-    .setFooter({ text: `${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${anime.genres.map(a => a.name).join(', ')}` })
-    .addFields([
-      { name: 'Status', value: hreadable(anime.my_list_status.status) },
-      { name: 'Score given', value: genScore(anime.my_list_status.score) },
-      {
-        name: 'Info',
-        value: `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? `#${anime.rank}` : 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(
-          anime.num_list_users,
-        ).toLocaleString('en-US')}\n **Episodes watched** ${anime.my_list_status.num_episodes_watched}/${anime.num_episodes}`,
-      },
-      { name: 'Synopsis', value: synopsis }
-    ]);
-}
-
 
 export const hreadable = (text) => {
   const str = text.split('_').join(' ');

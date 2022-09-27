@@ -1,5 +1,5 @@
 import { ButtonInteraction, EmbedBuilder, Message } from 'discord.js';
-import { CommandOptions } from '../../../../lib/interfaces/Main.js';
+import { CommandOptions, PaginatorOptions } from '../../../../lib/interfaces/Main.js';
 import { Paginator } from '../../../util/Buttons.js';
 import BaseCommand from '../../BaseCommand.js';
 import { genEmbed } from '../util/index.js';
@@ -68,13 +68,13 @@ class MALCommand extends BaseCommand {
       rmsg.delete().catch(() => {});
       const filter = (interaction: ButtonInteraction) => interaction.user.id === message.author.id;
       
-      const o = {
+      const o: PaginatorOptions = {
         boat: this.boat,
         message,
         data,
         offset,
         length: data.data.length,
-        callback: ({ data, offset, message }) => genEmbed(data, message, offset),
+        callback: ({ data, offset, message }) => genEmbed(data, message.author, offset),
         options: { filter, idle: 15000 }
       }
 

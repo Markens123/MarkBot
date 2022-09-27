@@ -2,7 +2,7 @@ import { ButtonInteraction, ChannelType, ChatInputCommandInteraction } from 'dis
 import { InteractionPaginatorOptions } from '../../../../../../lib/interfaces/Main.js';
 import { InteractionPaginator } from '../../../../../util/Buttons.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
-import { genEmbedI } from '../../../util/index.js';
+import { genEmbed } from '../../../util/index.js';
 
 class GetInteraction extends BaseInteraction {
   constructor(boat) {
@@ -46,7 +46,7 @@ class GetInteraction extends BaseInteraction {
       data,
       offset,
       length: data.data.length,
-      callback: ({ data, offset, interaction }) => genEmbedI(data, interaction, offset, use_client),
+      callback: ({ data, offset, interaction }) => genEmbed(data, interaction.user, offset, use_client),
       options: { filter, idle: 15000 },
       editreply: true
     }
