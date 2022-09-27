@@ -4,10 +4,10 @@ import { InteractionPaginator } from '../../../../../util/Buttons.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { genEmbedI } from '../../../util/index.js';
 
-class SearchInteraction extends BaseInteraction {
+class GetInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
-      name: 'search',
+      name: 'get',
       enabled: true,
     };
     super(boat, info);
@@ -17,7 +17,7 @@ class SearchInteraction extends BaseInteraction {
     if (interaction.channel.type !== ChannelType.GuildText) return;
     const boat = this.boat;
     const client = boat.client;
-    const query = interaction.options.getString('query');
+    const id = interaction.options.getInteger('id');
     let use_client = true;
     let token = false;
     let offset = 0;
@@ -34,7 +34,9 @@ class SearchInteraction extends BaseInteraction {
       }
     }
 
-    let data = await this.raft.apis.list.search({ token, query, client: use_client, nsfw: interaction.channel.nsfw });
+    let data = await this.raft.apis.list.getAnime({ token, id, client: use_client });
+    if (data.response && data.response.statusText === 'Not Found') return interaction.editReply('No results found');
+    data = { data: [{ node: data }] };
 
     const filter = (interaction: ButtonInteraction) => interaction.user.id === interaction.user.id;
 
@@ -72,4 +74,4 @@ class SearchInteraction extends BaseInteraction {
 }
 
 
-export default SearchInteraction;
+export default GetInteraction;
