@@ -1,5 +1,4 @@
-import { randomUUID } from 'crypto';
-import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 import { InteractionYesNo } from '../../../../../util/Buttons.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 
