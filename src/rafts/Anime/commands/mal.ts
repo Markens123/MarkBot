@@ -88,7 +88,7 @@ class MALCommand extends BaseCommand {
       const rmsg = await message.channel.send('Loading data...');
 
       // @ts-expect-error
-      let data = await this.raft.apis.list.search(client.maldata.get(message.author.id, 'AToken'), q, message.channel.nsfw);
+      let data = await this.raft.apis.list.search({token: client.maldata.get(message.author.id, 'AToken'), query: q, nsfw: message.channel.nsfw});
       if (data.data.length === 0) return error(rmsg, 'No results found');
 
       rmsg.delete().catch(() => {});
@@ -114,7 +114,7 @@ class MALCommand extends BaseCommand {
       const rmsg = await message.channel.send('Loading data...');
 
       // @ts-ignore
-      let data = await this.raft.apis.list.getAnime(client.maldata.get(message.author.id, 'AToken'), args[1]);
+      let data = await this.raft.apis.list.getAnime({token: client.maldata.get(message.author.id, 'AToken'), id: args[1]});
       if (data.response && data.response.statusText === 'Not Found') return error(rmsg, 'No results found');
       data = { data: [{ node: data }] };
 

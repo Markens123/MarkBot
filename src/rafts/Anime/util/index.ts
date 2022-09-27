@@ -1,6 +1,6 @@
 import { ColorResolvable, CommandInteraction, EmbedBuilder, Message } from "discord.js";
 
-export const genEmbedI = (data, interaction: CommandInteraction, offset: number) => {
+export const genEmbedI = (data, interaction: CommandInteraction, offset: number, client: boolean = false) => {
   const anime = data.data[offset].node;
 
   const synopsis = anime.synopsis.length >= 1021 ? `${anime.synopsis.substring(0, 1021)}...` : anime.synopsis;
@@ -9,6 +9,25 @@ export const genEmbedI = (data, interaction: CommandInteraction, offset: number)
     anime.my_list_status.status = 'not_watched';
     anime.my_list_status.score = 0;
     anime.my_list_status.num_episodes_watched = 0;
+  }
+
+  if (client) {
+    return new EmbedBuilder()
+    .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
+    .setColor('Random')
+    .setTitle(anime.title)
+    .setURL(`https://myanimelist.net/anime/${anime.id}`)
+    .setThumbnail(anime.main_picture.medium)
+    .setFooter({ text: `${offset + 1}/${data.data.length} • ${anime.media_type} ${hreadable(anime.status)} • ${anime.genres.map(a => a.name).join(', ')}` })
+    .addFields([
+      {
+        name: 'Info',
+        value: `**Score** ${anime.mean}\n**Ranked** ${anime.rank ? `#${anime.rank}` : 'N/A'}\n**Popularity** #${anime.popularity}\n**Members** ${parseInt(
+          anime.num_list_users,
+        ).toLocaleString('en-US')}`,
+      },
+      { name: 'Synopsis', value: synopsis }
+    ]);    
   }
 
   return new EmbedBuilder()
