@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Collection, Message, PermissionResolvable, Snowflake } from 'discord.js';
+import { ButtonInteraction, Client, ClientOptions, Collection, CommandInteraction, InteractionCollectorOptions, Message, MessageComponentCollectorOptions, PermissionResolvable, Snowflake } from 'discord.js';
 import Enmap from 'enmap';
 import BaseLoop from '../../src/loops/BaseLoop';
 import BaseInteraction from '../../src/rafts/BaseInteraction';
@@ -274,4 +274,25 @@ export interface LoopI {
   stop: () => void;
   start: () => void;
   run: () => void;
+}
+
+export type InteractionPaginatorOptions = {
+  boat: BoatI,
+  interaction: any, 
+  data: any, 
+  offset?: number, 
+  length?: number, 
+  callback: ({ data, offset, interaction }: { data: any, offset: number, interaction?: CommandInteraction }) => any, 
+  options: InteractionCollectorOptions<ButtonInteraction>, 
+  editreply?: boolean
+}
+
+export type PaginatorOptions = {
+  boat: BoatI,
+  message: Message,
+  data: any,
+  offset?: number,
+  length?: number,
+  callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any,
+  options: MessageComponentCollectorOptions<ButtonInteraction>
 }
