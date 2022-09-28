@@ -8,7 +8,7 @@ class MALCommand extends BaseCommand {
   constructor(boat) {
     const options: CommandOptions = {
       name: 'mal',
-      owner: false,
+      owner: true,
       dms: true,
       enabled: true,
     };

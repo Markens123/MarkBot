@@ -6,7 +6,7 @@ class UnlinkCommand extends BaseCommand {
   constructor(boat) {
     const options: CommandOptions = {
       name: 'unlink',
-      owner: false,
+      owner: true,
       dms: 'only',
       enabled: true,
     };

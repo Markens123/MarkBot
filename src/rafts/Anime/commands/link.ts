@@ -6,7 +6,7 @@ class LinkCommand extends BaseCommand {
   constructor(boat) {
     const options: CommandOptions = {
       name: 'link',
-      owner: false,
+      owner: true,
       dms: 'only',
       enabled: true,
     };
