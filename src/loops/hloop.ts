@@ -8,7 +8,7 @@ class HLoop extends BaseLoop {
     const options: LoopOptions = {
       name: 'hentailoop',
       active: true,
-      time: '*/30 * * * *',
+      time: '*/32 * * * *',
       dev: false
     };
     super(boat, options);
