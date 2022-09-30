@@ -11,11 +11,11 @@ class BaseLoop {
   active: boolean;
   boat: BoatI;
   name: string;
-  time: number|string|Date|DateTime;
+  time: number | string | Date | DateTime;
   iterations: number;
   dev: boolean | 'only';
   job: CronJob;
-  
+
   constructor(boat, options) {
     /**
      * The boat that handles this loop
@@ -23,19 +23,19 @@ class BaseLoop {
      * @type {Boat}
      */
     Object.defineProperty(this, 'boat', { value: boat });
-    
+
     /**
      * The name of this loop
      * @name BaseLoop#name
      * @type {string}
      */
-     this.name = options.name;
+    this.name = options.name;
 
     /**
      * The amount of time between each loop in seconds or as a date or cron job
      * @type {number|string|Date|DateTime}
      */
-     this.time = options.time;
+    this.time = options.time;
 
     /**
      * Whether this loop is currently active
@@ -47,20 +47,20 @@ class BaseLoop {
      * The amount of times the loop has looped (starts at 0)
      * @type {number}
      */
-     this.iterations = 0;
+    this.iterations = 0;
 
     /**
      * Whether this runs in dev (true by default)
      * @type {boolean|'none'}
      */
-     this.dev = options.dev ?? true;
+    this.dev = options.dev ?? true;
   }
-  
+
   /**
    * Starts the loop
    * @abstract
    */
-   start(): void {
+  start(): void {
     if (!this.dev && this.boat.options.dev) return;
 
     if (this.dev === 'only' && this.boat.options.dev == false) return;
@@ -90,18 +90,18 @@ class BaseLoop {
    * Stops the loop
    * @abstract
    */
-   stop(): void {
+  stop(): void {
     this.job.stop();
     this.job = null;
     this.active = false;
     this.iterations = 0;
-  }  
+  }
 
   /**
    * The code to run every loop
    * @abstract
    */
-   run(): any {
+  run(): any {
     throw new Error('Must be implemented by subclass');
   }
 }
