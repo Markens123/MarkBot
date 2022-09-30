@@ -1,15 +1,16 @@
 import { TextChannel } from 'discord.js';
 import Enmap from 'enmap';
+import { LoopOptions } from '../../lib/interfaces/Main.js';
 import AnimeAPI from '../rafts/Anime/apis/anime.js';
 import { ChunkEmbeds } from '../util/Constants.js';
 import BaseLoop from './BaseLoop.js';
 
 class ALoop extends BaseLoop {
   constructor(boat) {
-    const options = {
+    const options: LoopOptions = {
       name: 'animeloop',
       active: false,
-      time: 12*3600,
+      time: '0 */3 * * *',
       dev: false
     };
     super(boat, options);

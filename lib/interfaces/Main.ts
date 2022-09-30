@@ -1,5 +1,6 @@
 import { ButtonInteraction, Client, ClientOptions, Collection, CommandInteraction, InteractionCollectorOptions, Message, MessageComponentCollectorOptions, PermissionResolvable, Snowflake } from 'discord.js';
 import Enmap from 'enmap';
+import { DateTime } from 'luxon';
 import BaseLoop from '../../src/loops/BaseLoop';
 import BaseInteraction from '../../src/rafts/BaseInteraction';
 
@@ -295,4 +296,11 @@ export type PaginatorOptions = {
   length?: number,
   callback: ({ data, offset, message }: { data: any, offset: number, message?: Message }) => any,
   options: MessageComponentCollectorOptions<ButtonInteraction>
+}
+
+export type LoopOptions = {
+  name: string,
+  active: boolean,
+  time: string | number | DateTime | Date;
+  dev?: boolean | 'only';
 }

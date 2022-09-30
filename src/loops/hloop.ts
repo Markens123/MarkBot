@@ -1,14 +1,14 @@
 import { TextChannel } from 'discord.js';
-import { HAnime } from '../../lib/interfaces/Main.js';
+import { HAnime, LoopOptions } from '../../lib/interfaces/Main.js';
 import HAnimeAPI from '../rafts/Anime/apis/hen.js';
 import BaseLoop from './BaseLoop.js';
 
 class HLoop extends BaseLoop {
   constructor(boat) {
-    const options = {
+    const options: LoopOptions = {
       name: 'hentailoop',
       active: true,
-      every: 'half-hour',
+      time: '*/30 * * * *',
       dev: false
     };
     super(boat, options);
