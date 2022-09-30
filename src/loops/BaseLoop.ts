@@ -69,9 +69,11 @@ class BaseLoop {
       this.time = `*/${this.time} * * * * *`
     }
 
-    if (this.job) return null;
-
     this.active = true;
+    if (this.job?.running) return null;
+    if (this.job) {
+      return this.job.start()
+    }
 
     this.job = new CronJob(
       this.time,
@@ -92,7 +94,6 @@ class BaseLoop {
    */
   stop(): void {
     this.job.stop();
-    this.job = null;
     this.active = false;
     this.iterations = 0;
   }
