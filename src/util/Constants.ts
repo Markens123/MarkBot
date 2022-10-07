@@ -1,7 +1,7 @@
 import { ActionRowBuilder, EmbedBuilder, TextInputBuilder } from 'discord.js';
 import got from 'got';
 import { JSDOM } from 'jsdom';
-import { Item, Task } from '../../lib/interfaces/Main';
+import { DiscordBuild, Item, Task } from '../../lib/interfaces/Main';
 
 export const AniQueue = (arr: string[] | []): string => {
   let content = '';
@@ -174,3 +174,34 @@ export const shorten = (str, maxLen, separator = ' ') => {
 }
 
 export const range = (start: number, stop: number, step: number): number[] => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+
+export const discVer = (channel: 'ptb' | 'stable' | 'canary' = 'stable'): Promise<DiscordBuild> => {
+  return new Promise(async (resove, reject) => {
+    const branches = ['ptb', 'stable', 'canary'];
+    if (!branches.includes(channel)) return reject('Invalid branch');
+    const mainurl = channel === 'stable' ? 'https://discord.com/app' : `https://${channel}.discord.com/app`;
+
+    const { body: mbody, headers: mheaders } = await got.get(mainurl);
+    let buildHash = mheaders["x-build-id"] as string;
+  
+    const jsurl = mbody.match(/([a-zA-z0-9]+)\.js" /g).map(x => x.replace('" ', '')).pop();
+  
+    if (!jsurl) {
+      return reject('Js file not found');
+    }
+  
+    const sourceurl = channel === 'stable' ? `https://discord.com/assets/${jsurl}` : `https://${channel}.discord.com/assets/${jsurl}`;
+  
+    const { body: sbody } = await got.get(sourceurl);
+  
+    let buildstrings: any = sbody.match(/Build Number: (?:\"\).concat\(\")?(\d+)/);
+  
+    if (buildstrings && buildstrings[1] && parseInt(buildstrings[1])) buildstrings = parseInt(buildstrings[1])
+  
+    resove({
+      buildNum: buildstrings.toString(),
+      buildID: buildHash.slice(0, 7),
+      buildHash,
+    })
+  })
+} 

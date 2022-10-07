@@ -1,9 +1,9 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
-
-import fetcher from 'discord-build-fetcher-js';
-//import gplay from 'google-play-scraper';
 import store from 'app-store-scraper';
+import gplay from 'google-play-scraper';
+
+import { discVer } from '../../../../util/Constants.js';
 
 const definition = {
   name: 'discordver',
@@ -14,8 +14,8 @@ class DiscordVerInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'discordver',
-      guild: '274765646217216003',
-      enabled: true,      
+      guild: ['274765646217216003', '816098833054302208'],
+      enabled: true,
       definition,
     };
     super(boat, info);
@@ -24,34 +24,33 @@ class DiscordVerInteraction extends BaseInteraction {
   async run(interaction: ChatInputCommandInteraction) {
     interaction.reply(`Checking Versions...`);
 
-    const stable = await fetcher(`stable`).then(data => {
-      return "Stable " + data.buildNum + " (" + data.buildID + ")"
-    });  
-    const ptb = await fetcher(`ptb`).then(data => {
-      return "PTB " + data.buildNum + " (" + data.buildID + ")"
-    });                                  
-    const canary = await fetcher(`canary`).then(data => {
-      return "Canary " + data.buildNum + " (" + data.buildID + ")"
+    const stable = await discVer(`stable`).then(data => {
+      return 'Stable ' + data.buildNum + ' (' + data.buildID + ')'
+    });
+    const ptb = await discVer(`ptb`).then(data => {
+      return 'PTB ' + data.buildNum + ' (' + data.buildID + ')'
+    });
+    const canary = await discVer(`canary`).then(data => {
+      return 'Canary ' + data.buildNum + ' (' + data.buildID + ')'
     });
 
-/*    const astable = await gplay.app({appId: 'com.discord'}).then(data => {
-        return "Stable " + data.version 
-    });*/
-
-    const istable = await store.app({id: 985746746}).then(data => {
-      return "Stable " + data.version
+    const astable = await gplay.app({ appId: 'com.discord' }).then(data => {
+      return 'Stable ' + data.version.replace('- Stable', '')
     });
-    const embed = new EmbedBuilder()
-    .setTitle("Current Discord Builds")
-    .setColor('#00FF00')
-    .addFields([
-      {name: "Desktop", value: `${stable}\n${ptb}\n${canary}`},
-      {name: "iOS", value: istable}
-    ])
-    .setTimestamp()
-    //.addField("Android", astable);
+    const istable = await store.app({ id: 985746746 }).then(data => {
+      return 'Stable ' + data.version
+    });
     
-      
+    const embed = new EmbedBuilder()
+      .setTitle('Current Discord Builds')
+      .setColor('#00FF00')
+      .addFields([
+        { name: 'Desktop', value: `${stable}\n${ptb}\n${canary}` },
+        { name: 'iOS', value: istable },
+        { name: 'Android', value: astable }
+      ])
+      .setTimestamp()
+
     interaction.editReply({ content: null, embeds: [embed] });
   }
 }

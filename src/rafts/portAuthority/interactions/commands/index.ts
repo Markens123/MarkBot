@@ -17,5 +17,6 @@ commands.enable = (await import('./enable.js')).default;
 commands.disable = (await import('./disable.js')).default;
 commands.timestamp = (await import('./timestamp.js')).default;
 commands.ocr = (await import('./ocr.js')).default;
+commands.dalerts = (await import('./dalerts.js')).default;
 
 export default commands;
