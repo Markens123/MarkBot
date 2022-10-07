@@ -12,6 +12,7 @@ class DAlertsConfigInteraction extends BaseInteraction {
 
   async run(interaction: ChatInputCommandInteraction) {
     const client = this.boat.client;
+    client.dalerts.ensure(interaction.guild.id, {})
     const ptb = client.dalerts.get(interaction.guild.id, 'ptb');
     const canary = client.dalerts.get(interaction.guild.id, 'canary');
     const stable = client.dalerts.get(interaction.guild.id, 'stable');
