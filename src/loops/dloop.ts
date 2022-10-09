@@ -59,9 +59,9 @@ class DLoop extends BaseLoop {
         client.dalerts.forEach(async (g, i) => {
           if (i !== 'latest') {
             if (g[x]) {
-              const channel = await client.channels.fetch(g[x]).catch(err => false) as TextBasedChannel | null;
+              const channel = await client.channels.fetch(g[x].channel).catch(err => false) as TextBasedChannel | null;
               if (channel) {
-                channel.send({ embeds: [embed] })
+                channel.send({ embeds: [embed], content: g[x].mention ? `<@&${g[x].mention}>` : null })
               }
             }
           }

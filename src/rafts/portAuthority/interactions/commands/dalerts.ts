@@ -62,6 +62,29 @@ function getDefinition() {
             .setDescription('Remove the alerts for this branch?')
         )
     )
+    .addSubcommand(commmand =>
+      commmand
+        .setName('role')
+        .setDescription("Set roles mention for a branch's alert")
+        .addStringOption(option =>
+          option
+            .setName('branch')
+            .setDescription('Branch to notify about')
+            .addChoices(...choices)
+            .setRequired(true)
+        )
+        .addRoleOption(option =>
+          option
+            .setName('role')
+            .setDescription('Role to mention with alerts')
+            .setRequired(false)
+        )
+        .addBooleanOption(option =>
+          option
+            .setName('remove')
+            .setDescription('Remove the role mention for this branch?')
+        )
+    )    
     .addSubcommand(command =>
       command
         .setName('config')
