@@ -1,8 +1,6 @@
-import { Channel, EmbedBuilder, TextBasedChannel, TextChannel } from 'discord.js';
-import Enmap from 'enmap';
+import { EmbedBuilder, TextBasedChannel } from 'discord.js';
 import { DiscordBuild, LoopOptions } from '../../lib/interfaces/Main.js';
-import AnimeAPI from '../rafts/Anime/apis/anime.js';
-import { ChunkEmbeds, discVer } from '../util/Constants.js';
+import { discVer } from '../util/Constants.js';
 import BaseLoop from './BaseLoop.js';
 
 class DLoop extends BaseLoop {
@@ -11,6 +9,7 @@ class DLoop extends BaseLoop {
       name: 'discordloop',
       active: true,
       time: 30,
+      dev: false
     };
     super(boat, options);
   }
@@ -53,19 +52,19 @@ class DLoop extends BaseLoop {
             name: 'Build Hash',
             value: current.buildHash,
             inline: false
-          }                        
+          }
         ])
 
-        client.dalerts.forEach(async (g, i) => {
-          if (i !== 'latest') {
-            if (g[x]) {
-              const channel = await client.channels.fetch(g[x].channel).catch(err => false) as TextBasedChannel | null;
-              if (channel) {
-                channel.send({ embeds: [embed], content: g[x].mention ? `<@&${g[x].mention}>` : null })
-              }
+      client.dalerts.forEach(async (g, i) => {
+        if (i !== 'latest') {
+          if (g[x]) {
+            const channel = await client.channels.fetch(g[x].channel).catch(err => false) as TextBasedChannel | null;
+            if (channel) {
+              channel.send({ embeds: [embed], content: g[x].mention ? `<@&${g[x].mention}>` : null })
             }
           }
-        })
+        }
+      })
     })
 
     client.dalerts.set('latest', cstable, 'stable')
