@@ -197,7 +197,8 @@ export const discVer = (channel: 'ptb' | 'stable' | 'canary' = 'stable'): Promis
     let buildstrings: any = sbody.match(/Build Number: (?:\"\).concat\(\")?(\d+)/);
   
     if (buildstrings && buildstrings[1] && parseInt(buildstrings[1])) buildstrings = parseInt(buildstrings[1])
-  
+    else reject('Build number invalid') 
+
     resove({
       buildNum: buildstrings.toString(),
       buildID: buildHash.slice(0, 7),

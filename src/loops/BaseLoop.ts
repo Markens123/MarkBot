@@ -1,7 +1,9 @@
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { CronJob } from 'cron';
 import { DateTime } from 'luxon';
-
+import util from 'util';
+import { fileURLToPath } from 'url';
+const module = fileURLToPath(import.meta.url);
 
 /**
  * Represents a loop
@@ -77,10 +79,14 @@ class BaseLoop {
 
     this.job = new CronJob(
       this.time,
-      () => {
+      async () => {
         if (this.active) {
-          this.run()
-          this.iterations++
+          try {
+            await this.run()
+            this.iterations++
+          } catch (err) {
+            this.boat.log.warn(module, `Error occurred during loop call ${this.name}: ${util.formatWithOptions({}, err)}`);
+          }
         }
       },
       null,
