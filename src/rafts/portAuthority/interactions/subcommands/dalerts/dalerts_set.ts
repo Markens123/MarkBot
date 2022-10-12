@@ -18,7 +18,7 @@ class DAlertsSetInteraction extends BaseInteraction {
     client.dalerts.ensure(interaction.guild.id, {});
 
     if (!remove && !channel) {
-      return interaction.reply({ content: 'You must select the channel or remove option!', ephemeral: true })
+      return interaction.reply({ content: 'You must select a channel or the remove option!', ephemeral: true })
     }
 
     if (remove) {
