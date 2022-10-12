@@ -24,22 +24,22 @@ class DiscordVerInteraction extends BaseInteraction {
     interaction.reply(`Checking Versions...`);
 
     const stable = await discVer(`stable`).then(data => {
-      return 'Stable ' + data.buildNum + ' (' + data.buildID + ')'
+      return `Stable ${data.buildNum} (${data.buildID})`
     });
     const ptb = await discVer(`ptb`).then(data => {
-      return 'PTB ' + data.buildNum + ' (' + data.buildID + ')'
+      return `PTB ${data.buildNum} (${data.buildID})`
     });
     const canary = await discVer(`canary`).then(data => {
-      return 'Canary ' + data.buildNum + ' (' + data.buildID + ')'
+      return `Canary ${data.buildNum} (${data.buildID})`
     });
 
     const astable = await gplay.app({ appId: 'com.discord' }).then(data => {
-      return 'Stable ' + data.version.replace('- Stable', '')
+      return `Stable ${data.version.replace('- Stable', '')}`
     });
     const istable = await store.app({ id: 985746746 }).then(data => {
-      return 'Stable ' + data.version
+      return `Stable ${data.version}`
     });
-    
+
     const embed = new EmbedBuilder()
       .setTitle('Current Discord Builds')
       .setColor('#00FF00')
