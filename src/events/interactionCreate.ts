@@ -14,7 +14,7 @@ export default async (boat: BoatI, interaction: Interaction) => {
     && interaction.commandType === ApplicationCommandType.ChatInput
   ) {
     handler = boat.interactions.commands.get(interaction.commandName)
-    if (handler.subcommands) {
+    if (handler?.subcommands) {
       let scname = interaction.options.getSubcommand(false); 
       if (scname) {
        handler = boat.interactions.subcommands.get(interaction.commandName).get(scname)
@@ -75,6 +75,8 @@ export default async (boat: BoatI, interaction: Interaction) => {
   if (!handler.dev && boat.options.dev) return;
 
   if (handler.dev === 'only' && boat.options.dev == false) return;
+
+  if (handler.owner && !handler.owner.includes(interaction.user.id)) return;
 
   // Handle command
   try {

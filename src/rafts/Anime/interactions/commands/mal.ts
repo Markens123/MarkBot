@@ -103,6 +103,7 @@ function getDefinition() {
           option
             .setName('query')
             .setDescription('What to search for')
+            .setMinLength(3)
             .setRequired(true)
         )
     )
