@@ -68,11 +68,11 @@ class BaseCommand {
      */
     this.threads = options.threads ?? true;
 
-        /**
+    /**
      * Whether this command can be used in voice text channels
      * @type {boolean|'only'}
      */
-         this.voice = options.voice ?? true;
+    this.voice = options.voice ?? true;
 
     /**
      * Arguments for the command
@@ -91,7 +91,7 @@ class BaseCommand {
         if (!this.args[i].type) this.args[i].type = 'string';
         if (!this.args[i].required) this.args[i].required = false;
         if (!this.args[i].error) this.args[i].error = undefined;
-        
+
         if (this.args[i].type === 'flag') {
           if (!this.args[i].flags) this.args[i] = undefined;
           else if (!this.args[i].index) this.args[i].index = 0;
@@ -136,7 +136,7 @@ class BaseCommand {
      * Whether this runs in dev (true by default)
      * @type {boolean|'none'}
      */
-     this.dev = options.dev ?? true;    
+    this.dev = options.dev ?? true;
   }
 
   /**
