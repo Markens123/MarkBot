@@ -23,7 +23,7 @@ class DAlertsSetInteraction extends BaseInteraction {
 
     if (remove) {
       client.dalerts.delete(interaction.guild.id, branch)
-      return interaction.reply(`Updates for '${branch}' will no longer be recieved!`)
+      return interaction.reply(`Updates for '${branch}' will no longer be received!`)
     }
 
     client.dalerts.set(interaction.guild.id, channel.id, `${branch}.channel`);
