@@ -43,7 +43,7 @@ class UpdateCommand extends BaseCommand {
     let embed = new EmbedBuilder().setColor('Blurple');
 
     if (branch) {
-      let { stdout, stderr } = await promiseExec(`git fetch ${branch}`).catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
+      let { stdout, stderr } = await promiseExec(`git fetch origin ${branch}`).catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
       if (!stdout && !stderr) return;
       stdout = clean(stdout);
       stderr = clean(stderr);
