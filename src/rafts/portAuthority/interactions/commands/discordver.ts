@@ -2,7 +2,6 @@ import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 import store from 'app-store-scraper';
 import gplay from 'google-play-scraper';
-
 import { discVer } from '../../../../util/Constants.js';
 
 const definition = {
