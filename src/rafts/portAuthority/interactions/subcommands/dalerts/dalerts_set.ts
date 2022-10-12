@@ -18,12 +18,12 @@ class DAlertsSetInteraction extends BaseInteraction {
     client.dalerts.ensure(interaction.guild.id, {});
 
     if (!remove && !channel) {
-      return interaction.reply({ content: 'You must select the channel or remove option!', ephemeral: true })
+      return interaction.reply({ content: 'You must select a channel or the remove option!', ephemeral: true })
     }
 
     if (remove) {
       client.dalerts.delete(interaction.guild.id, branch)
-      return interaction.reply(`Updates for '${branch}' will no longer be recieved!`)
+      return interaction.reply(`Updates for '${branch}' will no longer be received!`)
     }
 
     client.dalerts.set(interaction.guild.id, channel.id, `${branch}.channel`);

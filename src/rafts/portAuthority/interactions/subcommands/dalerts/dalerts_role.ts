@@ -18,7 +18,7 @@ class DAlertsRoleInteraction extends BaseInteraction {
     client.dalerts.ensure(interaction.guild.id, {});
 
     if (!remove && !role) {
-      return interaction.reply({ content: 'You must select the role or remove option!', ephemeral: true })
+      return interaction.reply({ content: 'You must select a role or the remove option!', ephemeral: true })
     }
 
     if (!client.dalerts.get(interaction.guild.id, `${branch}.channel`)) {
