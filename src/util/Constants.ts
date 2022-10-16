@@ -205,4 +205,14 @@ export const discVer = (channel: 'ptb' | 'stable' | 'canary' = 'stable'): Promis
       buildHash,
     })
   })
-} 
+}
+
+export const stringToJSON = (data: string, splitter: string = ':'): any => {
+  return data.split('\n').reduce(function(obj, str, index) {
+    let strParts = str.split(splitter);
+    if (strParts[0] && strParts[1]) {
+      obj[strParts[0].replace(/\s+/g, '')] = strParts[1].trim();
+    }
+    return obj;
+  }, {});
+}

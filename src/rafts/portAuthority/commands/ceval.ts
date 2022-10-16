@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { util } from '../../../util/index.js';
 import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
@@ -30,7 +30,7 @@ class CEvalCommand extends BaseCommand {
     let stdout, stderr;
     let e = false;
     try {
-      const out = await promiseExec(args);
+      const out = await util.promiseExec(args);
       stdout = out.stdout;
       stderr = out.stderr;
     } catch (error) {
@@ -56,18 +56,6 @@ class CEvalCommand extends BaseCommand {
     embed.addFields([{name: '📤 Output', value: `\`\`\`bash\n${out}\`\`\``}]);
     return message.channel.send({ embeds: [embed] });
   }
-}
-
-function promiseExec(action: any): any {
-  return new Promise((resolve, reject) =>
-    exec(action, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ stdout, stderr });
-      }
-    }),
-  );
 }
 
 export default CEvalCommand;

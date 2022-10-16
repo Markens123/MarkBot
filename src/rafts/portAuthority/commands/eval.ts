@@ -4,6 +4,7 @@ import glob from 'glob';
 import path, { basename } from 'path';
 import { fileURLToPath } from 'url';
 import * as util from 'util';
+import { util as pUtil } from '../../../util/index.js';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { loop } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';
@@ -86,6 +87,7 @@ class EvalCommand extends BaseCommand {
       shorten,
       delay,
       Discord,
+      promiseExec: pUtil.promiseExec,
       ...Discord,
     };
   
@@ -102,7 +104,7 @@ class EvalCommand extends BaseCommand {
         ? await new AsyncFunction(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope))
         : new Function(...Object.keys(scope), `try {\n${args}\n} catch (err) {\n  return err;\n}`)(...Object.values(scope));
       if (isPromise(evaluated)) {
-        message.react('1002621741127958578');
+        await message.react('1002621741127958578');
         evaluated = await evaluated;
         message.reactions.cache.get('1002621741127958578')?.remove();
       }
@@ -170,7 +172,8 @@ class EvalCommand extends BaseCommand {
       /* client.maldata.fetchEverything().forEach(element => {
         text = text.replace(element.AToken, 'Redacted')
         .replace(element.RToken, 'Redacted')
-      }); */ 
+      }); */
+      [].filter(Boolean)
       return text
         .replace(/` /g, `\`${String.fromCharCode(8203)}`)
         .replace(/@/g, `@${String.fromCharCode(8203)}`)

@@ -1,3 +1,6 @@
+import { exec } from "child_process";
+import { ExecuteOutput } from "../../lib/interfaces/Main";
+
 class Util {
   constructor() {
     throw new Error('This class may not be instantiated');
@@ -59,7 +62,24 @@ class Util {
       }
     }
     return args;
-  }  
+  }
+
+  /**
+   * Promise version of child_process's exec function
+   * @param {string} action the action to execute
+   * @returns {Promise<ExecuteOutput>}
+   */  
+  static promiseExec(action: string): Promise<ExecuteOutput> {
+    return new Promise((resolve, reject) =>
+      exec(action, (err, stdout, stderr) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ stdout, stderr });
+        }
+      }),
+    );
+  }
 }
 
 export { Util as util };

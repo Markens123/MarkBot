@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { util } from '../../../util/index.js'
 import { EmbedBuilder, Message } from 'discord.js';
 import { fileURLToPath } from 'url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
@@ -43,27 +43,27 @@ class UpdateCommand extends BaseCommand {
     let embed = new EmbedBuilder().setColor('Blurple');
 
     if (branch) {
-      let { stdout, stderr } = await promiseExec(`git fetch origin ${branch}`).catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
+      let { stdout, stderr } = await util.promiseExec(`git fetch origin ${branch}`).catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
       if (!stdout && !stderr) return;
       stdout = clean(stdout);
       stderr = clean(stderr);
       embed.setTitle('Branch Fetched').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
       await message.channel.send({ embeds: [embed] });
 
-      ({ stdout, stderr } = await promiseExec(`git checkout ${branch}`).catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
+      ({ stdout, stderr } = await util.promiseExec(`git checkout ${branch}`).catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
       if (!stdout && !stderr) return;
-      embed.setTitle('Branch switched').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
+      embed.setTitle('Branch Switched').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
       await message.channel.send({ embeds: [embed] });
     }
 
-    let { stdout, stderr } = await promiseExec('git pull').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
+    let { stdout, stderr } = await util.promiseExec('git pull').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
     embed.setTitle('Git Pulled').setDescription(`\`\`\`bash\n${stdout}\n${stderr}\`\`\``);
     await message.channel.send({ embeds: [embed] });
 
-    ({ stdout, stderr } = await promiseExec('npm i').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
+    ({ stdout, stderr } = await util.promiseExec('npm i').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
@@ -71,7 +71,7 @@ class UpdateCommand extends BaseCommand {
     await message.channel.send({ embeds: [embed] });
 
     if (python) {
-      ({ stdout, stderr } = await promiseExec('npm run i').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
+      ({ stdout, stderr } = await util.promiseExec('npm run i').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
       if (!stdout && !stderr) return;
       stdout = clean(stdout);
       stderr = clean(stderr);
@@ -80,7 +80,7 @@ class UpdateCommand extends BaseCommand {
     }
 
     const build_msg = await message.channel.send('Building...');
-    ({ stdout, stderr } = await promiseExec('npm run build').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
+    ({ stdout, stderr } = await util.promiseExec('npm run build').catch((err): any => message.channel.send(`\`\`\`bash\n${err}\`\`\``)));
     if (!stdout && !stderr) return;
     stdout = clean(stdout);
     stderr = clean(stderr);
@@ -100,17 +100,6 @@ class UpdateCommand extends BaseCommand {
   }
 }
 
-function promiseExec(action): Promise<any> {
-  return new Promise((resolve, reject) =>
-    exec(action, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ stdout, stderr });
-      }
-    }),
-  );
-}
 
 function clean(text: string): string {
   if (typeof text === 'string') {

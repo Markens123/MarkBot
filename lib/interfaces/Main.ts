@@ -12,6 +12,8 @@ export interface ClientI extends Client {
   animealerts?: Enmap;
   dalerts?: Enmap;
   tasksdata?: TaskDB;
+  cache?: Enmap;
+  functions?: Enmap;
   loops?: Collection<string, LoopI>;
 }
 
@@ -310,4 +312,9 @@ export type DiscordBuild = {
   buildID: string;
   buildNum: string;
   buildHash: string;
+}
+
+export type ExecuteOutput = {
+  stdout: string, 
+  stderr: string
 }

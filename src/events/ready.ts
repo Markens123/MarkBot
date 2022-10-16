@@ -1,4 +1,3 @@
-
 import { ActionRowBuilder } from 'discord.js';
 import { fileURLToPath } from 'url';
 import { BoatI } from '../../lib/interfaces/Main.js';
