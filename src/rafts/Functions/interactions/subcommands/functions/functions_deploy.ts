@@ -58,7 +58,6 @@ class FunctionsDeployInteraction extends BaseInteraction {
 
         if (builderr) return interaction.editReply({ content: this.errors.build, });
       }
-
       
       if (env) {
         const envtxt = readFile(`pj-functions/${name}/.env.example`);
@@ -67,7 +66,8 @@ class FunctionsDeployInteraction extends BaseInteraction {
           return interaction.editReply({ content: this.errors.env });
         } else {
           const envdata = envtxt.replaceAll('\n', '').split('=').filter(Boolean);
-          
+          const modal = this.boat.interactions.modals.get('FUNCTIONS_ENV').definition(name, envdata);
+          return await interaction.showModal(modal);
         }
       }
 

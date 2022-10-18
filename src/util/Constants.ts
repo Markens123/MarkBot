@@ -132,6 +132,7 @@ export const ModalFunctions = createEnum([
   'TASK_EDIT',
   'ITEM_ADD',
   'ITEM_EDIT',
+  'FUNCTIONS_ENV'
 ]);
 
 function createEnum(keys) {
