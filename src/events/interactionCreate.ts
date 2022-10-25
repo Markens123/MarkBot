@@ -17,7 +17,7 @@ export default async (boat: BoatI, interaction: Interaction) => {
     if (handler?.subcommands) {
       let scname = interaction.options.getSubcommand(false); 
       if (scname) {
-       handler = boat.interactions.subcommands.get(interaction.commandName).get(scname)
+       handler = boat.interactions.subcommands.get(interaction.commandName)?.get(scname)
       }
     }
   }
