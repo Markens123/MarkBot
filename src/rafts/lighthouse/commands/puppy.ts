@@ -6,7 +6,7 @@ class PuppyCommand extends BaseCommand {
   constructor(raft) {
     const options: CommandOptions = {
       name: 'Puppy',
-      owner: false,
+      owner: true,
       enabled: true,
     };
     super(raft, options);

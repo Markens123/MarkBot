@@ -10,6 +10,7 @@ class FractalCommand extends BaseCommand {
     const options: CommandOptions = {
       name: 'fractal',
       enabled: true,
+      owner: true,
       args: [
         {
           name: 'hcolor',

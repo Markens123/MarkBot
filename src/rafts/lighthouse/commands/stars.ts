@@ -9,7 +9,9 @@ class StarsCommand extends BaseCommand {
     const options: CommandOptions = {
       
       name: 'stars',
-      owner: false,
+      owner: true,
+
+      owner: true,
       enabled: true,
       args: [
         {

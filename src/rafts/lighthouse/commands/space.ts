@@ -6,7 +6,7 @@ class SpaceCommand extends BaseCommand {
   constructor(raft) {
     const options: CommandOptions = {
       name: 'space',
-      owner: false,
+      owner: true,
       enabled: true,
     };
     super(raft, options);

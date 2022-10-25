@@ -9,7 +9,7 @@ class AbstractCommand extends BaseCommand {
   constructor(raft) {
     const options: CommandOptions = {
       name: 'abstract',
-      owner: false,
+      owner: true,
       enabled: true,
     };
     super(raft, options);

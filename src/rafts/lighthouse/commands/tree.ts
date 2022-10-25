@@ -8,7 +8,7 @@ class TreeCommand extends BaseCommand {
   constructor(raft) {
     const options: CommandOptions = {
       name: 'tree',
-      owner: false,
+      owner: true,
       enabled: true,
     };
     super(raft, options);
