@@ -7,10 +7,7 @@ const { createCanvas } = pkg;
 class StarsCommand extends BaseCommand {
   constructor(raft) {
     const options: CommandOptions = {
-      
       name: 'stars',
-      owner: true,
-
       owner: true,
       enabled: true,
       args: [
