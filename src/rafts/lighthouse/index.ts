@@ -1,5 +1,6 @@
 import apis from './apis/index.js';
 import commands from './commands/index.js';
+import interactions from './interactions/index.js';
 import BaseRaft from '../BaseRaft.js';
 import { fileURLToPath } from 'url';
 const module = fileURLToPath(import.meta.url);
@@ -10,7 +11,7 @@ const module = fileURLToPath(import.meta.url);
  */
 class Lighthouse extends BaseRaft {
   launch() {
-    super.launch({ commands, apis, module });
+    super.launch({ commands, apis, module, interactions });
   }
 }
 
