@@ -57,7 +57,7 @@ class AQueueReorderInteraction extends BaseInteraction {
       return
     })
 
-    collector.on('collect', async (int) => {
+    collector.on('collect', async (int: ButtonInteraction | SelectMenuInteraction) => {
 
       if (!int.customId.split(':')[1].startsWith('aqueue')) {
         int.reply({ content: "These are not the droids you're looking for", ephemeral: true });
