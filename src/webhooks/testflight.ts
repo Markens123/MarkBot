@@ -1,8 +1,7 @@
 import BaseHook from './BaseHook.js';
 import { Response } from 'express';
 import { RequestI } from '../../lib/interfaces/Main.js';
-import { EmbedBuilder } from '@discordjs/builders';
-import { Colors } from 'discord.js';
+import { Colors, EmbedBuilder, WebhookClient } from 'discord.js';
 
 class TestFlightHook extends BaseHook {
   constructor() {
@@ -18,7 +17,7 @@ class TestFlightHook extends BaseHook {
     const client = boat.client;
     const content: string = body.toString();
     const MENTION = '396726969544343554';
-    const channel = await client.fetchWebhook('1024768792359862393', 'WraCgSnzPuRDJEoFd5zsRBA5oDux0OqFHXwbOhPKHAFyZailZ_we6lmVgw6uSL6V8rs1')
+    const webhook = new WebhookClient({url: boat.options.tokens.testflight });  
     if (content) {
       const msg = content.match(/Message: ([A-Za-z0-9\s]+)(\r?\n)/)?.[1].trim() || 'None';
       const branch = content.match(/Branch: ([A-Za-z0-9-\/\s]+)(\r?\n)/)?.[1].trim() || 'None';
@@ -32,7 +31,7 @@ class TestFlightHook extends BaseHook {
           .setTitle('New TestFlight Update')
           .addFields([{ name: 'Version', value: version }])
           .setColor(Colors.Red);
-        await channel.send({ content: `<@${MENTION}>`, embeds: [embed] })
+        await webhook.send({ content: `<@${MENTION}>`, embeds: [embed] })
         return res.sendStatus(200);
       } else {
         const embed = new EmbedBuilder()
@@ -57,7 +56,7 @@ class TestFlightHook extends BaseHook {
             }
           ])
           .setColor(Colors.Red);
-        await channel.send({ content: `<@${MENTION}>`, embeds: [embed] })
+        await webhook.send({ content: `<@${MENTION}>`, embeds: [embed] })
         return res.sendStatus(200);
       }
 
