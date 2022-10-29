@@ -124,6 +124,7 @@ export const ComponentFunctions = createEnum([
   'HALERTS_RESET',
   'TASK_OPTIONS',
   'ITEM_SELECT',
+  'GENERATE_NEW',
 ]);
 
 export const ModalFunctions = createEnum([
