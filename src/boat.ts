@@ -14,6 +14,7 @@ import rafts from './rafts/index.js';
 import { util } from './util/index.js';
 import express, { Express } from 'express';
 import router from './webhooks/router.js';
+import bodyParser from 'body-parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -326,6 +327,9 @@ class Boat implements BoatI {
   launchExpress() {
     const client = this.client;
     let app = express();
+    
+    app.use(bodyParser.text());
+    app.use(bodyParser.json())
 
     app.get('/callback', async ({ query }, response) => {
       const { code, state } = query;

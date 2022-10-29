@@ -21,8 +21,8 @@ util.objForEach(hooks, hook => {
   const hc = new hook() as BaseHook;
   if (hc.active) {
     if (hc.gate) {
-      router.get(`/${hc.name}`, verify, hc.run)
-    } else router.get(`/${hc.name}`, hc.run)
+      router[hc.type](`/${hc.name}`, verify, hc.run)
+    } else router[hc.type](`/${hc.name}`, hc.run)
   }
 })
 

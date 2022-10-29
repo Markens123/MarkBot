@@ -8,6 +8,7 @@ class BaseHook {
   active: boolean;
   name: string;
   gate: boolean;
+  type: 'get' | 'put' | 'post' | 'patch' | 'delete';
 
   constructor(options) {
     /**
@@ -26,10 +27,17 @@ class BaseHook {
      
     /**
      * Is the webhook gated
-     * @name BaseHook#active
+     * @name BaseHook#gate
      * @type {string}
      */
-     this.gate = options.gate ?? false;      
+     this.gate = options.gate ?? false;
+
+    /**
+     * Type of request to recieve
+     * @name BaseHook#type
+     * @type {string}
+     */
+     this.type = options.type ?? 'get';         
   }
   /**
    * The code to run when webhook is called
