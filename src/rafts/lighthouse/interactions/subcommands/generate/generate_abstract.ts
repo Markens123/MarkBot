@@ -1,5 +1,5 @@
 import pkg from 'canvas';
-import { AttachmentBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ChatInputCommandInteraction, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { CommandOptions } from '../../../../../../lib/interfaces/Main.js';
 import { util } from '../../../../../util/index.js';
@@ -15,6 +15,17 @@ class GenerateAbstractInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
+    const buffer = await this.generate();
+    const attachment = new AttachmentBuilder(buffer, { name: 'image.png' });
+
+    const button = this.raft.interactions.buttonComponents.get('GENERATE_NEW').definition('abstract') as ButtonBuilder;
+
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
+
+    interaction.reply({ files: [attachment], components: [row] })
+  }
+
+  async generate() {
     const width = 1200;
     const height = 730;
     const canvas = createCanvas(width, height);
@@ -32,10 +43,7 @@ class GenerateAbstractInteraction extends BaseInteraction {
       },
       { context },
     );
-
-    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'image.png' });
-
-    interaction.reply({ files: [attachment] })
+    return canvas.toBuffer();
   }
 }
 

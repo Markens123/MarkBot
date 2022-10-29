@@ -1,5 +1,5 @@
 import pkg from 'canvas';
-import { AttachmentBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { CommandOptions } from '../../../../../../lib/interfaces/Main.js';
 const { createCanvas } = pkg;
@@ -14,13 +14,33 @@ class GenerateStarsInteraction extends BaseInteraction {
   }
 
   run(interaction: ChatInputCommandInteraction) {
+    const stars = interaction.options.getInteger('stars', false) || Math.floor(Math.random() * 101) + 75;
+    const lines = interaction.options.getInteger('lines', false) || Math.floor(Math.random() * 4) + 3;
+    const image = interaction.options.getBoolean('image', false);
+
+    const buffer = this.generate(stars, lines);
+
+    const attachment = new AttachmentBuilder(buffer, { name: 'image.png' });
+
+    let embed = new EmbedBuilder()
+      .setTitle('Random Stars')
+      .setColor('#000001')
+      .setImage('attachment://image.png')
+      .setFooter({ text: `Stars: ${stars} | Lines: ${lines}` })
+      .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() });
+
+    const button = this.raft.interactions.buttonComponents.get('GENERATE_NEW').definition('stars', { stars, lines, image }) as ButtonBuilder;
+
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
+
+    interaction.reply({ embeds: image ? null : [embed], files: [attachment], components: [row] });
+  }
+
+  generate(stars: number, lines: number) {
     const width = 1200;
     const height = 730;
     const canvas = createCanvas(width, height);
     const context = canvas.getContext('2d');
-    const stars = interaction.options.getInteger('stars', false) || Math.floor(Math.random() * 101) + 75;
-    const lines = interaction.options.getInteger('lines', false) || Math.floor(Math.random() * 4) + 3;
-    const image = interaction.options.getBoolean('image', false);
     let a = [];
 
     context.fillStyle = 'black';
@@ -46,16 +66,7 @@ class GenerateStarsInteraction extends BaseInteraction {
         context.closePath();
       }
     }
-    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'image.png' });
-
-    let embed = new EmbedBuilder()
-      .setTitle('Random Stars')
-      .setColor('#000001')
-      .setImage('attachment://image.png')
-      .setFooter({ text: `Stars: ${stars} | Lines: ${lines}` })
-      .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() });
-
-    interaction.reply({ embeds: image ? null : [embed], files: [attachment] });
+    return canvas.toBuffer();
   }
 }
 

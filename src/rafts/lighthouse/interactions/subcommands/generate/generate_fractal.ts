@@ -1,5 +1,5 @@
 import pkg from 'canvas';
-import { AttachmentBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { CommandOptions } from '../../../../../../lib/interfaces/Main.js';
 import { util } from '../../../../../util/index.js';
@@ -17,11 +17,31 @@ class GenerateFractalInteraction extends BaseInteraction {
   async run(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
     const startTime = Date.now();
+    const color = interaction.options.getString('color', false);
+
+    const buffer = await this.generate(color);
+
+    const endTime = Date.now();
+    const attachment = new AttachmentBuilder(buffer, { name: 'fractal.png' });
+
+    const embed = new EmbedBuilder()
+      .setTitle('Randomly generated fractal')
+      .setImage('attachment://fractal.png')
+      .setFooter({ text: `Generation time: ${(endTime - startTime) / 1000}s` })
+      .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() });
+
+    const button = this.raft.interactions.buttonComponents.get('GENERATE_NEW').definition('fractal', { color }) as ButtonBuilder;
+
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
+
+    interaction.editReply({ embeds: [embed], files: [attachment], components: [row] });
+  }
+
+  async generate(hcolor: string) {
     const width = 1200;
     const height = 1200;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
-    const hcolor = interaction.options.getString('color', false);
 
     function checkIfBelongsToMandelbrotSet(x, y) {
       let realComponentOfResult = x;
@@ -66,18 +86,8 @@ class GenerateFractalInteraction extends BaseInteraction {
     }
     ctx.translate(width / 2, height / 2);
     ctx.rotate((Math.floor(Math.random() * 360) * Math.PI) / 180);
-    const endTime = Date.now();
-    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'fractal.png' });
-
-    const embed = new EmbedBuilder()
-      .setTitle('Randomly generated fractal')
-      .setImage('attachment://fractal.png')
-      .setFooter({ text: `Generation time: ${(endTime - startTime) / 1000}s` })
-      .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() });
-
-    interaction.editReply({ embeds: [embed], files: [attachment] });
+    return canvas.toBuffer();
   }
 }
-
 
 export default GenerateFractalInteraction;
