@@ -8,6 +8,7 @@ class TestFlightHook extends BaseHook {
     const options = {
       name: 'tf',
       active: true,
+      gate: true,
       type: 'post'
     };
     super(options);
@@ -16,7 +17,7 @@ class TestFlightHook extends BaseHook {
   async run({ boat, body }: RequestI, res: Response) {
     const content: string = body.toString();
     const MENTION = '396726969544343554';
-    const webhook = new WebhookClient({url: boat.options.tokens.testflight });  
+    const webhook = new WebhookClient({ url: boat.options.tokens.testflight });
     if (content) {
       const msg = content.match(/Message: ([A-Za-z0-9\s]+)(\r?\n)/)?.[1].trim() || 'None';
       const branch = content.match(/Branch: ([A-Za-z0-9-\/\s]+)(\r?\n)/)?.[1].trim() || 'None';
