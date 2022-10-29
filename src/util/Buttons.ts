@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Message, MessageActionRowComponentBuilder, SelectMenuInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, ComponentType, Message, MessageActionRowComponentBuilder, SelectMenuInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
 import { InteractionPaginatorOptions, PaginatorOptions } from '../../lib/interfaces/Main.js';
 
 export const Paginator = async ({
@@ -37,7 +37,7 @@ export const Paginator = async ({
     msg.edit({ components: [row] }).catch(() => { });
   }
 
-  collector.on('collect', async (interaction) => {
+  collector.on('collect', async (interaction: ButtonInteraction) => {
     const next = new ButtonBuilder().setLabel('➡️').setStyle(ButtonStyle.Primary).setCustomId('collector:next');
     const back = new ButtonBuilder().setLabel('⬅️').setStyle(ButtonStyle.Primary).setCustomId('collector:back');
     const del = boat.rafts.portAuthority.interactions.buttonComponents.get('DELETE').definition(message.author.id);
@@ -176,8 +176,7 @@ export const YesNo = async ({ message, content, user_id = message.author.id }:
   }
 
   try {
-    //@ts-expect-error
-    const int = await msg.awaitMessageComponent(options);
+    const int = await msg.awaitMessageComponent<ComponentType.Button>(options);
 
     if (!(int instanceof Error)) {
       msg.delete().catch(() => { });
@@ -219,7 +218,7 @@ export const InteractionYesNo = async ({ interaction, content, editReply = false
   }
 
   try {
-    const int = await interaction.channel.awaitMessageComponent(options);
+    const int = await interaction.channel.awaitMessageComponent<ComponentType.Button>(options);
 
     if (!(int instanceof Error)) {
       if (!int.replied) int.deferUpdate()

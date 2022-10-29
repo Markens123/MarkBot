@@ -1,23 +1,41 @@
 import pkg from 'canvas';
-import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
-import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import BaseCommand from '../../BaseCommand.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
+import BaseInteraction from '../../../../BaseInteraction.js';
+import { CommandOptions } from '../../../../../../lib/interfaces/Main.js';
 const { createCanvas } = pkg;
 
-class TreeCommand extends BaseCommand {
+class GenerateTreeInteraction extends BaseInteraction {
   constructor(raft) {
     const options: CommandOptions = {
       name: 'tree',
-      owner: true,
       enabled: true,
     };
     super(raft, options);
   }
 
-  async run(message: Message) {
+  async run(interaction: ChatInputCommandInteraction) {
+    await interaction.deferReply();
 
-    const responseMsg = await message.channel.send('Generating Tree');
     const startTime = Date.now();
+    const buffer = await this.generate()
+    const endTime = Date.now();
+
+    const attachment = new AttachmentBuilder(buffer, { name: 'tree.png' });
+
+    const embed = new EmbedBuilder()
+      .setTitle('Randomly generated tree')
+      .setImage('attachment://tree.png')
+      .setFooter({ text: `Generation time: ${(endTime - startTime) / 1000}s` })
+      .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() });
+
+    const button = this.raft.interactions.buttonComponents.get('GENERATE_NEW').definition('tree') as ButtonBuilder;
+
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
+
+    interaction.editReply({ embeds: [embed], files: [attachment], components: [row] });
+  }
+
+  async generate() {
     const width = 600;
     const height = 600;
     let canvas = createCanvas(width, height);
@@ -81,18 +99,8 @@ class TreeCommand extends BaseCommand {
     ctx.globalCompositeOperation = 'destination-over';
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, width, height);
-    const endTime = Date.now();
-    const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: 'tree.png'});
-
-    const embed = new EmbedBuilder()
-      .setTitle('Randomly generated tree')
-      .setImage('attachment://tree.png')
-      .setFooter({text: `Generation time: ${(endTime - startTime) / 1000}s`})
-      .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()});
-
-    if (responseMsg.deletable) responseMsg.delete();
-    message.channel.send({embeds: [embed], files: [attachment]});
+    return canvas.toBuffer()
   }
 }
 
-export default TreeCommand;
+export default GenerateTreeInteraction;

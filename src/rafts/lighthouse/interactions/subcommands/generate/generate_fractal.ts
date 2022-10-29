@@ -1,31 +1,43 @@
 import pkg from 'canvas';
-import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
-import { CommandOptions } from '../../../../lib/interfaces/Main.js';
-import { util } from '../../../util/index.js';
-import BaseCommand from '../../BaseCommand.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageActionRowComponentBuilder } from 'discord.js';
+import BaseInteraction from '../../../../BaseInteraction.js';
+import { CommandOptions } from '../../../../../../lib/interfaces/Main.js';
+import { util } from '../../../../../util/index.js';
 const { createCanvas } = pkg;
 
-class FractalCommand extends BaseCommand {
+class GenerateFractalInteraction extends BaseInteraction {
   constructor(raft) {
     const options: CommandOptions = {
       name: 'fractal',
       enabled: true,
-      owner: true,
-      args: [
-        {
-          name: 'hcolor',
-          type: 'str',
-          validation: ({ arg }) => !isNaN(Colors[arg]),
-          error: 'The color you provided is invalid'
-        }
-      ]
     };
     super(raft, options);
   }
 
-  async run(message: Message, { hcolor }) {
-    const responseMsg = await message.channel.send('Generating Fractal');
+  async run(interaction: ChatInputCommandInteraction) {
+    await interaction.deferReply();
     const startTime = Date.now();
+    const color = interaction.options.getString('color', false);
+
+    const buffer = await this.generate(color);
+
+    const endTime = Date.now();
+    const attachment = new AttachmentBuilder(buffer, { name: 'fractal.png' });
+
+    const embed = new EmbedBuilder()
+      .setTitle('Randomly generated fractal')
+      .setImage('attachment://fractal.png')
+      .setFooter({ text: `Generation time: ${(endTime - startTime) / 1000}s` })
+      .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() });
+
+    const button = this.raft.interactions.buttonComponents.get('GENERATE_NEW').definition('fractal', { color }) as ButtonBuilder;
+
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
+
+    interaction.editReply({ embeds: [embed], files: [attachment], components: [row] });
+  }
+
+  async generate(hcolor: string) {
     const width = 1200;
     const height = 1200;
     const canvas = createCanvas(width, height);
@@ -53,7 +65,7 @@ class FractalCommand extends BaseCommand {
     const magnificationFactor = 2000;
     const panX = Math.random() * 2;
     const panY = Math.random() * 1;
-    const color = Colors[hcolor] ?? Math.floor(Math.random() * (360 - 1 + 1) + 1);
+    const color = hcolor ?? Math.floor(Math.random() * (360 - 1 + 1) + 1);
     for (let x = 0; x < canvas.width; x++) {
       await util.nonBlockLoop(
         canvas.height,
@@ -74,28 +86,8 @@ class FractalCommand extends BaseCommand {
     }
     ctx.translate(width / 2, height / 2);
     ctx.rotate((Math.floor(Math.random() * 360) * Math.PI) / 180);
-    const endTime = Date.now();
-    const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: 'fractal.png'});
-
-    const embed = new EmbedBuilder()
-      .setTitle('Randomly generated fractal')
-      .setImage('attachment://fractal.png')
-      .setFooter({text: `Generation time: ${(endTime - startTime) / 1000}s`})
-      .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()});
-
-    if (responseMsg.deletable) responseMsg.delete();
-    message.channel.send({embeds: [embed], files: [attachment]});
+    return canvas.toBuffer();
   }
 }
 
-const Colors = {
-  yellow: 60,
-  blue: 240,
-  pink: 300,
-  purple: 255,
-  cyan: 180,
-  red: 0,
-  green: 120
-}
-
-export default FractalCommand;
+export default GenerateFractalInteraction;
