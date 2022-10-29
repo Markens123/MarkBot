@@ -176,8 +176,9 @@ class Boat implements BoatI {
     this.client.maldata.ensure('queue', []);
     this.client.halerts.ensure('latest', []);
     this.client.animealerts.ensure('latest', {});
+    this.client.dalerts.ensure('latest', {});
 
-    this.launchExpress(); 
+    this.launchExpress();
 
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }

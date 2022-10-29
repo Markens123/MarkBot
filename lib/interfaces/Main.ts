@@ -11,6 +11,7 @@ export interface ClientI extends Client {
   reminders?: Enmap<Snowflake, Reminder[]>;
   halerts?: Enmap;
   animealerts?: Enmap;
+  dalerts?: Enmap;
   tasksdata?: TaskDB;
   loops?: Collection<string, LoopI>;
 }
@@ -309,4 +310,10 @@ export type LoopOptions = {
   active: boolean,
   time: string | number | DateTime | Date;
   dev?: boolean | 'only';
+}
+
+export type DiscordBuild = {
+  buildID: string;
+  buildNum: string;
+  buildHash: string;
 }
