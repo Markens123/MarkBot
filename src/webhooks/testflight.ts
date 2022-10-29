@@ -14,7 +14,6 @@ class TestFlightHook extends BaseHook {
   }
 
   async run({ boat, body }: RequestI, res: Response) {
-    const client = boat.client;
     const content: string = body.toString();
     const MENTION = '396726969544343554';
     const webhook = new WebhookClient({url: boat.options.tokens.testflight });  
