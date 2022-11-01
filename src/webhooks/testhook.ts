@@ -6,7 +6,7 @@ class TestHook extends BaseHook {
   constructor() {
     const options = {
       name: 'testhook',
-      active: true,
+      active: false,
     };
     super(options);
   }

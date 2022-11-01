@@ -329,7 +329,7 @@ class Boat implements BoatI {
     let app = express();
     
     app.use(bodyParser.text());
-    app.use(bodyParser.json())
+    app.use(bodyParser.json());
 
     app.get('/callback', async ({ query }, response) => {
       const { code, state } = query;
@@ -359,6 +359,7 @@ class Boat implements BoatI {
     app.use('/hooks', router);
 
     app.listen(process.env.PORT, () => this.log('#', `App listening at http://localhost:${process.env.PORT}`));
+    this.app = app; 
   }
   /**
    * Logging shortcut. Logs to `info` by default. Other levels are properties.

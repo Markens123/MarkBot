@@ -16,8 +16,9 @@ class TestFlightHook extends BaseHook {
 
   async run({ boat, body }: RequestI, res: Response) {
     const content: string = body.toString();
-    const MENTION = '396726969544343554';
+    const mention = '396726969544343554';
     const webhook = new WebhookClient({ url: boat.options.tokens.testflight });
+
     if (content) {
       const msg = content.match(/Message: ([A-Za-z0-9\s]+)(\r?\n)/)?.[1].trim() || 'None';
       const branch = content.match(/Branch: ([A-Za-z0-9-\/\s]+)(\r?\n)/)?.[1].trim() || 'None';
@@ -26,12 +27,14 @@ class TestFlightHook extends BaseHook {
       const creator = content.match(/Creator: ([A-Za-z0-9\s]+)(\r?\n)/)?.[1].trim() || 'None';
 
       if (new Set([msg, branch, commit, buildn, creator]).size === 1) {
-        const version = content.match(/Discord - Chat, Talk & Hangout(.+?)is ready to test on iOS/)?.[1].trim()
+        const version = content.match(/Discord - Chat, Talk & Hangout(.+?)is ready to test on iOS/)?.[1].trim();
+        
         const embed = new EmbedBuilder()
           .setTitle('New TestFlight Update')
           .addFields([{ name: 'Version', value: version }])
           .setColor(Colors.Red);
-        await webhook.send({ content: `<@${MENTION}>`, embeds: [embed] })
+
+        await webhook.send({ content: `<@${mention}>`, embeds: [embed] });
         return res.sendStatus(200);
       } else {
         const embed = new EmbedBuilder()
@@ -56,7 +59,8 @@ class TestFlightHook extends BaseHook {
             }
           ])
           .setColor(Colors.Red);
-        await webhook.send({ content: `<@${MENTION}>`, embeds: [embed] })
+        
+        await webhook.send({ content: `<@${mention}>`, embeds: [embed] });
         return res.sendStatus(200);
       }
 
