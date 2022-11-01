@@ -170,6 +170,7 @@ class Boat implements BoatI {
     this.attach();
 
     // Loads databases
+    this.log.debug(module, 'Loading databases');
     for (const [key, value] of Object.entries(databases)) {
       this.client[key] = value;
     }
@@ -179,6 +180,8 @@ class Boat implements BoatI {
     this.client.animealerts.ensure('latest', {});
     this.client.dalerts.ensure('latest', {});
 
+    // Start express
+    this.log.debug(module, 'Starting express server');
     this.launchExpress();
 
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
@@ -338,7 +341,7 @@ class Boat implements BoatI {
         let user = client.maldata.find(val => Object.keys(val).some(k => { return val[k] === state }));
         if (user) {
           user = Object.keys(user)[0]
-          const out = await this.rafts.Anime.apis.oauth.getToken(code).catch(err => { this.log.verbose(this.options.basepath, `Error getting token ${err}`) });
+          const out = await this.rafts.Anime.apis.oauth.getToken(code).catch(err => { this.log.verbose(module, `Error getting token ${err}`) });
           if (!out.access_token) response.sendFile('error.html', { root: '.' });
           client.maldata.set(user, out.access_token, 'AToken');
           client.maldata.set(user, out.refresh_token, 'RToken');

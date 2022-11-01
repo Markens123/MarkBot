@@ -21,7 +21,7 @@ class BaseHook {
     /**
      * Is the webhook active
      * @name BaseHook#active
-     * @type {string}
+     * @type {boolean}
      */
      this.active = options.active ?? true; 
      
