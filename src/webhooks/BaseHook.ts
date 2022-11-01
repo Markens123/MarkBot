@@ -1,4 +1,4 @@
-import { BoatI, RequestI } from '../../lib/interfaces/Main.js';
+import { RequestI } from '../../lib/interfaces/Main.js';
 import { Response } from 'express';
 /**
  * Represents a webhook

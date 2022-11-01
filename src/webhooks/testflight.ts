@@ -28,7 +28,7 @@ class TestFlightHook extends BaseHook {
 
       if (new Set([msg, branch, commit, buildn, creator]).size === 1) {
         const version = content.match(/Discord - Chat, Talk & Hangout(.+?)is ready to test on iOS/)?.[1].trim();
-        
+
         const embed = new EmbedBuilder()
           .setTitle('New TestFlight Update')
           .addFields([{ name: 'Version', value: version }])
@@ -59,7 +59,7 @@ class TestFlightHook extends BaseHook {
             }
           ])
           .setColor(Colors.Red);
-        
+
         await webhook.send({ content: `<@${mention}>`, embeds: [embed] });
         return res.sendStatus(200);
       }
