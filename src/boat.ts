@@ -347,11 +347,11 @@ class Boat implements BoatI {
           client.maldata.set(user, out.refresh_token, 'RToken');
           client.maldata.set(user, Date.now() + (out.expires_in * 1000), 'EXPD');
           client.maldata.delete('states', user);
-          return response.sendFile('successful.html', { root: '../' });
+          return response.sendFile('successful.html', { root: '.' });
         }
       }
 
-      return response.sendFile('error.html', { root: '../' });
+      return response.sendFile('error.html', { root: '.' });
     });
 
     app.use('/hooks', (req: RequestI, res, next) => {
