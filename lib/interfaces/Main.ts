@@ -3,6 +3,7 @@ import Enmap from 'enmap';
 import { DateTime } from 'luxon';
 import BaseLoop from '../../src/loops/BaseLoop';
 import BaseInteraction from '../../src/rafts/BaseInteraction';
+import { Express, Request, Response } from 'express';
 
 export interface ClientI extends Client {
   cooldowns?: Collection<string, Collection<Snowflake, number>>;
@@ -13,6 +14,10 @@ export interface ClientI extends Client {
   dalerts?: Enmap;
   tasksdata?: TaskDB;
   loops?: Collection<string, LoopI>;
+}
+
+export interface RequestI extends Request {
+  boat: BoatI;
 }
 
 export interface TaskDB extends Enmap<string, TaskGuilds> {
@@ -85,6 +90,7 @@ export interface BoatI {
   readonly toJSON: any;
   launchRaft: any;
   listen: any;
+  app: Express;
 }
 
 type InteractionCollection = Collection<string, BaseInteraction>;

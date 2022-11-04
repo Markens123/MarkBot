@@ -3,7 +3,7 @@ import { REST } from '@discordjs/rest';
 import { Client, Collection, Routes, Snowflake } from 'discord.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { BoatI, BoatOptions, ClientI, InteractionsI } from '../lib/interfaces/Main.js';
+import { BoatI, BoatOptions, ClientI, InteractionsI, RequestI } from '../lib/interfaces/Main.js';
 import databases from './databases.js';
 import events from './events/index.js';
 import BaseLoop from './loops/BaseLoop.js';
@@ -12,6 +12,9 @@ import BaseRaft from './rafts/BaseRaft.js';
 import logBuilder from './rafts/captainsLog/LogRouter.js';
 import rafts from './rafts/index.js';
 import { util } from './util/index.js';
+import express, { Express } from 'express';
+import router from './webhooks/router.js';
+import bodyParser from 'body-parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +35,7 @@ class Boat implements BoatI {
   loops: Collection<string, BaseLoop>;
   token: string;
   debug: boolean;
+  app: Express;
   ending: boolean;
 
   /**
@@ -108,7 +112,7 @@ class Boat implements BoatI {
      * Loops, mapped by name
      * @type {Collection<string, BaseLoop>}
      */
-     this.loops = new Collection();    
+    this.loops = new Collection();
 
     /**
      * The interactions that can be called, mapped by name
@@ -149,7 +153,7 @@ class Boat implements BoatI {
     // Iniatiate all rafts
     this.log.debug(module, 'Launching rafts');
     await util.objForEach(rafts, this.launchRaft.bind(this));
-    
+
     // Register all loops
     this.log.debug(module, 'Collecting loops');
     await util.objForEach(loops, this.launchLoop.bind(this));
@@ -166,6 +170,7 @@ class Boat implements BoatI {
     this.attach();
 
     // Loads databases
+    this.log.debug(module, 'Loading databases');
     for (const [key, value] of Object.entries(databases)) {
       this.client[key] = value;
     }
@@ -174,7 +179,11 @@ class Boat implements BoatI {
     this.client.halerts.ensure('latest', []);
     this.client.animealerts.ensure('latest', {});
     this.client.dalerts.ensure('latest', {});
-    
+
+    // Start express
+    this.log.debug(module, 'Starting express server');
+    this.launchExpress();
+
     return this.client.login(this.token).catch(err => this.log.critical(module, err));
   }
 
@@ -220,7 +229,7 @@ class Boat implements BoatI {
    * Associate all loops
    * @private
    */
-   async launchLoop(loop, name) {
+  async launchLoop(loop, name) {
     loop = new loop(this);
     if (!(loop instanceof BaseLoop)) throw new TypeError('All loops must extend BaseLoop');
     if (loop.active) loop.start();
@@ -268,7 +277,7 @@ class Boat implements BoatI {
               promises.push(
                 rest.post(
                   Routes.applicationGuildCommands(this.client.user.id, guild),
-                  { body:  interaction.definition },
+                  { body: interaction.definition },
                 )
               )
             });
@@ -278,7 +287,7 @@ class Boat implements BoatI {
           if (interaction.guild) {
             return rest.post(
               Routes.applicationGuildCommands(this.client.user.id, interaction.guild),
-              { body:  interaction.definition },
+              { body: interaction.definition },
             ).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
           }
           return rest.post(
@@ -286,7 +295,7 @@ class Boat implements BoatI {
             { body: interaction.definition }
           ).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
         }
-        default:
+      default:
     }
     return 'Invalid type';
   }
@@ -316,6 +325,46 @@ class Boat implements BoatI {
   }
 
   /**
+   * Starts express server for app.
+   */
+  launchExpress() {
+    const client = this.client;
+    let app = express();
+
+    app.use(bodyParser.text());
+    app.use(bodyParser.json());
+
+    app.get('/callback', async ({ query }, response) => {
+      const { code, state } = query;
+
+      if (code && state) {
+        let user = client.maldata.find(val => Object.keys(val).some(k => { return val[k] === state }));
+        if (user) {
+          user = Object.keys(user)[0]
+          const out = await this.rafts.Anime.apis.oauth.getToken(code).catch(err => { this.log.verbose(module, `Error getting token ${err}`) });
+          if (!out.access_token) response.sendFile('error.html', { root: '.' });
+          client.maldata.set(user, out.access_token, 'AToken');
+          client.maldata.set(user, out.refresh_token, 'RToken');
+          client.maldata.set(user, Date.now() + (out.expires_in * 1000), 'EXPD');
+          client.maldata.delete('states', user);
+          return response.sendFile('successful.html', { root: '.' });
+        }
+      }
+
+      return response.sendFile('error.html', { root: '.' });
+    });
+
+    app.use('/hooks', (req: RequestI, res, next) => {
+      req.boat = this;
+      next()
+    })
+
+    app.use('/hooks', router);
+
+    app.listen(process.env.PORT, () => this.log('#', `App listening at http://localhost:${process.env.PORT}`));
+    this.app = app;
+  }
+  /**
    * Logging shortcut. Logs to `info` by default. Other levels are properties.
    * @type {Logging}
    * @readonly
@@ -332,7 +381,7 @@ class Boat implements BoatI {
     await this.client.destroy();
     this.rafts.captainsLog.webhook.destroy();
     /* eslint-disable-next-line no-empty-function */
-    await new Promise(resolve => this.rafts.captainsLog.driver.end(resolve)).catch(() => {});
+    await new Promise(resolve => this.rafts.captainsLog.driver.end(resolve)).catch(() => { });
     clearTimeout(panic);
     process.exit(code);
   }
