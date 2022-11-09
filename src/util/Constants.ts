@@ -125,6 +125,7 @@ export const ComponentFunctions = createEnum([
   'TASK_OPTIONS',
   'ITEM_SELECT',
   'GENERATE_NEW',
+  'TEST_BUTTONS',
 ]);
 
 export const ModalFunctions = createEnum([

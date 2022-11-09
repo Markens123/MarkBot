@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, Message, MessageActionRowComponentBuilder, MessageComponentInteraction, SelectMenuBuilder, SelectMenuInteraction, SnowflakeUtil } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, Message, MessageActionRowComponentBuilder, MessageComponentInteraction, StringSelectMenuBuilder, StringSelectMenuInteraction, SnowflakeUtil } from 'discord.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -40,7 +40,7 @@ class HAlertsEditInteraction extends BaseInteraction {
       },
     ];
 
-    const select = new SelectMenuBuilder().addOptions(options).setCustomId(`collector:halerts_select:${code}`).setPlaceholder('Select option to edit');
+    const select = new StringSelectMenuBuilder().addOptions(options).setCustomId(`collector:halerts_select:${code}`).setPlaceholder('Select option to edit');
     const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:halerts_done:${code}`);
 
     const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);
@@ -71,14 +71,14 @@ class HAlertsEditInteraction extends BaseInteraction {
     let newchannel = '';
     let newmen = [];
 
-    collector.on('collect', async (int: ButtonInteraction | SelectMenuInteraction) => {
+    collector.on('collect', async (int: ButtonInteraction | StringSelectMenuInteraction) => {
 
       if (!int.customId.split(':')[1].startsWith('halerts')) {
         int.reply({ content: "These are not the droids you're looking for.", ephemeral: true });
         return
       }
 
-      if (int instanceof SelectMenuInteraction) {
+      if (int instanceof StringSelectMenuInteraction) {
 
         if (int.values[0] === 'channel') {
           await int.reply({ content: 'Please mention the channel that you would to have the alerts in.', ephemeral: true })

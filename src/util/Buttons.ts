@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, ComponentType, Message, MessageActionRowComponentBuilder, SelectMenuInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, ComponentType, Message, MessageActionRowComponentBuilder, StringSelectMenuInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
 import { InteractionPaginatorOptions, PaginatorOptions } from '../../lib/interfaces/Main.js';
 
 export const Paginator = async ({
@@ -194,7 +194,7 @@ export const YesNo = async ({ message, content, user_id = message.author.id }:
 
 export const InteractionYesNo = async ({ interaction, content, editReply = false, user_id = interaction.user.id }:
   {
-    interaction: ChatInputCommandInteraction | ButtonInteraction | SelectMenuInteraction,
+    interaction: ChatInputCommandInteraction | ButtonInteraction | StringSelectMenuInteraction,
     content: string,
     editReply?: boolean,
     user_id?: string | Snowflake

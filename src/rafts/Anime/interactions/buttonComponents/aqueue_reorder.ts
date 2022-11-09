@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, MessageActionRowComponentBuilder, MessageComponentInteraction, SelectMenuBuilder, SelectMenuInteraction, SnowflakeUtil } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, MessageActionRowComponentBuilder, MessageComponentInteraction, StringSelectMenuBuilder, StringSelectMenuInteraction, SnowflakeUtil } from 'discord.js';
 import { AniQueue, ComponentFunctions } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
@@ -31,7 +31,7 @@ class AQueueReorderInteraction extends BaseInteraction {
       })
     }
 
-    const select = new SelectMenuBuilder().addOptions(options).setCustomId(`collector:aqueue_select:${code}`);
+    const select = new StringSelectMenuBuilder().addOptions(options).setCustomId(`collector:aqueue_select:${code}`);
     const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`);
     const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
     const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);
@@ -57,7 +57,7 @@ class AQueueReorderInteraction extends BaseInteraction {
       return
     })
 
-    collector.on('collect', async (int: ButtonInteraction | SelectMenuInteraction) => {
+    collector.on('collect', async (int: ButtonInteraction | StringSelectMenuInteraction) => {
 
       if (!int.customId.split(':')[1].startsWith('aqueue')) {
         int.reply({ content: "These are not the droids you're looking for", ephemeral: true });
@@ -66,7 +66,7 @@ class AQueueReorderInteraction extends BaseInteraction {
 
       int.deferUpdate()
 
-      if (int instanceof SelectMenuInteraction) {
+      if (int instanceof StringSelectMenuInteraction) {
         let index = int.values[0]
         newarr.push(arr[index])
         arr.splice(index, 1)
@@ -82,7 +82,7 @@ class AQueueReorderInteraction extends BaseInteraction {
           })
         }
     
-        const select = new SelectMenuBuilder().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
+        const select = new StringSelectMenuBuilder().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
         const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`);
         const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
         
@@ -104,7 +104,7 @@ class AQueueReorderInteraction extends BaseInteraction {
 
           interaction.channel.messages.cache.get(interaction.message.id).edit({ embeds: [e] }).catch(() => {});
 
-          const select = new SelectMenuBuilder().setCustomId(`collector:aqueue_select:${code}`).addOptions({value: 'None', label: 'None'}).setDisabled(true);
+          const select = new StringSelectMenuBuilder().setCustomId(`collector:aqueue_select:${code}`).addOptions({value: 'None', label: 'None'}).setDisabled(true);
           const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`).setDisabled(true);
           const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
           
@@ -127,7 +127,7 @@ class AQueueReorderInteraction extends BaseInteraction {
             })
           }
       
-          const select = new SelectMenuBuilder().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
+          const select = new StringSelectMenuBuilder().addOptions(oarr).setCustomId(`collector:aqueue_select:${code}`);
           const done = new ButtonBuilder().setLabel('Done').setStyle(ButtonStyle.Success).setCustomId(`collector:aqueue_done:${code}`);
           const reset = new ButtonBuilder().setLabel('Reset').setStyle(ButtonStyle.Danger).setCustomId(`collector:aqueue_reset:${code}`);
           const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(select);

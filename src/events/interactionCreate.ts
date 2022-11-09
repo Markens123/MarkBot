@@ -53,13 +53,10 @@ export default async (boat: BoatI, interaction: Interaction) => {
       return;
     }
     name = ComponentFunctions[Number(interaction.customId.split(':')[0])];
-    switch (interaction.componentType) {
-      case ComponentType.Button:
-        handler = boat.interactions.buttonComponents.get(name);
-        break;
-      case ComponentType.SelectMenu:
-        handler = boat.interactions.selectMenuComponents.get(name);
-        break;
+    if (interaction.isButton()) {
+      handler = boat.interactions.buttonComponents.get(name);
+    } else if (interaction.isAnySelectMenu()) {
+      handler = boat.interactions.selectMenuComponents.get(name);
     }
   }
 

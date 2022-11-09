@@ -1,4 +1,4 @@
-import { CommandInteraction, Interaction, MessageComponentInteraction, SelectMenuInteraction } from 'discord.js';
+import { AnySelectMenuInteraction, ChannelSelectMenuInteraction, CommandInteraction, Interaction, MentionableSelectMenuInteraction, MessageComponentInteraction, RoleSelectMenuInteraction, StringSelectMenuInteraction, UserSelectMenuInteraction } from 'discord.js';
 import BaseCommand from './BaseCommand.js';
 
 class BaseInteraction extends BaseCommand {
@@ -37,7 +37,7 @@ class BaseInteraction extends BaseCommand {
    * @param {?Object} options the options passed to the interaction
    * @abstract
    */
-   run(interaction: MessageComponentInteraction | SelectMenuInteraction | CommandInteraction | Interaction, options?: any): any {
+   run(interaction: MessageComponentInteraction | AnySelectMenuInteraction | CommandInteraction | Interaction, options?: any): any {
     throw new Error('Must be implemented by subclass');
   }
 

@@ -24,7 +24,7 @@
     "canvas": "^2.8.0",
     "cheerio": "^1.0.0-rc.10",
     "cron": "^2.1.0",
-    "discord.js": "^14.6.0",
+    "discord.js": "^14.6.1-dev.1667563454-68c9cb3.0",
     "dotenv": "^8.2.0",
     "enmap": "^5.8.4",
     "express": "^4.17.1",
@@ -40,6 +40,9 @@
     "ocr-space-api-wrapper": "^2.1.1",
     "parse-duration": "^1.0.0",
     "winston": "^3.3.3"
+  },
+  "overrides": {
+    "@discordjs/builders": "1.4.0-dev.1667347887-5152abf.0"
   },
   "devDependencies": {
     "@types/cron": "^2.0.0",

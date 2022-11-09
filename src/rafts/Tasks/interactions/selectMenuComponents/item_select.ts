@@ -1,4 +1,4 @@
-import { ActionRowBuilder, SelectMenuBuilder, SelectMenuComponentOptionData, SelectMenuInteraction, ThreadChannel } from 'discord.js';
+import { ActionRowBuilder, StringSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuInteraction, ThreadChannel } from 'discord.js';
 import { Item, Task, TaskOptions } from '../../../../../lib/interfaces/Main.js';
 import { InteractionYesNo } from '../../../../util/Buttons.js';
 import { ComponentFunctions, TaskMessage } from '../../../../util/Constants.js';
@@ -14,7 +14,7 @@ class ItemSelectInteraction extends BaseInteraction {
     this.definition = this.generateDefinition.bind(this);
   }
 
-  async run(interaction: SelectMenuInteraction) {
+  async run(interaction: StringSelectMenuInteraction) {
     const boat = this.boat;
     const client = boat.client;
     const data = interaction.customId.split(':');
@@ -98,7 +98,7 @@ class ItemSelectInteraction extends BaseInteraction {
     return interaction.deferUpdate()
   }
 
-  generateDefinition(task_id: string, items: Item[], next: TaskOptions): ActionRowBuilder<SelectMenuBuilder> {
+  generateDefinition(task_id: string, items: Item[], next: TaskOptions): ActionRowBuilder<StringSelectMenuBuilder> {
     const customId = `${ComponentFunctions[this.name]}:${task_id}:${next}`;
     const options: SelectMenuComponentOptionData[] = [];
 
@@ -111,7 +111,7 @@ class ItemSelectInteraction extends BaseInteraction {
     
     return new ActionRowBuilder({
       components: [
-        new SelectMenuBuilder()
+        new StringSelectMenuBuilder()
           .setCustomId(customId)
           .setPlaceholder('Nothing selected')
           .addOptions(options),

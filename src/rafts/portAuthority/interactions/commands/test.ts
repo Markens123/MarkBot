@@ -1,49 +1,28 @@
-import { ChatInputCommandInteraction, CommandInteractionOption, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ChatInputCommandInteraction, CommandInteractionOption, SlashCommandBuilder } from 'discord.js';
 import * as util from 'util';
-import { ModalComponents, ModalFunctions } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class TestInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'test',
-      enabled: true,      
+      enabled: true,
       definition: getDefinition(),
     };
     super(boat, info);
   }
 
   async run(interaction: ChatInputCommandInteraction, args: CommandInteractionOption[]) {
-    const resp = args?.find(arg => arg.name === `response`)?.value;
-    const client = interaction.client;
+    const resp = interaction.options.getString('response', false);
 
     if (resp === 'modal') {
-      const modal = new ModalBuilder().setCustomId(`${ModalFunctions['TEST']}:`).setTitle('Test Modal!');
-
-      const nameInput = new TextInputBuilder()
-      .setCustomId('name')
-      .setLabel('Name')
-      .setRequired(true)
-      .setPlaceholder('Josh')
-      .setStyle(TextInputStyle.Short);
-
-      const ageInput = new TextInputBuilder()
-      .setCustomId('age')
-      .setLabel('Age')
-      .setRequired(false)
-      .setPlaceholder('21')
-      .setStyle(TextInputStyle.Short);
-      
-      const hruInput = new TextInputBuilder()
-      .setCustomId('hru')
-      .setLabel('How are you doing today?')
-      .setRequired(false)
-      .setStyle(TextInputStyle.Paragraph);
-
-      modal.addComponents(...ModalComponents([nameInput, ageInput, hruInput]));
+      const modal = this.boat.interactions.modals.get('TEST').definition();
 
       return interaction.showModal(modal);
-    } 
+    } else if (resp === 'buttons') {
+      const buttons = this.boat.interactions.buttonComponents.get('TEST_BUTTONS').definition();
+      return interaction.reply({content: 'Buttons!', components: buttons });
+    }
 
     interaction.reply(`\`\`\`js\n${util.inspect(args)}\`\`\``);
   }
@@ -63,23 +42,23 @@ function getDefinition() {
         .setName('integer')
         .setDescription('Whole numbers')
     )
-    .addBooleanOption(option => 
+    .addBooleanOption(option =>
       option
         .setName('boolean')
         .setDescription('True or false')
     )
-    .addUserOption(option => 
+    .addUserOption(option =>
       option
         .setName('user')
         .setDescription('Any user (can use id)')
     )
-    .addChannelOption(option => 
+    .addChannelOption(option =>
       option
         .setName('channel')
         .setDescription('Channel that is in this server')
     )
     .addRoleOption(option =>
-       option
+      option
         .setName('role')
         .setDescription('Role that is in this server')
     )
@@ -95,14 +74,23 @@ function getDefinition() {
     )
     .addAttachmentOption(option =>
       option
-      .setName('attachment')
-      .setDescription('An attachment')
+        .setName('attachment')
+        .setDescription('An attachment')
     )
     .addStringOption(option =>
       option
         .setName('response')
         .setDescription('The response')
-        .addChoices({ name: 'Modal', value: 'modal' })
+        .addChoices(
+          {
+            name: 'Modal',
+            value: 'modal'
+          },
+          {
+            name: 'Buttons',
+            value: 'buttons'
+          }
+        )
     )
     .toJSON();
 }

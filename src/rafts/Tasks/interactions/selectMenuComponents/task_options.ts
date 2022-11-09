@@ -1,4 +1,4 @@
-import { ActionRowBuilder, SelectMenuBuilder, SelectMenuInteraction, ThreadChannel } from 'discord.js';
+import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, ThreadChannel } from 'discord.js';
 import { Item, Task, TaskOptions } from '../../../../../lib/interfaces/Main.js';
 import { InteractionYesNo } from '../../../../util/Buttons.js';
 import { ComponentFunctions, TaskMessage } from '../../../../util/Constants.js';
@@ -14,7 +14,7 @@ class TaskOptionsInteraction extends BaseInteraction {
     this.definition = this.generateDefinition.bind(this);
   }
 
-  async run(interaction: SelectMenuInteraction) {
+  async run(interaction: StringSelectMenuInteraction) {
     const boat = this.boat;
     const client = boat.client;
     const guild = interaction.customId.split(':')[1];
@@ -117,13 +117,13 @@ class TaskOptionsInteraction extends BaseInteraction {
     return interaction.deferUpdate()
   }
 
-  generateDefinition(guild: string, task: Task): ActionRowBuilder<SelectMenuBuilder> {
+  generateDefinition(guild: string, task: Task): ActionRowBuilder<StringSelectMenuBuilder> {
     const customId = `${ComponentFunctions[this.name]}:${guild}:${task.id}`;
 
     if (!task.open) {
       return new ActionRowBuilder({
         components: [
-          new SelectMenuBuilder()
+          new StringSelectMenuBuilder()
             .setCustomId(customId)
             .setPlaceholder('Nothing selected')
             .addOptions([
@@ -139,7 +139,7 @@ class TaskOptionsInteraction extends BaseInteraction {
 
     return new ActionRowBuilder({
       components: [
-        new SelectMenuBuilder()
+        new StringSelectMenuBuilder()
           .setCustomId(customId)
           .setPlaceholder('Nothing selected')
           .addOptions([
