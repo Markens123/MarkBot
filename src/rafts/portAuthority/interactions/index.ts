@@ -1,10 +1,16 @@
-const interactions: any = {};
+import buttonComponents from './buttonComponents/index.js';
+import commands from './commands/index.js';
+import modals from './modals/index.js';
+import subcommands from './subcommands/index.js';
+import { messages as messageContextMenuComponents } from './contextMenuComponents/index.js';
+import autocomplete from './autocomplete/index.js';
 
-interactions.commands = (await import('./commands/index.js')).default;
-interactions.autocomplete = (await import('./autocomplete/index.js')).default;
-interactions.buttonComponents = (await import('./buttonComponents/index.js')).default;
-interactions.modals = (await import('./modals/index.js')).default;
-interactions.messageContextMenuComponents = (await import('./contextMenuComponents/index.js')).messages;
-interactions.subcommands = (await import('./subcommands/index.js')).default;
 
-export default interactions;
+export default {
+  buttonComponents,
+  commands,
+  modals,
+  subcommands,
+  messageContextMenuComponents,
+  autocomplete
+}

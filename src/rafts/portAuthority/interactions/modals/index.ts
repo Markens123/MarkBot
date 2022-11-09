@@ -1,5 +1,5 @@
-const modals: any = {};
+import TEST from './testmodal.js';
 
-modals.TEST = (await import('./testmodal.js')).default;
-
-export default modals;
+export default {
+  TEST
+}

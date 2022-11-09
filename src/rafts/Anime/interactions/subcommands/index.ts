@@ -1,5 +1,5 @@
-const categories: any = {};
+import mal from './mal/index.js';
 
-categories.mal = (await import('./mal/index.js')).default;
-
-export default categories;
+export default {
+  mal
+}

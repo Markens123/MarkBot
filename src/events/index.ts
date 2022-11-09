@@ -1,7 +1,9 @@
-const events: any = {};
+import interactionCreate from './interactionCreate.js';
+import messageCreate from './messageCreate.js';
+import ready from './ready.js';
 
-events.messageCreate = (await import('./messageCreate.js')).default;
-events.interactionCreate = (await import('./interactionCreate.js')).default;
-events.ready = (await import('./ready.js')).default;
-
-export default events;
+export default {
+  interactionCreate,
+  messageCreate,
+  ready
+}

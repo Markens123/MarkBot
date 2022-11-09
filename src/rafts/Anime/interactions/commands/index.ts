@@ -1,6 +1,7 @@
-const commands: any = {};
+import halerts from './halerts.js';
+import mal from './mal.js';
 
-commands.halerts = (await import('./halerts.js')).default;
-commands.mal = (await import('./mal.js')).default;
-
-export default commands;
+export default {
+  halerts,
+  mal
+}

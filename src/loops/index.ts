@@ -1,8 +1,11 @@
-const loops: any = {};
+import anime from './aloop.js';
+import discord from './dloop.js';
+import hentai from './hloop.js';
+import test from './tloop.js';
 
-loops.hentai = (await import('./hloop.js')).default;
-loops.anime = (await import('./aloop.js')).default;
-loops.discord = (await import('./dloop.js')).default;
-loops.test = (await import('./tloop.js')).default;
-
-export default loops;
+export default {
+  anime,
+  discord,
+  hentai,
+  test
+}

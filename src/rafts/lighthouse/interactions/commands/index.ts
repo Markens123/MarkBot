@@ -1,5 +1,5 @@
-const commands: any = {};
+import generate from './generate.js';
 
-commands.generate = (await import('./generate.js')).default;
-
-export default commands;
+export default {
+  generate
+}

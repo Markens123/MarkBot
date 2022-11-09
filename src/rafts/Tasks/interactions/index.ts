@@ -1,8 +1,11 @@
-const interactions: any = {};
+import commands from './commands/index.js';
+import modals from './modals/index.js';
+import selectMenuComponents from './selectMenuComponents/index.js';
+import subcommands from './subcommands/index.js';
 
-interactions.commands = (await import('./commands/index.js')).default;
-interactions.subcommands = (await import('./subcommands/index.js')).default;
-interactions.modals = (await import('./modals/index.js')).default;
-interactions.selectMenuComponents = (await import('./selectMenuComponents/index.js')).default;
-
-export default interactions;
+export default {
+  commands,
+  modals,
+  selectMenuComponents,
+  subcommands
+}

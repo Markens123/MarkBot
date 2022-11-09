@@ -1,5 +1,5 @@
-const categories: any = {};
+import generate from './generate/index.js';
 
-categories.generate = (await import('./generate/index.js')).default;
-
-export default categories;
+export default {
+  generate
+}

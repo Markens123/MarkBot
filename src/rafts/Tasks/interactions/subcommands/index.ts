@@ -1,5 +1,5 @@
-const categories: any = {};
+import tasks from './tasks/index.js';
 
-categories.tasks = (await import('./tasks/index.js')).default;
-
-export default categories;
+export default {
+  tasks
+}

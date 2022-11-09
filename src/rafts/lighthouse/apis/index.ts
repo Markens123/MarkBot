@@ -1,6 +1,7 @@
-const apis: any = {};
+import nasa from './nasa.js';
+import dog from './dog.js';
 
-apis.nasa = (await import('./nasa.js')).default;
-apis.dog = (await import('./dog.js')).default;
-
-export default apis;
+export default {
+  nasa,
+  dog
+}

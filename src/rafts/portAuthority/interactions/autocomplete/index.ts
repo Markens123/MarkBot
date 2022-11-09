@@ -1,6 +1,7 @@
-const interactions: any = {};
+import date from './date.js';
+import thing from './things.js';
 
-interactions.thing = (await import('./things.js')).default;
-interactions.date = (await import('./date.js')).default;
-
-export default interactions;
+export default {
+  date,
+  thing
+}

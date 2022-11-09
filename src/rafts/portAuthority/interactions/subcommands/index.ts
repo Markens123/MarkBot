@@ -1,5 +1,5 @@
-const categories: any = {};
+import dalerts from './dalerts/index.js';
 
-categories.dalerts = (await import('./dalerts/index.js')).default;
-
-export default categories;
+export default {
+  dalerts
+}

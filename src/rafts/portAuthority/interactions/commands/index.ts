@@ -1,22 +1,39 @@
-const commands: any = {};
+import dalerts from './dalerts.js';
+import eball from './8ball.js';
+import atol from './atol.js';
+import avatar from './avatar.js';
+import banner from './banner.js';
+import checktf from './checktf.js';
+import disable from './disable.js';
+import discordver from './discordver.js';
+import enable from './enable.js';
+import ephemeral from './ephemeral.js';
+import noresp from './noresp.js';
+import ocr from './ocr.js';
+import onlyme from './onlyme.js';
+import reload from './reload.js';
+import schedule from './schedule.js';
+import shrug from './shrug.js';
+import test from './test.js';
+import timestamp from './timestamp.js';
 
-commands['8ball'] = (await import('./8ball.js')).default;
-commands.atol = (await import('./atol.js')).default;
-commands.avatar = (await import('./avatar.js')).default;
-commands.checktf = (await import('./checktf.js')).default;
-commands.discordver = (await import('./discordver.js')).default;
-commands.shrug = (await import('./shrug.js')).default;
-commands.test = (await import('./test.js')).default;
-commands.noresp = (await import('./noresp.js')).default;
-commands.onlyme = (await import('./onlyme.js')).default;
-commands.ephemeral = (await import('./ephemeral.js')).default;
-commands.schedule = (await import('./schedule.js')).default;
-commands.reload = (await import('./reload.js')).default;
-commands.banner = (await import('./banner.js')).default;
-commands.enable = (await import('./enable.js')).default;
-commands.disable = (await import('./disable.js')).default;
-commands.timestamp = (await import('./timestamp.js')).default;
-commands.ocr = (await import('./ocr.js')).default;
-commands.dalerts = (await import('./dalerts.js')).default;
-
-export default commands;
+export default {
+  '8ball': eball,
+  dalerts,
+  atol,
+  avatar,
+  banner,
+  checktf,
+  disable,
+  discordver,
+  enable,
+  ephemeral,
+  noresp,
+  ocr,
+  onlyme,
+  reload,
+  schedule,
+  shrug,
+  test,
+  timestamp
+}

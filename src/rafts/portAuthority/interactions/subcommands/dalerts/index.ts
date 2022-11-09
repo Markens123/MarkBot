@@ -1,7 +1,10 @@
-const commands: any = {};
+import config from './dalerts_config.js';
+import role from './dalerts_role.js';
+import set from './dalerts_set.js';
 
-commands.set = (await import('./dalerts_set.js')).default;
-commands.config = (await import('./dalerts_config.js')).default;
-commands.role = (await import('./dalerts_role.js')).default;
 
-export default commands;
+export default {
+  config,
+  role,
+  set
+}

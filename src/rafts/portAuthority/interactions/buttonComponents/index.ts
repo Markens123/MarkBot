@@ -1,6 +1,7 @@
-const buttons: any = {};
+import DELETE from './delete.js';
+import TEST_BUTTONS from './test_buttons.js';
 
-buttons.DELETE = (await import('./delete.js')).default;
-buttons.TEST_BUTTONS = (await import('./test_buttons.js')).default;
-
-export default buttons;
+export default {
+  DELETE,
+  TEST_BUTTONS
+}

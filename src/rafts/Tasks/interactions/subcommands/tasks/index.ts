@@ -1,8 +1,11 @@
-const commands: any = {};
+import create from './tasks_create.js';
+import setup from './tasks_setup.js';
+import edit from './tasks_edit.js';
+import config from './tasks_config.js';
 
-commands.create = (await import('./tasks_create.js')).default;
-commands.setup = (await import('./tasks_setup.js')).default;
-commands.edit = (await import('./tasks_edit.js')).default;
-commands.config = (await import('./tasks_config.js')).default;
-
-export default commands;
+export default {
+  create,
+  setup,
+  edit,
+  config
+}

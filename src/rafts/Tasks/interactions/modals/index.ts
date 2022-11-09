@@ -1,8 +1,11 @@
-const modals: any = {};
+import TASK_CREATE from './task_create.js';
+import TASK_EDIT from './task_edit.js';
+import ITEM_ADD from './item_add.js';
+import ITEM_EDIT from './item_edit.js';
 
-modals.TASK_CREATE = (await import('./task_create.js')).default;
-modals.TASK_EDIT = (await import('./task_edit.js')).default;
-modals.ITEM_ADD = (await import('./item_add.js')).default;
-modals.ITEM_EDIT = (await import('./item_edit.js')).default;
-
-export default modals;
+export default {
+  TASK_CREATE,
+  TASK_EDIT,
+  ITEM_ADD,
+  ITEM_EDIT
+}
