@@ -1,3 +1,5 @@
-const messages = (await import('./messages/index.js')).default;
+import messages from './messages/index.js';
 
-export { messages };
+export { 
+  messages 
+};

@@ -1,10 +1,13 @@
-const rafts: any = {};
+import Anime from './Anime/index.js';
+import captainsLog from './captainsLog/index.js';
+import lighthouse from './lighthouse/index.js';
+import portAuthority from './portAuthority/index.js';
+import Tasks from './Tasks/index.js';
 
-rafts.portAuthority = (await import('./portAuthority/index.js')).default;
-rafts.captainsLog = (await import('./captainsLog/index.js')).default;
-rafts.Anime = (await import('./Anime/index.js')).default;
-rafts.lighthouse = (await import('./lighthouse/index.js')).default;
-rafts.Tasks = (await import('./Tasks/index.js')).default;
-
-export default rafts;
-
+export default {
+  Anime,
+  captainsLog,
+  lighthouse,
+  portAuthority,
+  Tasks
+}

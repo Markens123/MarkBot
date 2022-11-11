@@ -1,5 +1,5 @@
-const messages: any = {};
+import sauce from './sauce.js';
 
-messages.sauce = (await import('./sauce.js')).default;
-
-export default messages;
+export default {
+  sauce
+}

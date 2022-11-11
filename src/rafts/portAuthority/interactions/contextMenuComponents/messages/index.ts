@@ -1,5 +1,5 @@
-const messages: any = {};
+import guess from './guess.js';
 
-messages.guess = (await import('./guess.js')).default;
-
-export default messages;
+export default {
+  guess
+}

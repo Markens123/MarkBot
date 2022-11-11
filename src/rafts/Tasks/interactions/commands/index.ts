@@ -1,5 +1,5 @@
-const commands: any = {};
+import tasks from './tasks.js';
 
-commands.tasks = (await import('./tasks.js')).default;
-
-export default commands;
+export default {
+  tasks
+}

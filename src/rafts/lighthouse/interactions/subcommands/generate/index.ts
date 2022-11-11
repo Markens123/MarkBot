@@ -1,10 +1,15 @@
-const commands: any = {};
+import abstract from './generate_abstract.js';
+import fractal from './generate_fractal.js';
+import puppy from './generate_puppy.js';
+import space from './generate_space.js';
+import stars from './generate_stars.js';
+import tree from './generate_tree.js';
 
-commands.stars = (await import('./generate_stars.js')).default;
-commands.abstract = (await import('./generate_abstract.js')).default;
-commands.puppy = (await import('./generate_puppy.js')).default;
-commands.fractal = (await import('./generate_fractal.js')).default;
-commands.space = (await import('./generate_space.js')).default;
-commands.tree = (await import('./generate_tree.js')).default;
-
-export default commands;
+export default {
+  abstract,
+  fractal,
+  puppy,
+  space,
+  tree,
+  stars
+}

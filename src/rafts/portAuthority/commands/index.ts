@@ -1,17 +1,27 @@
-const commands: any = {};
+import ceval from './ceval.js';
+import delreminder from './delreminder.js';
+import echo from './echo.js';
+import evalcmd from './eval.js';
+import hello from './hello.js';
+import ping from './ping.js';
+import reboot from './reboot.js';
+import reloadcommand from './reloadcommand.js';
+import remind from './remind.js';
+import reminders from './reminders.js';
+import test from './test.js';
+import update from './update.js';
 
-commands.ceval = (await import('./ceval.js')).default;
-commands.eval = (await import('./eval.js')).default;
-commands.ping = (await import('./ping.js')).default;
-commands.echo = (await import('./echo.js')).default;
-commands.hello = (await import('./hello.js')).default;
-commands.reboot = (await import('./reboot.js')).default;
-commands.update = (await import('./update.js')).default;
-commands.reloadcommand = (await import('./reloadcommand.js')).default;
-commands.remind = (await import('./remind.js')).default;
-commands.reminders = (await import('./reminders.js')).default;
-commands.delreminder = (await import('./delreminder.js')).default;
-commands.test = (await import('./test.js')).default;
-
-
-export default commands;
+export default {
+  ceval,
+  delreminder,
+  echo,
+  eval: evalcmd,
+  hello,
+  ping,
+  reboot,
+  reloadcommand,
+  remind,
+  reminders,
+  test,
+  update
+}

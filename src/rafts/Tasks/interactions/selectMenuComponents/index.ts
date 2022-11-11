@@ -1,6 +1,7 @@
-const menus: any = {};
+import TASK_OPTIONS from './task_options.js';
+import ITEM_SELECT from './item_select.js';
 
-menus.TASK_OPTIONS = (await import('./task_options.js')).default;
-menus.ITEM_SELECT= (await import('./item_select.js')).default;
-
-export default menus;
+export default {
+  TASK_OPTIONS,
+  ITEM_SELECT
+}

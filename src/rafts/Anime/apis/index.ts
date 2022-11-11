@@ -1,6 +1,7 @@
-const apis: any = {};
+import list from './list.js';
+import oauth from './oauth.js';
 
-apis.oauth = (await import('./oauth.js')).default;
-apis.list = (await import('./list.js')).default;
-
-export default apis;
+export default {
+  list,
+  oauth
+}

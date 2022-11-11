@@ -54,7 +54,7 @@ class BaseRaft {
    * @param {Object} [handlers.apis] The API handlers
    * @abstract
    */
-  launch({ commands, interactions, apis, module }: { commands?: Collection<string, object>, apis?: any, interactions?: any, module?: string } = {}) {
+  launch({ commands, interactions, apis, module }: { commands?: any, apis?: any, interactions?: any, module?: string } = {}) {
     this.boat.log.verbose(module, `Lauching ${this.constructor.name}`);
     this.boat.log.berbose(module, `Registering APIs`);
     util.objForEach(

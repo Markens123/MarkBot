@@ -1,7 +1,9 @@
-const interactions: any = {};
+import buttonComponents from './buttonComponents/index.js';
+import commands from './commands/index.js';
+import subcommands from './subcommands/index.js';
 
-interactions.commands = (await import('./commands/index.js')).default;
-interactions.subcommands = (await import('./subcommands/index.js')).default;
-interactions.buttonComponents = (await import('./buttonComponents/index.js')).default;
-
-export default interactions;
+export default {
+  buttonComponents,
+  commands,
+  subcommands
+}

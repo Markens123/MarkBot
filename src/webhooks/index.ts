@@ -1,6 +1,7 @@
-const hooks: any = {};
+import test from './testhook.js';
+import tf from './testflight.js';
 
-hooks.test = (await import('./testhook.js')).default;
-hooks.tf = (await import('./testflight.js')).default;
-
-export default hooks;
+export default {
+  test,
+  tf
+}

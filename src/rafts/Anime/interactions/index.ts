@@ -1,8 +1,11 @@
-const interactions: any = {};
+import buttonComponents from './buttonComponents/index.js';
+import commands from './commands/index.js';
+import subcommands from './subcommands/index.js';
+import { messages as messageContextMenuComponents } from './contextMenuComponents/index.js';
 
-interactions.messageContextMenuComponents = (await import('./contextMenuComponents/index.js')).messages;
-interactions.buttonComponents = (await import('./buttonComponents/index.js')).default;
-interactions.commands = (await import('./commands/index.js')).default;
-interactions.subcommands = (await import('./subcommands/index.js')).default;
-
-export default interactions;
+export default {
+  buttonComponents,
+  commands,
+  subcommands,
+  messageContextMenuComponents
+}

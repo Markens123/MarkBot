@@ -1,9 +1,13 @@
-const commands: any = {};
+import aqueue from './aqueue.js';
+import link from './link.js';
+import mal from './mal.js';
+import sauce from './sauce.js';
+import unlink from './unlink.js';
 
-commands.link = (await import('./link.js')).default;
-commands.mal = (await import('./mal.js')).default;
-commands.sauce = (await import('./sauce.js')).default;
-commands.unlink = (await import('./unlink.js')).default;
-commands.aqueue = (await import('./aqueue.js')).default;
-
-export default commands;
+export default {
+  aqueue,
+  link,
+  mal,
+  sauce,
+  unlink
+}

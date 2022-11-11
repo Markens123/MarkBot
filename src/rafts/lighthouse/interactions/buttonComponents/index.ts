@@ -1,5 +1,5 @@
-const buttons: any = {};
+import GENERATE_NEW from './generate_new.js';
 
-buttons.GENERATE_NEW = (await import('./generate_new.js')).default;
-
-export default buttons;
+export default {
+  GENERATE_NEW
+}
