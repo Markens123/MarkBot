@@ -1,11 +1,10 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, MessageActionRowComponentBuilder, Snowflake } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
-const delay = s => new Promise(res => setTimeout(res, s*1000));
+const delay = s => new Promise(res => setTimeout(res, s * 1000));
 
 class TestButtonsInteraction extends BaseInteraction {
-
-  definition: (user: Snowflake) => ButtonBuilder;
+  definition: () => ActionRowBuilder<MessageActionRowComponentBuilder>[];
   name: string;
 
   constructor(raft) {
@@ -14,29 +13,45 @@ class TestButtonsInteraction extends BaseInteraction {
       enabled: true,
     };
     super(raft, info);
-    this.definition = this.generateDefinition.bind(this);
+    this.definition = this.generateDefinition;
   }
 
   async run(interaction: ButtonInteraction) {
-    const chars = interaction.customId.split(':').slice(1).join().split('');
+    const id = interaction.customId.split(':').slice(1);
+    const chars = id.join().split('');
     const ephemeral = chars[2] === 'e' ? true : false;
     const num = this.delays[chars[0]];
 
-    if (chars[1] === 'r') {
-      return interaction.reply({ content: `Replied ${ephemeral ? 'ephemeral' : ''}`, ephemeral })
-    } else if (chars[1] === 'd') {
-      await interaction.deferReply({ ephemeral });
-      await delay(num);
-      return interaction.editReply({ content: `Defer Reply ${ephemeral ? 'ephemeral' : ''}`})
-    } else if (chars[1] === 'd') {
-      await interaction.deferUpdate();
-      await delay(num);
-      return interaction.message.reply({ content: `Defer Update`}).catch(() => {});
-    } else if (chars[1] === 'e') {
-      await interaction.reply({ content: 'Waiting for edit',ephemeral });
-      await delay(num);
-      return interaction.editReply({ content: `Edit ${ephemeral ? 'ephemeral' : ''}`}).catch(() => {});
+
+    switch (id[0]) {
+      case 'modal':
+        const modal = this.boat.interactions.modals.get('TEST').definition();
+        return interaction.showModal(modal);
+      case 'noresp':
+        return interaction.deferUpdate();
+      case 'fail':
+        return;
     }
+
+    switch (chars[1]) {
+      case 'r':
+        return interaction.reply({ content: `Replied ${ephemeral ? 'ephemeral' : ''}`, ephemeral });
+      case 'd':
+        await interaction.deferReply({ ephemeral });
+        await delay(num);
+        return interaction.editReply({ content: `Defer Reply ${ephemeral ? 'ephemeral' : ''}` });
+      case 'u':
+        await interaction.deferUpdate();
+        await delay(num);
+        return interaction.message.reply({ content: `Defer Update` }).catch(() => { });
+      case 'e':
+        await interaction.reply({ content: 'Waiting for edit', ephemeral });
+        await delay(num);
+        return interaction.editReply({ content: `Edit ${ephemeral ? 'ephemeral' : ''}` }).catch(() => { });
+      default:
+        return interaction.reply({ content: 'Idk what to do', ephemeral: true });
+    }
+
   }
 
   generateDefinition(): ActionRowBuilder<MessageActionRowComponentBuilder>[] {
@@ -118,7 +133,33 @@ class TestButtonsInteraction extends BaseInteraction {
 
     const row3 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(zee, tee, gee);
 
-    return [row1, row2, row3];
+    const fu = new ButtonBuilder({
+      customId: `${customId}:fu`,
+      label: 'Update (5s)',
+      style: ButtonStyle.Success
+    });
+
+    const modal = new ButtonBuilder({
+      customId: `${customId}:modal`,
+      label: 'Modal',
+      style: ButtonStyle.Success
+    });
+
+    const noresp = new ButtonBuilder({
+      customId: `${customId}:noresp`,
+      label: 'No Response',
+      style: ButtonStyle.Success
+    });
+
+    const fail = new ButtonBuilder({
+      customId: `${customId}:fail`,
+      label: 'Fail',
+      style: ButtonStyle.Success
+    });
+
+    const row4 = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(fu, modal, fail, noresp);
+
+    return [row1, row2, row3, row4];
   }
 
   delays = {
