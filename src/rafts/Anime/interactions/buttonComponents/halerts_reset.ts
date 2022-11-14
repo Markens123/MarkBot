@@ -24,7 +24,9 @@ class HAlertsResetInteraction extends BaseInteraction {
 
     const resp = await InteractionYesNo({
       interaction,
-      content: 'Are you sure that you want to reset the halert config for this server?',
+      options: {
+        content: 'Are you sure that you want to reset the halert config for this server?'
+      },
       editReply: true
     });
 

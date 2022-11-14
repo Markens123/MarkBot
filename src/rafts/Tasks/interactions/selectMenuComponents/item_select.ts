@@ -60,7 +60,9 @@ class ItemSelectInteraction extends BaseInteraction {
 
       const resp = await InteractionYesNo({
         interaction,
-        content: `Are you sure that you want to delete the item \`${item.body}\`?`,
+        options: {
+          content: `Are you sure that you want to delete the item \`${item.body}\`?`
+        },
         editReply: false
       });
 
