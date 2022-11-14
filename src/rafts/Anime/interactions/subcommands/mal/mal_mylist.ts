@@ -4,7 +4,7 @@ import { InteractionPaginator } from '../../../../../util/Buttons.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { genEmbed } from '../../../util/index.js';
 
-class MyListInteraction extends BaseInteraction {
+class MALMyListInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'mylist',
@@ -72,4 +72,4 @@ class MyListInteraction extends BaseInteraction {
 }
 
 
-export default MyListInteraction;
+export default MALMyListInteraction;

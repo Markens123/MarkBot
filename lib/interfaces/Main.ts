@@ -4,6 +4,12 @@ import { DateTime } from 'luxon';
 import BaseLoop from '../../src/loops/BaseLoop';
 import BaseInteraction from '../../src/rafts/BaseInteraction';
 import { Express, Request, Response } from 'express';
+import Anime from '../../src/rafts/Anime/index.js';
+import CaptainsLog from '../../src/rafts/captainsLog/index.js';
+import Lighthouse from '../../src/rafts/lighthouse/index.js';
+import PortAuthority from '../../src/rafts/portAuthority/index.js';
+import Tasks from '../../src/rafts/Tasks/index.js';
+import { AnCommands, PaCommands, LhCommands, PaInteractions, AnInteractions, LhInteractions, TaInteractions } from './Rafts.js';
 
 export interface ClientI extends Client {
   cooldowns?: Collection<string, Collection<Snowflake, number>>;
@@ -78,10 +84,7 @@ export interface BoatI {
   owners: Snowflake[];
   prefix: string;
   events: any;
-  rafts: any;
-  commands: any;
   loops: Collection<string, BaseLoop>;
-  interactions: InteractionsI;
   token: string;
   debug: boolean;
   ending: boolean;
@@ -91,7 +94,27 @@ export interface BoatI {
   launchRaft: any;
   listen: any;
   app: Express;
+  rafts: {
+    Anime: Anime,
+    captiansLog: CaptainsLog,
+    lighthouse: Lighthouse,
+    portAuthority: PortAuthority,
+    Tasks: Tasks
+  },
+  commands: AnCommands & PaCommands & LhCommands,
+  interactions: {
+    commands: PaInteractions['commands'] & AnInteractions['commands'] & LhInteractions['commands'] & TaInteractions['commands'],
+    autocomplete: PaInteractions['autocomplete'],
+    buttonComponents: PaInteractions['buttonComponents'] & AnInteractions['buttonComponents'] & LhInteractions['buttonComponents'],
+    modals: TaInteractions['modals'] & PaInteractions['modals'],
+    messageContextMenuComponents: PaInteractions['messageContextMenuComponents'] & AnInteractions['messageContextMenuComponents'],
+    subcommands: LhInteractions['subcommands'] & PaInteractions['subcommands'] & AnInteractions['subcommands'] & TaInteractions['subcommands'],
+    selectMenuComponents: TaInteractions['selectMenuComponents'],
+    userContextMenuComponents: any
+  },
 }
+let test: BoatI;
+const t = test.interactions.subcommands.get('mal').get('link');
 
 type InteractionCollection = Collection<string, BaseInteraction>;
 

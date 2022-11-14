@@ -4,6 +4,8 @@ import { Task } from '../../../../../lib/interfaces/Main.js';
 import { ModalComponents, ModalFunctions, TaskMessage } from '../../../../util/Constants.js';
 
 class TaskEditModalInteraction extends BaseInteraction {
+  definition: (id: string) => ModalBuilder;
+   
   constructor(raft) {
     const info = {
       name: 'TASK_EDIT',

@@ -3,6 +3,7 @@ import commands from './commands/index.js';
 import interactions from './interactions/index.js';
 import BaseRaft from '../BaseRaft.js';
 import { fileURLToPath } from 'url';
+import { LhApis, LhCommands, LhInteractions } from '../../../lib/interfaces/Rafts.js';
 const module = fileURLToPath(import.meta.url);
 
 /**
@@ -10,6 +11,10 @@ const module = fileURLToPath(import.meta.url);
  * @extends {BaseRaft}
  */
 class Lighthouse extends BaseRaft {
+  commands: LhCommands;
+  apis: LhApis;
+  interactions: LhInteractions;
+  
   launch() {
     super.launch({ commands, apis, module, interactions });
   }

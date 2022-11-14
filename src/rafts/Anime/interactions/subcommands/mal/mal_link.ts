@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 
-class LinkInteraction extends BaseInteraction {
+class MALlinkInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'link',
@@ -29,4 +29,4 @@ class LinkInteraction extends BaseInteraction {
 }
 
 
-export default LinkInteraction;
+export default MALlinkInteraction;

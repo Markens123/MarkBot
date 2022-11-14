@@ -4,6 +4,8 @@ import { ModalFunctions, ModalComponents } from '../../../../util/Constants.js';
 import BaseInteraction from '../../../BaseInteraction.js';
 
 class TestModalInteraction extends BaseInteraction {
+  definition: () => ModalBuilder;
+  
   constructor(raft) {
     const info = {
       name: 'TEST',

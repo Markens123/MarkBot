@@ -43,7 +43,7 @@ class ThingsInteraction extends BaseInteraction {
         arr = Array.from(this.boat.interactions.messageContextMenuComponents.keys());
         break;
       case 'interaction.user':
-        arr = Array.from(this.boat.interactions.userContextMenuComponents.keys());
+        arr = Array.from(this.boat.interactions.userContextMenuComponents.keys()); 
         break;
       case 'interaction.button':
         arr = Array.from(this.boat.interactions.buttonComponents.keys());

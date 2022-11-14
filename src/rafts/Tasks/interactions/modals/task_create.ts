@@ -4,6 +4,8 @@ import { Task } from '../../../../../lib/interfaces/Main.js';
 import { ModalComponents, ModalFunctions, TaskMessage } from '../../../../util/Constants.js';
 
 class TaskCreateModalInteraction extends BaseInteraction {
+  definition: () => ModalBuilder;
+  
   constructor(raft) {
     const info = {
       name: 'TASK_CREATE',

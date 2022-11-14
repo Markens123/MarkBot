@@ -46,7 +46,7 @@ class ReloadCommandCommand extends BaseCommand {
         raft.commands.set(commandName, new command(raft));
       
       slashcmd ? this.boat.interactions.commands.set(commandName, raft.interactions.commands.get(commandName)) :
-        this.boat.commands.set(commandName, raft.commands.get(commandName));
+        this.boat.commands.set(commandName, raft.commands.get(commandName)); 
       
       message.channel.send(`You have succesfully reloaded the command ${commandName}`)
     } catch(error) {

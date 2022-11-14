@@ -4,7 +4,7 @@ import { InteractionPaginator } from '../../../../../util/Buttons.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
 import { genEmbed } from '../../../util/index.js';
 
-class SearchInteraction extends BaseInteraction {
+class MALSearchInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'search',
@@ -72,4 +72,4 @@ class SearchInteraction extends BaseInteraction {
 }
 
 
-export default SearchInteraction;
+export default MALSearchInteraction;
