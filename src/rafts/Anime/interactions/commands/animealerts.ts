@@ -37,7 +37,8 @@ function getDefinition() {
             .setName('channel')
             .setDescription('Channel that all alerts will go to')
             .addChannelTypes(ChannelType.GuildText, ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.GuildAnnouncement)
-        )
+            .setRequired(true)
+          )
     )
     .addSubcommand(subcommand =>
       subcommand
@@ -47,6 +48,7 @@ function getDefinition() {
           option
             .setName('name')
             .setDescription('Name of the anime')
+            .setRequired(true)
         )
     )
     .addSubcommand(subcommand =>
@@ -57,7 +59,8 @@ function getDefinition() {
           option
             .setName('name')
             .setDescription("Name of the anime to remove (use the same name that's in the config)")
-        )
+            .setRequired(true)
+          )
     )
 }
 
