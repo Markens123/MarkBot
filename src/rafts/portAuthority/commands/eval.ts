@@ -136,6 +136,7 @@ class EvalCommand extends BaseCommand {
         else msg = await message.channel.send({ embeds: [evaluated] })
         e = false;
         evaluated = msg;
+        nr = !nr
       } catch (err) {
         e = true;
         evaluated = err;
