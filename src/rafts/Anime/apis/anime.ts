@@ -33,7 +33,7 @@ class AnimeAPI {
     for (let i = 0; i < arr.length; i++) {
       const anime = await this.getRawVideoData(arr[i].title)
       if (anime) {
-        const simple = await this.toSimple(anime, arr[i].episode, arr[i].url);
+        const simple = this.toSimple(anime, arr[i].episode, arr[i].url);
     
         farr.push(simple);
       }
@@ -48,7 +48,7 @@ class AnimeAPI {
     return body;
   }
 
-  async toSimple(og: AnimeI, eps: number, url): Promise<SimpleAnime> {
+  toSimple(og: AnimeI, eps: number, url?: string): SimpleAnime {
     return {
       id: og.id.toString(),
       title: og.title,
