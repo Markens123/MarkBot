@@ -58,7 +58,8 @@ class AnimeAPI {
       eps,
       alt_titles: Object.values(og.alternative_titles)?.flat() ?? [],
       genres: og.genres?.map(x => x.name) ?? [],
-      type: og.media_type
+      type: og.media_type,
+      status: og.status
     };  
   }
 
@@ -66,7 +67,7 @@ class AnimeAPI {
     const searchParams = new URLSearchParams([
       ['q', title.substring(0, 30)], 
       ['limit', '10'], 
-      ['fields', 'id,title,main_picture,media_type,genres,alternative_titles'],
+      ['fields', 'id,title,main_picture,media_type,genres,alternative_titles,status'],
       ['nsfw', 'true'],
     ]);
     

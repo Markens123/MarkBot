@@ -234,6 +234,7 @@ export interface SimpleAnime {
   alt_titles: string[];
   genres: string[];
   type: AnimeMediaType;
+  status: AnimeStatus;
 }
 
 export interface AnimeI {
@@ -243,6 +244,13 @@ export interface AnimeI {
   media_type: AnimeMediaType;
   genres: AnimeGenres[];
   alternative_titles: AnimeAltTitles;
+  status: AnimeStatus; 
+}
+
+enum AnimeStatus {
+  currently_airing = 'currently_airing',
+  finished_airing = 'finished_airing',
+  not_yet_aired = 'not_yet_aired'
 }
 
 enum AnimeMediaType {
