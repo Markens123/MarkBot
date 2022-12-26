@@ -1,4 +1,4 @@
-import { ActionRowBuilder, MentionableSelectMenuBuilder, MentionableSelectMenuInteraction, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
 import { AnimeI } from '../../../../../lib/interfaces/Main.js';
 import { InteractionYesNo } from '../../../../util/Buttons.js';
 import { ComponentFunctions } from '../../../../util/Constants.js';
