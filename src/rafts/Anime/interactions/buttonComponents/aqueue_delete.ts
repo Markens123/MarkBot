@@ -36,7 +36,7 @@ class AQueueDeleteInteraction extends BaseInteraction {
   
     const index = parseInt(message.content);
 
-    if (index === NaN || !arr[index] || index < 0) {
+    if (Number.isNaN(index) || !arr[index] || index < 0) {
       message.delete()
       return interaction.editReply('Please provide a valid index!')
     }
