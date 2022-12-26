@@ -9,9 +9,9 @@ class ALoop extends BaseLoop {
   constructor(boat) {
     const options: LoopOptions = {
       name: 'animeloop',
-      active: false,
+      active: true,
       time: '0 */3 * * *',
-      dev: false
+      dev: true
     };
     super(boat, options);
   }
@@ -61,17 +61,14 @@ class ALoop extends BaseLoop {
 
       client.animealerts.forEach(async (g, i) => {
         if (i !== 'latest') {
-          const animeToPost = newAnime.filter(x => g.animes.some(i => x.alt_titles.map(y => y.toLowerCase()).includes(i.toLowerCase())));
-
+          const animeToPost = newAnime.filter(x => g.animes.some(i => x.id == i));
           if (animeToPost.length != 0) {
             const embeds = api.genEmbeds(animeToPost);
-
             const channel = await client.channels.fetch(g.channel) as TextChannel;
-
             let ids = [];
             
             for (const p in g.mentions)  {
-              const search = animeToPost.filter(x => x.alt_titles.map(y => y.toLowerCase()).includes(p.toLowerCase()))
+              const search = animeToPost.filter(x => x.id == p)
               if (search.length != 0) {
                 ids.push(...g.mentions[p])
               }

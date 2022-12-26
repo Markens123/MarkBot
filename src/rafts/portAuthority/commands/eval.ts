@@ -8,6 +8,7 @@ import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { loop } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';
 import { shorten } from '../../../util/Constants.js';
+import AnimeAPI from '../../Anime/apis/anime.js';
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,6 +86,7 @@ class EvalCommand extends BaseCommand {
       loop,
       shorten,
       delay,
+      animeapi: new AnimeAPI(),
       Discord,
       ...Discord,
     };

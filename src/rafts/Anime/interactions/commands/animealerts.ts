@@ -25,7 +25,7 @@ function getDefinition() {
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
     .addSubcommand(subcommand =>
       subcommand
-        .setName('conifg')
+        .setName('config')
         .setDescription('View the config for this server')
     )
     .addSubcommand(subcommand =>
@@ -55,12 +55,29 @@ function getDefinition() {
       subcommand
         .setName('remove')
         .setDescription('Remove anime from alerts')
-        .addStringOption(option =>
+        .addIntegerOption(option =>      
           option
-            .setName('name')
-            .setDescription("Name of the anime to remove (use the same name that's in the config)")
+            .setName('id')
+            .setDescription('MAL id of the anime')
             .setRequired(true)
-          )
+        )
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('edit')
+        .setDescription('Edit the mentions for an anime')
+        .addIntegerOption(option =>      
+          option
+            .setName('id')
+            .setDescription('MAL id of the anime')
+            .setRequired(true)
+        )
+        .addBooleanOption(option =>
+          option
+            .setName('remove')
+            .setDescription('Do you want to remove mentions for this anime?')
+            .setRequired(false)
+        )
     )
 }
 
