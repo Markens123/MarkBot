@@ -33,7 +33,7 @@ class AAlertsEditInteraction extends BaseInteraction {
         },
         editReply: true
       });
-  
+
       if (!resp) return interaction.editReply({ content: 'Operation canceled.', components: [] });
 
       client.animealerts.delete(interaction.guild.id, `mentions.${id}`)

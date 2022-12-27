@@ -37,7 +37,7 @@ class AAlertsConfigInteraction extends BaseInteraction {
       .addFields(info.map(x => {
         const mentions = x.mentions ? `mentions: ${x.mentions.join(' ')}` : '';
         return {
-          name: x.title, 
+          name: x.title,
           value: `id: \`${x.id}\`\n${mentions}`
         }
       }));

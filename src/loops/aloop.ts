@@ -18,25 +18,27 @@ class ALoop extends BaseLoop {
 
   async run() {
     const client = this.boat.client;
-    
+
     const oldLatest = client.animealerts.get('latest') as Enmap;
-    const api = new AnimeAPI()
+    const api = new AnimeAPI();
     const newLatest = await api.getLatest(15);
 
     if (!newLatest) {
       return this.boat.log.error('Animeloop', 'New anime not found')
     }
 
-    let diff: { id: string, eps: number }[] = [];
-    let oldArr: { id: string, eps: number }[] = [];
-    let newArr: { id: string, eps: number }[] = [];
+    type list = { id: string, eps: number }[];
 
-    oldArr = Object.keys(oldLatest).map((x) => ({id: oldLatest[x].id, eps: oldLatest[x].eps }));
-    newArr = newLatest.map(x => ({id: x.id, eps: x.eps }));
+    let diff: list = [];
+    let oldArr: list = [];
+    let newArr: list = [];
+
+    oldArr = Object.keys(oldLatest).map((x) => ({ id: oldLatest[x].id, eps: oldLatest[x].eps }));
+    newArr = newLatest.map(x => ({ id: x.id, eps: x.eps }));
 
     for (let i = 0; i < newArr.length; i++) {
 
-      const filtered = oldArr.filter(x => x.id === newArr[i].id); 
+      const filtered = oldArr.filter(x => x.id === newArr[i].id);
 
       if (filtered.length === 0) {
         diff.push(newArr[i])
@@ -46,15 +48,6 @@ class ALoop extends BaseLoop {
         }
       }
     }
-
-    /* client.halerts.forEach(async (g, i) => {
-      if (i !== 'latest') {
-        const channel = await client.channels.fetch(g.channel) as TextChannel;
-        channel.edit({
-          topic: `Last Check: <t:${Math.round(Date.now() / 1000)}:R>`
-        })
-      }
-    })    Will plan on doing something for this later too tired to do*/ 
 
     if (diff.length) {
       const newAnime = newLatest.map(x => diff.filter(y => y.id === x.id).length ? x : null).filter(x => x !== null);
@@ -66,8 +59,8 @@ class ALoop extends BaseLoop {
             const embeds = api.genEmbeds(animeToPost);
             const channel = await client.channels.fetch(g.channel) as TextChannel;
             let ids = [];
-            
-            for (const p in g.mentions)  {
+
+            for (const p in g.mentions) {
               const search = animeToPost.filter(x => x.id == p)
               if (search.length != 0) {
                 ids.push(...g.mentions[p])
@@ -75,7 +68,7 @@ class ALoop extends BaseLoop {
             }
 
             const mentions = ids.join(' ');
-            
+
             ChunkEmbeds(embeds, (c_embeds) => {
               channel.send({ content: mentions || null, embeds: c_embeds })
             })

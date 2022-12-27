@@ -11,11 +11,11 @@ class AAlertsSetupInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
-    const client = this.boat.client;    
+    const client = this.boat.client;
     const channel = await client.channels.fetch(interaction.options.getChannel('channel', true).id);
-    
+
     if (!interaction.guild.members.me.permissionsIn(channel.id).has('SendMessages')) {
-      return interaction.reply({ content: `I don't have permission to send messages in ${channel.toString()}`, ephemeral: true })
+      return interaction.reply({ content: `I don't have permission to send messages in ${channel.toString()}`, ephemeral: true });
     }
 
     client.animealerts.set(
@@ -27,7 +27,7 @@ class AAlertsSetupInteraction extends BaseInteraction {
       }
     )
 
-    return interaction.reply({ content: `Setup complete. Alerts channel has been set to ${channel.toString()}`, ephemeral: true})
+    return interaction.reply({ content: `Setup complete. Alerts channel has been set to ${channel.toString()}`, ephemeral: true });
   }
 }
 
