@@ -1,6 +1,6 @@
 import { TextChannel } from 'discord.js';
 import Enmap from 'enmap';
-import { LoopOptions } from '../../lib/interfaces/Main.js';
+import { LoopOptions, SimpleAnime } from '../../lib/interfaces/Main.js';
 import AnimeAPI from '../rafts/Anime/apis/anime.js';
 import { ChunkEmbeds } from '../util/Constants.js';
 import BaseLoop from './BaseLoop.js';
@@ -81,7 +81,10 @@ class ALoop extends BaseLoop {
         client.animealerts.set('latest', anime, anime.id.toString())
       })
 
-
+      const asArray = Object.entries(client.animealerts.get('latest'));
+      const filtered = asArray.filter(([key, value]: [string, SimpleAnime]) => value.status != 'finished_airing');
+      const final = Object.fromEntries(filtered);
+      client.animealerts.set('latest', final);
     }
 
     return;
