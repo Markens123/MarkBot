@@ -11,7 +11,7 @@ class ALoop extends BaseLoop {
       name: 'animeloop',
       active: true,
       time: '0 */3 * * *',
-      dev: true
+      dev: false
     };
     super(boat, options);
   }
