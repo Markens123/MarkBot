@@ -5,7 +5,6 @@ class AnimeAlertsInteraction extends BaseInteraction {
   constructor(raft) {
     const info = {
       name: 'animealerts',
-      guild: '816098833054302208',
       enabled: true,
       subcommands: true,
       definition: getDefinition(),
