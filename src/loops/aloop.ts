@@ -19,11 +19,6 @@ class ALoop extends BaseLoop {
   async run() {
     const client = this.boat.client;
 
-    const asArray = Object.entries(client.animealerts.get('latest'));
-    const filtered = asArray.filter(([_, value]: [string, SimpleAnime]) => value.status != 'finished_airing');
-    const final = Object.fromEntries(filtered);
-    client.animealerts.set('latest', final);
-
     const oldLatest = client.animealerts.get('latest') as Enmap;
     const api = new AnimeAPI();
     const newLatest = await api.getLatest(15);
@@ -59,8 +54,10 @@ class ALoop extends BaseLoop {
 
       client.animealerts.forEach(async (g, i) => {
         if (i !== 'latest') {
+
           const animeToPost = newAnime.filter(x => g.animes.some(i => x.id == i));
           if (animeToPost.length != 0) {
+
             const embeds = api.genEmbeds(animeToPost);
             const channel = await client.channels.fetch(g.channel) as TextChannel;
             let ids = [];
@@ -74,9 +71,25 @@ class ALoop extends BaseLoop {
 
             const mentions = ids.join(' ');
 
-            ChunkEmbeds(embeds, (c_embeds) => {
-              channel.send({ content: mentions || null, embeds: c_embeds })
+            ChunkEmbeds(embeds, async (c_embeds) => {
+              await channel.send({ content: mentions || null, embeds: c_embeds })
             })
+
+            const ids_rmv = animeToPost.map(x => x.status == 'finished_airing' ? x.id : null).filter(x => x !== null);
+
+            const ids_cur = client.animealerts.get(i).animes.filter(x => !ids_rmv.includes(x));
+            client.animealerts.set(i, ids_cur, 'animes');
+
+            const men_cur = client.animealerts.get(i).mentions;
+
+            const filtered = Object.keys(men_cur)
+              .filter(key => !ids_rmv.includes(key))
+              .reduce((obj, key) => {
+                obj[key] = men_cur[key];
+                return obj;
+              }, {});
+
+            client.animealerts.set(i, filtered, 'mentions');
 
           }
         }
@@ -86,6 +99,11 @@ class ALoop extends BaseLoop {
         client.animealerts.set('latest', anime, anime.id.toString())
       })
     }
+
+    const asArray = Object.entries(client.animealerts.get('latest'));
+    const filtered = asArray.filter(([_, value]: [string, SimpleAnime]) => value.status != 'finished_airing');
+    const final = Object.fromEntries(filtered);
+    client.animealerts.set('latest', final);
 
     return;
   }
