@@ -34,7 +34,7 @@ class ItemSelectInteraction extends BaseInteraction {
       if (Object.values(task.items).length !== 0) {
         await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
       } else {
-        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: null });
+        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: [] });
       }
       
       let newitem: Item = {
@@ -55,12 +55,14 @@ class ItemSelectInteraction extends BaseInteraction {
       if (Object.values(task.items).length !== 0) {
         await interaction.update({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
       } else {
-        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: null });
+        return await interaction.update({ content: 'No items present. Add some with the menu above!', components: [] });
       }
 
       const resp = await InteractionYesNo({
         interaction,
-        content: `Are you sure that you want to delete the item \`${item.body}\`?`,
+        options: {
+          content: `Are you sure that you want to delete the item \`${item.body}\`?`
+        },
         editReply: false
       });
 
@@ -90,7 +92,7 @@ class ItemSelectInteraction extends BaseInteraction {
       if (Object.values(task.items).length !== 0) {
         await interaction.editReply({ components: [this.generateDefinition(id, Object.values(task.items), next)] });
       } else {
-       await interaction.editReply({ content: 'No items present. Add some with the menu above!', components: null });
+       await interaction.editReply({ content: 'No items present. Add some with the menu above!', components: [] });
       }
       return      
     }

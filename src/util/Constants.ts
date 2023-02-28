@@ -126,6 +126,8 @@ export const ComponentFunctions = createEnum([
   'ITEM_SELECT',
   'GENERATE_NEW',
   'TEST_BUTTONS',
+  'ANIMEALERTS_MENTIONS',
+  'ANIMEALERTS_SELECT',
 ]);
 
 export const ModalFunctions = createEnum([

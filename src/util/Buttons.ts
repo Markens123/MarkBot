@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, ComponentType, Message, MessageActionRowComponentBuilder, StringSelectMenuInteraction, Snowflake, SnowflakeUtil } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, ComponentType, Message, MessageActionRowComponentBuilder, StringSelectMenuInteraction, Snowflake, SnowflakeUtil, InteractionReplyOptions } from 'discord.js';
 import { InteractionPaginatorOptions, PaginatorOptions } from '../../lib/interfaces/Main.js';
 
 export const Paginator = async ({
@@ -156,7 +156,7 @@ export const InteractionPaginator = async ({
   });
 }
 
-export const YesNo = async ({ message, content, user_id = message.author.id }:
+export const YesNo = async ({ message, content, user_id = message.author.id, }:
   {
     message: Message,
     content: string,
@@ -192,10 +192,10 @@ export const YesNo = async ({ message, content, user_id = message.author.id }:
   }
 }
 
-export const InteractionYesNo = async ({ interaction, content, editReply = false, user_id = interaction.user.id }:
+export const InteractionYesNo = async ({ interaction, options, editReply = false, user_id = interaction.user.id }:
   {
     interaction: ChatInputCommandInteraction | ButtonInteraction | StringSelectMenuInteraction,
-    content: string,
+    options: InteractionReplyOptions,
     editReply?: boolean,
     user_id?: string | Snowflake
   }): Promise<boolean> => {
@@ -204,21 +204,21 @@ export const InteractionYesNo = async ({ interaction, content, editReply = false
   const no = new ButtonBuilder().setStyle(ButtonStyle.Danger).setCustomId(`collector:no:${code}`).setLabel('No');
   const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(yes, no);
   let msg: Message;
-  content = content.replace('{user}', `<@${user_id}>`);
+  options.content = options.content.replace('{user}', `<@${user_id}>`);
 
 
-  if (editReply) msg = await interaction.editReply({ content, components: [row], allowedMentions: { parse: ['users', 'roles', 'everyone'] } });
-  else msg = await interaction.channel.send({ content, components: [row] })
+  if (editReply) msg = await interaction.editReply({ ...options, components: [row], allowedMentions: { parse: ['users', 'roles', 'everyone'] } });
+  else msg = await interaction.channel.send({ content: options.content, components: [row] })
 
   const filter = (intt) => intt.user.id === user_id && intt.customId.split(':')[2] == code.toString();
 
-  const options = {
+  const c_options = {
     filter,
     idle: 15000
   }
 
   try {
-    const int = await interaction.channel.awaitMessageComponent<ComponentType.Button>(options);
+    const int = await interaction.channel.awaitMessageComponent<ComponentType.Button>(c_options);
 
     if (!(int instanceof Error)) {
       if (!int.replied) int.deferUpdate()

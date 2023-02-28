@@ -148,9 +148,9 @@ function parseArgs(thing, w) {
   let num: number;
   if (w === 'int' ||  w === 'integer') num = parseInt(thing);
   else if (w === 'float') num = parseFloat(thing);
-  else if (num === NaN) return null
+  else if (Number.isNaN(num)) return null
   
-  return num ?? thing; 
+  return num ?? thing;
 }
 
 function removeFlags(msg: string[], args: ArgI[]) {

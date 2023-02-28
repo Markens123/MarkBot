@@ -1,4 +1,4 @@
-import Discord, { ActionRowBuilder, AttachmentBuilder, EmbedBuilder } from 'discord.js';
+import Discord, { ActionRowBuilder, AttachmentBuilder, EmbedBuilder, REST } from 'discord.js';
 import * as fs from 'fs';
 import glob from 'glob';
 import path, { basename } from 'path';
@@ -8,6 +8,7 @@ import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import { loop } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';
 import { shorten } from '../../../util/Constants.js';
+import AnimeAPI from '../../Anime/apis/anime.js';
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,6 +61,7 @@ class EvalCommand extends BaseCommand {
 
   async run(message: Discord.Message, { depth, nf, nr, canary, msg }, ogargs) {
     const client = this.boat.client;
+    const rest = new REST({ version: '10' }).setToken(client.token);
     if (canary) client.options.rest.api = 'https://canary.discord.com/api';
 
     depth = parseInt(depth);
@@ -85,7 +87,9 @@ class EvalCommand extends BaseCommand {
       loop,
       shorten,
       delay,
+      animeapi: new AnimeAPI(),
       Discord,
+      rest,
       ...Discord,
     };
   

@@ -66,11 +66,13 @@ class TaskOptionsInteraction extends BaseInteraction {
     }    
 
     if (selected === TaskOptions.closeTask) {
-      await interaction.reply({ content: '‎', ephemeral: true }); 
+      await interaction.deferReply({ ephemeral: true });
       if (Object.values(task.items).filter((x: Item) => x.completed).length !== Object.values(task.items).length) {
         const resp = await InteractionYesNo({ 
           interaction, 
-          content: 'Are you sure that you want to close this task? (Some items are not completed)', 
+          options: {
+            content: 'Are you sure that you want to close this task? (Some items are not completed)'
+          }, 
           editReply: true 
         })
         if (!resp) return interaction.editReply({ content: 'Close canceled!', components: [] })

@@ -8,7 +8,7 @@ databases.reminders = new Enmap('RData');
 databases.halerts = new Enmap('HAData')
 databases.animealerts = new Enmap('AnimeAData');
 databases.tasksdata = new Enmap('TasksData');
-databases.dalerts = new Enmap('DiscordAData')
+databases.dalerts = new Enmap('DiscordAData');
 databases.cooldowns = new Collection();
 
 

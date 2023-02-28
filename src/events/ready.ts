@@ -10,7 +10,7 @@ export default (boat: BoatI) => {
   boat.log(module, 'Connected to discord!');
   client.channels.fetch('807033695483461632');
 
-  client.reminders.clear()
+  client.reminders.clear();
 
   Object.defineProperty(Array.prototype, 'chunkc', {
     value: function (chunkSize) {
