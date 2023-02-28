@@ -23,9 +23,10 @@ class AAlertsRemoveInteraction extends BaseInteraction {
 
     if (!anime) return interaction.editReply({ content: 'That anime does not exist!' });
 
+    if (!client.animealerts.has(interaction.guild.id)) return interaction.editReply({ content: 'Anime alerts have not been setup in this server!' });
+    
     if (!client.animealerts.get(interaction.guild.id, 'animes').includes(id)) return interaction.editReply({ content: "That anime isn't added to this server!" })
 
-    if (!client.animealerts.has(interaction.guild.id)) return interaction.editReply({ content: 'Anime alerts have not been setup in this server!' });
 
     const resp = await InteractionYesNo({
       interaction,
