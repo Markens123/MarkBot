@@ -19,6 +19,11 @@ class ALoop extends BaseLoop {
   async run() {
     const client = this.boat.client;
 
+    const asArray = Object.entries(client.animealerts.get('latest'));
+    const filtered = asArray.filter(([_, value]: [string, SimpleAnime]) => value.status != 'finished_airing');
+    const final = Object.fromEntries(filtered);
+    client.animealerts.set('latest', final);
+
     const oldLatest = client.animealerts.get('latest') as Enmap;
     const api = new AnimeAPI();
     const newLatest = await api.getLatest(15);
@@ -80,15 +85,9 @@ class ALoop extends BaseLoop {
       newLatest.forEach(anime => {
         client.animealerts.set('latest', anime, anime.id.toString())
       })
-
-      const asArray = Object.entries(client.animealerts.get('latest'));
-      const filtered = asArray.filter(([key, value]: [string, SimpleAnime]) => value.status != 'finished_airing');
-      const final = Object.fromEntries(filtered);
-      client.animealerts.set('latest', final);
     }
 
     return;
-
   }
 }
 
