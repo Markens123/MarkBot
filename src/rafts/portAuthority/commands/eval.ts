@@ -1,4 +1,4 @@
-import Discord, { ActionRowBuilder, AttachmentBuilder, EmbedBuilder } from 'discord.js';
+import Discord, { ActionRowBuilder, AttachmentBuilder, EmbedBuilder, REST } from 'discord.js';
 import * as fs from 'fs';
 import glob from 'glob';
 import path, { basename } from 'path';
@@ -61,6 +61,7 @@ class EvalCommand extends BaseCommand {
 
   async run(message: Discord.Message, { depth, nf, nr, canary, msg }, ogargs) {
     const client = this.boat.client;
+    const rest = new REST({ version: '10' }).setToken(client.token);
     if (canary) client.options.rest.api = 'https://canary.discord.com/api';
 
     depth = parseInt(depth);
@@ -88,6 +89,7 @@ class EvalCommand extends BaseCommand {
       delay,
       animeapi: new AnimeAPI(),
       Discord,
+      rest,
       ...Discord,
     };
   
