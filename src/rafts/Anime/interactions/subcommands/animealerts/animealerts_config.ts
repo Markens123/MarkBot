@@ -17,7 +17,9 @@ class AAlertsConfigInteraction extends BaseInteraction {
     const api = new AnimeAPI();
 
     await interaction.deferReply();
-
+    
+    if (!client.animealerts.has(interaction.guild.id)) return interaction.editReply({ content: 'Anime alerts have not been setup in this server!' });
+    
     const ids: string[] = alerts.animes;
     let info: { id: string, title: string, mentions: string[] }[] = [];
 
