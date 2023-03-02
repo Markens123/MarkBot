@@ -14,8 +14,7 @@ export default async (boat: BoatI, message: Message) => {
   if (message.partial) {
     try {
       message.fetch()
-    } catch(error)
-    {
+    } catch (error) {
       boat.log.error('events/messageCreate', error)
     }
   }
@@ -52,7 +51,7 @@ export default async (boat: BoatI, message: Message) => {
   if (handler.permissions) {
     const authorPerms = message.member.permissions;
     if (!authorPerms || !authorPerms.has(handler.permissions)) {
-        return message.reply("You don't have the required permissions for this command!");
+      return message.reply("You don't have the required permissions for this command!");
     }
   }
 
@@ -63,7 +62,7 @@ export default async (boat: BoatI, message: Message) => {
   if (handler.guild) {
     if (typeof handler.guild === 'string') {
       if (message.guild.id !== handler.guild) return;
-    }  
+    }
     else if (!handler.guild.includes(message.guild.id)) return;
   }
 
@@ -105,10 +104,7 @@ export default async (boat: BoatI, message: Message) => {
 
         if (f1.test(args) || f2.test(args)) {
           let index = args.search(f1) > -1 ? args.search(f1) : args.search(f2);
-          if (handler.args[i].name === 'imports') {
-          }
-          newargs[handler.args[i].name] = handler.args[i].index === 0 ? true : args.splice(index+1, handler.args[i].index+1).join(' ');
-
+          newargs[handler.args[i].name] = handler.args[i].index === 0 ? true : args.splice(index + 1, handler.args[i].index + 1).join(' ');
         } else {
           newargs[handler.args[i].name] = handler.args[i].default ?? undefined;
         }
@@ -119,11 +115,11 @@ export default async (boat: BoatI, message: Message) => {
         newargs[handler.args[i].name] = removeFlags(ogargs, handler.args);
       } else {
         if (handler.args[i].index) {
-          newargs[handler.args[i].name] = args.slice(count, handler.args[i].index+1).join(' ')
+          newargs[handler.args[i].name] = args.slice(count, handler.args[i].index + 1).join(' ')
         } else newargs[handler.args[i].name] = parseArgs(args[count] ?? handler.args[i].default, handler.args[i].type);
-      
+
         if (!newargs[handler.args[i].name] && handler.args[i].required) return message.channel.send(handler.args[i].error ?? `The argument ${handler.args[i].name} is required!`);
-        if (newargs[handler.args[i].name] && handler.args[i].validation && !handler.args[i].validation({arg: newargs[handler.args[i].name], message, boat: handler.boat})) return message.channel.send(handler.args[i].error ?? `The argument ${handler.args[i].name} has failed validation.`)
+        if (newargs[handler.args[i].name] && handler.args[i].validation && !handler.args[i].validation({ arg: newargs[handler.args[i].name], message, boat: handler.boat })) return message.channel.send(handler.args[i].error ?? `The argument ${handler.args[i].name} has failed validation.`)
         count++
       }
     }
@@ -148,10 +144,10 @@ function handleRaft(rafts, message) {
 
 function parseArgs(thing, w) {
   let num: number;
-  if (w === 'int' ||  w === 'integer') num = parseInt(thing);
+  if (w === 'int' || w === 'integer') num = parseInt(thing);
   else if (w === 'float') num = parseFloat(thing);
   else if (Number.isNaN(num)) return null
-  
+
   return num ?? thing;
 }
 
