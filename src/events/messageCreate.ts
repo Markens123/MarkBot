@@ -105,8 +105,10 @@ export default async (boat: BoatI, message: Message) => {
 
         if (f1.test(args) || f2.test(args)) {
           let index = args.search(f1) > -1 ? args.search(f1) : args.search(f2);
-          newargs[handler.args[i].name] = handler.args[i].index === 0 ? true : args[index + handler.args[i].index];
-          args.splice(index, handler.args[i].index+1);
+          if (handler.args[i].name === 'imports') {
+          }
+          newargs[handler.args[i].name] = handler.args[i].index === 0 ? true : args.splice(index+1, handler.args[i].index+1).join(' ');
+
         } else {
           newargs[handler.args[i].name] = handler.args[i].default ?? undefined;
         }
