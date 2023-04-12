@@ -23,7 +23,8 @@ const botconfig: BoatOptions = {
   tokens: {
     nasa: process.env.NASA_API_KEY,
     ocr: process.env.OCR_API_KEY,
-    testflight: process.env.TF_WEBHOOK
+    testflight: process.env.TF_WEBHOOK,
+    pushup: '1080280525706637332'
   },
 };
 

@@ -179,6 +179,8 @@ class Boat implements BoatI {
     this.client.halerts.ensure('latest', []);
     this.client.animealerts.ensure('latest', {});
     this.client.dalerts.ensure('latest', {});
+    this.client.pushups.ensure('due', 0);
+    this.client.pushups.ensure('done', 0);
 
     // Start express
     this.log.debug(module, 'Starting express server');
