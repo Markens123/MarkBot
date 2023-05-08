@@ -62,10 +62,16 @@ class BaseLoop {
    * Starts the loop
    * @abstract
    */
-  start(): void {
-    if (!this.dev && this.boat.options.dev) return;
+  start(bypass?: boolean): void {
+    if (!this.dev && this.boat.options.dev && !bypass) {
+      this.active = false;
+      return;
+    };
 
-    if (this.dev === 'only' && this.boat.options.dev == false) return;
+    if (this.dev === 'only' && this.boat.options.dev == false && !bypass) {
+      this.active = false;
+      return;
+    };
 
     if (typeof this.time === 'number') {
       this.time = `*/${this.time} * * * * *`
@@ -99,7 +105,7 @@ class BaseLoop {
    * @abstract
    */
   stop(): void {
-    this.job.stop();
+    this.job?.stop();
     this.active = false;
     this.iterations = 0;
   }

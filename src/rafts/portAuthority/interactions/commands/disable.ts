@@ -1,5 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
+import BaseLoop from '../../../../loops/BaseLoop.js';
+import BaseCommand from '../../../BaseCommand.js';
 
 class DisableInteraction extends BaseInteraction {
   constructor(raft) {
@@ -23,59 +25,66 @@ class DisableInteraction extends BaseInteraction {
     const blocklist = ['enable', 'disable', 'reload']
 
     if (blocklist.includes(thing)) return interaction.reply({ content: `You cannot disable ${thing}!`, ephemeral: true })
-  
-    let t: any;
+
+    let t: BaseLoop | BaseInteraction | BaseCommand;
     let tn: string;
     let reply: string;
 
-    switch(type) {
+    switch (type) {
       case 'command':
-        t = this.boat.commands.get(thing);
+        t = this.boat.commands.get(thing) as BaseCommand;
         tn = t.name;
         !t.enabled ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the command ${tn}`;
         t.enabled = false;
         break;
 
       case 'interaction.command':
-        t = this.boat.interactions.commands.get(thing)
+        t = this.boat.interactions.commands.get(thing) as BaseInteraction;
         tn = t.name;
         !t.enabled ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the slash command ${tn}`;
         t.enabled = false;
         break;
 
       case 'interaction.autocomplete':
-        t = this.boat.interactions.autocomplete.get(thing);
+        t = this.boat.interactions.autocomplete.get(thing) as BaseInteraction;
         tn = t.name;
         !t.enabled ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the autocomplete interaction ${tn}`;
         t.enabled = false;
         break;
 
       case 'interaction.message':
-        t = this.boat.interactions.messageContextMenuComponents.get(thing);
+        t = this.boat.interactions.messageContextMenuComponents.get(thing) as BaseInteraction;
         tn = t.name;
         !t.enabled ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the message interaction ${tn}`;
         t.enabled = false;
         break;
 
       case 'interaction.user':
-        t = this.boat.interactions.userContextMenuComponents.get(thing);
+        t = this.boat.interactions.userContextMenuComponents.get(thing) as BaseInteraction;
         tn = t.name;
         !t.enabled ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the user interaction ${tn}`;
         t.enabled = false;
         break;
 
       case 'interaction.button':
-        t = this.boat.interactions.buttonComponents.get(thing);
+        t = this.boat.interactions.buttonComponents.get(thing) as BaseInteraction;
         tn = t.name;
         !t.enabled ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the button interaction ${tn}`;
         t.enabled = false;
         break;
 
       case 'interaction.select':
-        t = this.boat.interactions.selectMenuComponents.get(thing);
+        t = this.boat.interactions.selectMenuComponents.get(thing) as BaseInteraction;
         tn = t.name;
         !t.enabled ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the select interaction ${tn}`;
         t.enabled = false;
+        break;
+
+      case 'loop':
+        t = this.boat.loops.get(thing) as BaseLoop;
+        tn = t.name;
+        !t.active ? reply = `${tn} is already disabled!` : reply = `You have succesfully disabled the loop ${tn}`;
+        t.stop();
         break;
 
       default:
@@ -87,34 +96,34 @@ class DisableInteraction extends BaseInteraction {
 
 function getDefinition() {
   const choices = [];
-  const types = ['Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select',]
-  
+  const types = ['Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select', 'Loop',]
+
   for (let i = 0; i < types.length; i++) {
     choices.push({
       name: types[i],
       value: types[i].toLowerCase()
-    })  
+    })
   }
-  
+
 
   return new SlashCommandBuilder()
-  .setName('disable')
-  .setDescription('Disables certian bot things')
-  .addStringOption(option =>
-    option
-      .setName('type')
-      .setDescription('The type of thing to disable')
-      .addChoices(...choices)
-      .setRequired(true)
-  )
-  .addStringOption(option =>
-    option
-      .setName('thing')
-      .setDescription('The thing to disable')
-      .setAutocomplete(true)
-      .setRequired(true)
-  )
-  .toJSON();
+    .setName('disable')
+    .setDescription('Disables certian bot things')
+    .addStringOption(option =>
+      option
+        .setName('type')
+        .setDescription('The type of thing to disable')
+        .addChoices(...choices)
+        .setRequired(true)
+    )
+    .addStringOption(option =>
+      option
+        .setName('thing')
+        .setDescription('The thing to disable')
+        .setAutocomplete(true)
+        .setRequired(true)
+    )
+    .toJSON();
 }
 
 export default DisableInteraction;

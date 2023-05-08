@@ -1,5 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import BaseInteraction from '../../../BaseInteraction.js';
+import BaseCommand from '../../../BaseCommand.js';
+import BaseLoop from '../../../../loops/BaseLoop.js';
 
 class EnableInteraction extends BaseInteraction {
   constructor(raft) {
@@ -21,59 +23,66 @@ class EnableInteraction extends BaseInteraction {
     const type = interaction.options.get('type').value.toString().toLowerCase();
     const thing = interaction.options.get('thing').value.toString();
   
-    let t: any;
+    let t: BaseCommand | BaseInteraction | BaseLoop;
     let tn: string;
     let reply: string;
 
     switch(type) {
       case 'command':
-        t = this.boat.commands.get(thing);
+        t = this.boat.commands.get(thing) as BaseCommand;
         tn = t.name;
         t.enabled ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the command ${tn}`;
         t.enabled = true;
         break;
 
       case 'interaction.command':
-        t = this.boat.interactions.commands.get(thing)
+        t = this.boat.interactions.commands.get(thing) as BaseInteraction;
         tn = t.name;
         t.enabled ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the slash command ${tn}`;
         t.enabled = true;
         break;
 
       case 'interaction.autocomplete':
-        t = this.boat.interactions.autocomplete.get(thing);
+        t = this.boat.interactions.autocomplete.get(thing) as BaseInteraction;
         tn = t.name;
         t.enabled ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the autocomplete interaction ${tn}`;
         t.enabled = true;
         break;
 
       case 'interaction.message':
-        t = this.boat.interactions.messageContextMenuComponents.get(thing);
+        t = this.boat.interactions.messageContextMenuComponents.get(thing) as BaseInteraction;
         tn = t.name;
         t.enabled ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the message interaction ${tn}`;
         t.enabled = true;
         break;
 
       case 'interaction.user':
-        t = this.boat.interactions.userContextMenuComponents.get(thing);
+        t = this.boat.interactions.userContextMenuComponents.get(thing) as BaseInteraction;
         tn = t.name;
         t.enabled ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the user interaction ${tn}`;
         t.enabled = true;
         break;
 
       case 'interaction.button':
-        t = this.boat.interactions.buttonComponents.get(thing);
+        t = this.boat.interactions.buttonComponents.get(thing) as BaseInteraction;
         tn = t.name;
         t.enabled ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the button interaction ${tn}`;
         t.enabled = true;
         break;
 
       case 'interaction.select':
-        t = this.boat.interactions.selectMenuComponents.get(thing);
+        t = this.boat.interactions.selectMenuComponents.get(thing) as BaseInteraction;
         tn = t.name;
         t.enabled ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the select interaction ${tn}`;
         t.enabled = true;
         break;
+
+        case 'loop':
+          t = this.boat.loops.get(thing) as BaseLoop;
+          tn = t.name;
+          t.active ? reply = `${tn} is already enabled!` : reply = `You have succesfully enabled the loop ${tn}`;
+          t.start(true);
+          break;        
 
       default:
         return interaction.reply({ content: 'Invalid type!', ephemeral: true })
@@ -84,7 +93,7 @@ class EnableInteraction extends BaseInteraction {
 
 function getDefinition() {
   const choices = [];
-  const types = ['Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select',]
+  const types = ['Command', 'Interaction.Command', 'Interaction.Autocomplete', 'Interaction.Message', 'Interaction.User', 'Interaction.Button', 'Interaction.Select', 'Loop',]
   
   for (let i = 0; i < types.length; i++) {
     choices.push({
