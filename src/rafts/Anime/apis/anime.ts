@@ -24,12 +24,15 @@ class AnimeAPI {
     const list = $('#wrapper_bg > section > div > div.page_content > ul').children();
 
     list.each((i, e) => {
-      const title = $(e).find(`li:nth-child(${i + 1}) > div.name > a`).attr('title');
-      arr.push({
-        title,
-        episode: parseEps($(e).find(`li:nth-child(${i + 1}) > p`).text().trim()),
-        url: `https://animension.to/search?search_text=${encodeURI(title)}`
-      })
+      let ii = i + 1;
+      const title = $(e).find(`li:nth-child(${ii}) > div.name > a`).attr('title') || $(e).find(`li:nth-child(${ii}) > div.name > a > h4`).text();
+      if (title) {
+        arr.push({
+          title,
+          episode: parseEps($(e).find(`li:nth-child(${ii}) > p`).text().trim()),
+          url: `https://animension.to/search?search_text=${encodeURI(title)}`
+        })
+      }
     });
 
     for (let i = 0; i < arr.length; i++) {

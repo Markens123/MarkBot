@@ -51,6 +51,9 @@ class ThingsInteraction extends BaseInteraction {
       case 'interaction.select':
         arr = Array.from(this.boat.interactions.selectMenuComponents.keys());
         break;
+      case 'loop':
+        arr = Array.from(this.boat.loops.keys());
+        break;
     }
 
     if (!cv) {
