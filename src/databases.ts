@@ -9,7 +9,6 @@ databases.halerts = new Enmap('HAData')
 databases.animealerts = new Enmap('AnimeAData');
 databases.tasksdata = new Enmap('TasksData');
 databases.dalerts = new Enmap('DiscordAData');
-databases.pushups = new Enmap('PushUpData'); 
 databases.cooldowns = new Collection();
 
 

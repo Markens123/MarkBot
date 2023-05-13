@@ -14,17 +14,6 @@ export interface ClientI extends Client {
   dalerts?: Enmap;
   tasksdata?: TaskDB;
   loops?: Collection<string, LoopI>;
-  pushups?: PushUpDB;
-}
-
-interface PushUpDB extends Enmap<'message' | 'due' | 'done', string | number> {
-  get(key: 'message'): Snowflake | null;
-  get(key: 'due' ): number;
-  get(key: 'done'): number;
-
-  set(key: 'message', _: Snowflake | null);
-  set(key: 'due', _: number);
-  set(key: 'done', _: number); 
 }
 
 export interface RequestI extends Request {
