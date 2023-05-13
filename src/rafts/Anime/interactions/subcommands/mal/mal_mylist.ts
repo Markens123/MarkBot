@@ -25,12 +25,12 @@ class MyListInteraction extends BaseInteraction {
       return interaction.reply({ content: 'Error: You did not link your MAL account yet!', ephemeral: true });
     }
 
-    await interaction.deferReply()
-
     // Token refresh
     if (Date.now() >= client.maldata.get(interaction.user.id, 'EXPD')) {
       await this.refreshtoken(interaction, client.maldata.get(interaction.user.id, 'RToken'));
     }
+
+    await interaction.deferReply()
 
     //@ts-expect-error this is expected bc of nsfw
     let data = await this.raft.apis.list.getList(client.maldata.get(interaction.user.id, 'AToken'), sort, status, interaction.channel.nsfw)
