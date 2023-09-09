@@ -1,6 +1,6 @@
 // Import dependencies
 import { REST } from '@discordjs/rest';
-import { Client, Collection, Routes, Snowflake } from 'discord.js';
+import { ApplicationCommandType, Client, Collection, ContextMenuCommandBuilder, RESTPostAPIContextMenuApplicationCommandsJSONBody, Routes, Snowflake } from 'discord.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { BoatI, BoatOptions, ClientI, InteractionsI, RequestI } from '../lib/interfaces/Main.js';
@@ -258,12 +258,16 @@ class Boat implements BoatI {
    */
   async registerInteraction(type, name: string | string[]) {
     let interaction;
+    let boat = this;
+    let client = this.client;
     const rest = new REST({ version: '10' }).setToken(this.client.token);
     let promises = [];
+    let names = [];
     let results;
+    let def: RESTPostAPIContextMenuApplicationCommandsJSONBody;
+
     switch (type) {
-      case 2:
-        let names = [];
+      case 1:
         if (name === 'all') names = Array.from(this.interactions.commands.keys())
         else if (Array.isArray(name)) names = name
         else names.push(name)
@@ -294,6 +298,70 @@ class Boat implements BoatI {
             Routes.applicationCommands(this.client.user.id),
             { body: interaction.definition }
           ).catch(err => this.log.warn(module, `Error encountered while registering commmand: ${err.stack ?? err}`));
+        }
+      case 2:
+        for (let i = 0; i < names.length; i++) {
+          interaction = boat.interactions.userContextMenuComponents.get(names[i]);
+          if (!interaction) return `No such interaction (${names[i]})`;
+
+          def = new ContextMenuCommandBuilder().setName(interaction.name).setType(ApplicationCommandType.User).toJSON();
+
+          if (Array.isArray(interaction.guild)) {
+            interaction.guild.forEach(guild => {
+              promises.push(
+                rest.post(
+                  Routes.applicationGuildCommands(client.user.id, guild),
+                  { body: def },
+                )
+              )
+            });
+            results = await Promise.all(promises).catch(err => boat.log.warn(module, `Error encountered while registering context menu command (user): ${err.stack ?? err}`));
+            return results.map(result => ({ guild: result.guild_id, id: result.id, name: result.name }));
+          }
+          if (interaction.guild) {
+            return rest.post(
+              Routes.applicationGuildCommands(client.user.id, interaction.guild),
+              { body: def },
+            ).catch(err => boat.log.warn(module, `Error encountered while registering context menu command (user): ${err.stack ?? err}`));
+          }
+          return rest.post(
+            Routes.applicationCommands(client.user.id),
+            { body: def }
+          ).catch(err => boat.log.warn(module, `Error encountered while registering context menu command (user): ${err.stack ?? err}`));
+        }
+      case 3:
+        if (name === 'all') names = Array.from(this.interactions.messageContextMenuComponents.keys())
+        else if (Array.isArray(name)) names = name
+        else names.push(name)
+
+        for (let i = 0; i < names.length; i++) {
+          interaction = boat.interactions.messageContextMenuComponents.get(names[i]);
+          if (!interaction) return `No such interaction (${names[i]})`;
+
+          def = new ContextMenuCommandBuilder().setName(interaction.name).setType(ApplicationCommandType.Message).toJSON();
+
+          if (Array.isArray(interaction.guild)) {
+            interaction.guild.forEach(guild => {
+              promises.push(
+                rest.post(
+                  Routes.applicationGuildCommands(client.user.id, guild),
+                  { body: def },
+                )
+              )
+            });
+            results = await Promise.all(promises).catch(err => boat.log.warn(module, `Error encountered while registering context menu command (msg): ${err.stack ?? err}`));
+            return results.map(result => ({ guild: result.guild_id, id: result.id, name: result.name }));
+          }
+          if (interaction.guild) {
+            return rest.post(
+              Routes.applicationGuildCommands(client.user.id, interaction.guild),
+              { body: def },
+            ).catch(err => boat.log.warn(module, `Error encountered while registering context menu command (msg): ${err.stack ?? err}`));
+          }
+          return rest.post(
+            Routes.applicationCommands(client.user.id),
+            { body: def }
+          ).catch(err => boat.log.warn(module, `Error encountered while registering context menu command (msg): ${err.stack ?? err}`));
         }
       default:
     }

@@ -73,7 +73,7 @@ export default async (boat: BoatI, interaction: Interaction) => {
 
   if (handler.dev === 'only' && boat.options.dev == false) return;
 
-  if (handler.owner && !handler.owner.includes(interaction.user.id)) return;
+  if (handler.owner && !boat.owners.includes(interaction.user.id)) return;
 
   // Handle command
   try {
