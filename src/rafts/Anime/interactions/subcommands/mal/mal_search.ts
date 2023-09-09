@@ -36,6 +36,10 @@ class SearchInteraction extends BaseInteraction {
 
     let data = await this.raft.apis.list.search({ token, query, client: use_client, nsfw: interaction.channel.nsfw });
 
+    if (!data || !data.data) {
+      return interaction.editReply({ content: 'No results found!' })
+    }
+
     const filter = (interaction: ButtonInteraction) => interaction.user.id === interaction.user.id;
 
     const o: InteractionPaginatorOptions = {
