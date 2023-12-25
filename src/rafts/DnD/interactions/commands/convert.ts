@@ -21,7 +21,7 @@ class ConvertInteraction extends BaseInteraction {
     const electrum = interaction.options.getNumber('electrum', false) ?? 0;
     const copper = interaction.options.getNumber('copper', false) ?? 0;
 
-    const final = (gold) + (silver * .1) + (platinum * 5) + (electrum * .5) + (copper * .01)
+    const final = (gold) + (silver * .1) + (platinum * 5) + (electrum * .05) + (copper * .01)
     const fields = [] as APIEmbedField[];
 
     for (const [key, value] of Object.entries({ platinum, gold, silver, electrum, copper })) {
