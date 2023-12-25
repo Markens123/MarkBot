@@ -6,7 +6,7 @@ class ConvertInteraction extends BaseInteraction {
     const info = {
       name: 'convert',
       enabled: true,
-      guild: '816098833054302208',
+      guild: ['816098833054302208', '906198620813008896'],
       definition: getDefinition(),
     };
     super(boat, info);
