@@ -14,6 +14,7 @@ export interface ClientI extends Client {
   dalerts?: Enmap;
   tasksdata?: TaskDB;
   loops?: Collection<string, LoopI>;
+  equipment?: ShopItem[];
 }
 
 export interface RequestI extends Request {
@@ -324,4 +325,10 @@ export type DiscordBuild = {
   buildID: string;
   buildNum: string;
   buildHash: string;
+}
+
+export type ShopItem = {
+  item: string;
+  price: number;
+  weight: number;
 }
