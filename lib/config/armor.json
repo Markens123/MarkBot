@@ -1,0 +1,22 @@
+[
+  {
+   "item": "Leather Armor",
+   "price": 20,
+   "weight": 15
+  },
+  {
+   "item": "Chain Mail",
+   "price": 60,
+   "weight": 40
+  },
+  {
+   "item": "Plate Mail",
+   "price": 300,
+   "weight": 50
+  },
+  {
+   "item": "Shield",
+   "price": 7,
+   "weight": 5
+  }
+ ]

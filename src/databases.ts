@@ -1,8 +1,8 @@
 import { Collection } from 'discord.js';
 import Enmap from 'enmap';
-import equipment from '../data/equipment.json' assert { type: 'json' };
-import armor from '../data/armor.json' assert { type: 'json' };
-import weapons from '../data/weapons.json' assert { type: 'json' };
+import equipment from '../lib/config/equipment.json' assert { type: 'json' };
+import armor from '../lib/config/armor.json' assert { type: 'json' };
+import weapons from '../lib/config/weapons.json' assert { type: 'json' };
 
 const databases: any = {};
 
