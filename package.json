@@ -36,6 +36,7 @@
     "is-image-url": "^1.1.8",
     "jsdom": "^16.6.0",
     "luxon": "^3.0.1",
+    "node": "^21.2.0",
     "node-sauce": "^1.0.5",
     "ocr-space-api-wrapper": "^2.1.1",
     "parse-duration": "^1.0.0",
