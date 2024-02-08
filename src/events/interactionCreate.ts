@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
 import { ComponentFunctions, ModalFunctions } from '../util/Constants.js';
+import { exec } from 'child_process';
 const module = fileURLToPath(import.meta.url);
 
 export default async (boat: BoatI, interaction: Interaction) => {
@@ -16,6 +17,15 @@ export default async (boat: BoatI, interaction: Interaction) => {
     handler = boat.interactions.commands.get(interaction.commandName)
     if (handler?.subcommands) {
       let scname = interaction.options.getSubcommand(false);
+      if (handler.name === 'palworld') {
+        let { stdout, stderr } = await promiseExec("sudo docker container inspect -f '{{.State.Running}}' palworld-server").catch((err): any => null);
+        if (!stdout && !stderr) return interaction.reply({ content: "The server isn't on!", ephemeral: true });
+        stdout = clean(stdout);
+        stderr = clean(stderr);
+        
+        if (stderr || stdout == 'false') return interaction.reply({ content: "The server isn't on!", ephemeral: true })
+      }
+
       if (scname) {
         handler = boat.interactions.subcommands.get(interaction.commandName)?.get(scname)
       }
@@ -116,4 +126,23 @@ function verifyCustomId(id: string, components: ActionRow<MessageActionRowCompon
   const found = components.find(component => component.type === ComponentType.ActionRow && component.components.find(c => c.customId === id));
   if (found) return true;
   return false;
+}
+
+function promiseExec(action): Promise<any> {
+  return new Promise((resolve, reject) =>
+    exec(action, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ stdout, stderr });
+      }
+    }),
+  );
+}
+
+function clean(text: string): string {
+  if (typeof text === 'string') {
+    return text.replace(/` /g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
+  }
+  return text;
 }

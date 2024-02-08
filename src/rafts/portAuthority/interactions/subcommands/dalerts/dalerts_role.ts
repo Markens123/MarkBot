@@ -4,7 +4,7 @@ import BaseInteraction from '../../../../BaseInteraction.js';
 class DAlertsRoleInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
-      name: 'set',
+      name: 'role',
       enabled: true,
     };
     super(boat, info);

@@ -11,5 +11,4 @@ databases.tasksdata = new Enmap('TasksData');
 databases.dalerts = new Enmap('DiscordAData');
 databases.cooldowns = new Collection();
 
-
 export default databases;

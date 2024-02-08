@@ -16,6 +16,7 @@ import schedule from './schedule.js';
 import shrug from './shrug.js';
 import test from './test.js';
 import timestamp from './timestamp.js';
+import palworld from './palworld.js';
 
 export default {
   '8ball': eball,
@@ -35,5 +36,6 @@ export default {
   schedule,
   shrug,
   test,
-  timestamp
+  timestamp,
+  palworld
 }
