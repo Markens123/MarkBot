@@ -2,6 +2,7 @@ import { ActionRowBuilder, EmbedBuilder, TextInputBuilder } from 'discord.js';
 import got from 'got';
 import { JSDOM } from 'jsdom';
 import { DiscordBuild, Item, Task } from '../../lib/interfaces/Main';
+import { exec } from 'child_process';
 
 export const AniQueue = (arr: string[] | []): string => {
   let content = '';
@@ -209,4 +210,16 @@ export const discVer = (channel: 'ptb' | 'stable' | 'canary' = 'stable'): Promis
       buildHash,
     })
   })
-} 
+}
+
+export const promiseExec = (action): Promise<any> => {
+  return new Promise((resolve, reject) =>
+    exec(action, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ stdout, stderr });
+      }
+    }),
+  );
+}
