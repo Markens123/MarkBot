@@ -25,7 +25,7 @@ class PalworldRestartInteraction extends BaseInteraction {
     if (stderr) return error(interaction, this.boat, stderr);
 
     const embed = new EmbedBuilder()
-    .setColor('#FF0000')
+    .setColor('#32CD32')
     .addFields([{name: '📤 Output', value: `\`\`\`bash\n${stdout.slice(0, 1000)}\`\`\``}]);
 
     interaction.reply({ embeds: [embed] })

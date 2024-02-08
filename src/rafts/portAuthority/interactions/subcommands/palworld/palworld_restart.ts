@@ -16,6 +16,7 @@ class PalworldRestartInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
+    interaction.deferReply({ ephemeral: true })
     
     let { stdout, stderr } = await promiseExec('sudo docker restart palworld-server').catch((err): any => null);
     if (!stdout && !stderr) return;
@@ -25,12 +26,13 @@ class PalworldRestartInteraction extends BaseInteraction {
     if (stderr) return error(interaction, this.boat, stderr);
     
 
-    interaction.reply({ content: "The server is rebooting!" })
+    interaction.editReply({ content: "The server is rebooting!" })
+    this.boat.log.warn('palworld-restart', `${interaction.user.toString()} restarted the server`)
   }
 }
 
 function error(interaction: ChatInputCommandInteraction, boat: BoatI, err: any) {
-  interaction.reply({ content: "An error has occurred, please contact the bot owner if the issue persists.", ephemeral: true })
+  interaction.editReply({ content: "An error has occurred, please contact the bot owner if the issue persists." })
   boat.log.warn(module, `Error occurred during palworld restart: ${util.formatWithOptions({}, err)}`);
 }
 
