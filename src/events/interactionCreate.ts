@@ -23,7 +23,7 @@ export default async (boat: BoatI, interaction: Interaction) => {
         stdout = clean(stdout);
         stderr = clean(stderr);
         
-        if (stderr || stdout == 'false') return interaction.reply({ content: "The server isn't on!", ephemeral: true })
+        if (stderr || stdout !== 'true') return interaction.reply({ content: "The server isn't on!", ephemeral: true })
       }
 
       if (scname) {
