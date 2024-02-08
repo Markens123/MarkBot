@@ -56,6 +56,13 @@ export default async (boat: BoatI, message: Message) => {
     }
   }
 
+  if (handler.roles) {
+    const authorRoles = message.member.roles.cache.map(x => x.id)
+    if (!handler.roles.some(x => authorRoles.includes(x))) {
+      return message.reply("You don't have the required permissions for this command!");
+    }
+  }
+
   if (handler.owner && !boat.owners.includes(message.author.id)) return;
 
   if (handler.channels && !handler.channels.includes(message.channel.id)) return;
@@ -70,7 +77,6 @@ export default async (boat: BoatI, message: Message) => {
   if (!handler.dev && boat.options.dev) return;
 
   if (handler.dev === 'only' && boat.options.dev == false) return;
-
 
   // Cooldown stuff
   const { cooldowns } = boat.client;

@@ -1,4 +1,4 @@
-import { ActionRow, ApplicationCommandType, ComponentType, Interaction, InteractionType, MessageActionRowComponent } from 'discord.js';
+import { ActionRow, ApplicationCommandType, ChannelType, ComponentType, Interaction, InteractionType, MessageActionRowComponent } from 'discord.js';
 import { fileURLToPath } from 'url';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
@@ -10,14 +10,14 @@ export default async (boat: BoatI, interaction: Interaction) => {
   let name;
   // Check for handler
   if (
-    interaction.type === InteractionType.ApplicationCommand 
+    interaction.type === InteractionType.ApplicationCommand
     && interaction.commandType === ApplicationCommandType.ChatInput
   ) {
     handler = boat.interactions.commands.get(interaction.commandName)
     if (handler?.subcommands) {
-      let scname = interaction.options.getSubcommand(false); 
+      let scname = interaction.options.getSubcommand(false);
       if (scname) {
-       handler = boat.interactions.subcommands.get(interaction.commandName)?.get(scname)
+        handler = boat.interactions.subcommands.get(interaction.commandName)?.get(scname)
       }
     }
   }
@@ -49,7 +49,7 @@ export default async (boat: BoatI, interaction: Interaction) => {
 
   if (interaction.type === InteractionType.MessageComponent) {
     if (!verifyCustomId(interaction.customId, interaction.message.components)) {
-      interaction.reply({content: 'You think you are sneaky huh, well, no such luck here!', ephemeral: true });
+      interaction.reply({ content: 'You think you are sneaky huh, well, no such luck here!', ephemeral: true });
       return;
     }
     name = ComponentFunctions[Number(interaction.customId.split(':')[0])];
@@ -74,6 +74,33 @@ export default async (boat: BoatI, interaction: Interaction) => {
   if (handler.dev === 'only' && boat.options.dev == false) return;
 
   if (handler.owner && !boat.owners.includes(interaction.user.id)) return;
+
+  if (handler.channels && !handler.channels.includes(interaction.channel.id)) return;
+
+  if (interaction.type !== InteractionType.ApplicationCommandAutocomplete) {
+    if (!interaction.channel.isDMBased() && handler.dms === 'only') return interaction.reply({ content: "This command can only be used in dms!", ephemeral: true })
+    if (interaction.channel.isDMBased() && !handler.dms) return;
+
+    if (!interaction.channel.isThread() && handler.threads === 'only') return interaction.reply({ content: 'This command can only be used in threads!', ephemeral: true });
+    if (interaction.channel.isThread() && !handler.threads) return;
+
+    if (!(interaction.channel.type === ChannelType.GuildVoice) && handler.voice === 'only') return interaction.reply({ content: 'This command can only be used in voice channels!', ephemeral: true });
+    if (interaction.channel.type === ChannelType.GuildVoice && !handler.voice) return;
+  }
+
+  if (handler.permissions && interaction.type !== InteractionType.ApplicationCommandAutocomplete) {
+    const authorPerms = interaction.guild.members.cache.get(interaction.user.id).permissions
+    if (!authorPerms || !authorPerms.has(handler.permissions)) {
+      return interaction.reply({ content: "You don't have permission to use this command.", ephemeral: true });
+    }
+  }
+
+  if (handler.roles && interaction.type !== InteractionType.ApplicationCommandAutocomplete) {
+    const authorRoles = interaction.guild.members.cache.get(interaction.user.id).roles.cache.map(x => x.id)
+    if (!handler.roles.some(x => authorRoles.includes(x))) {
+      return interaction.reply({ content: "You don't have permission to use this command.", ephemeral: true })
+    }
+  }
 
   // Handle command
   try {

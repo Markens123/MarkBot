@@ -117,10 +117,11 @@ export interface CommandOptions {
   dev?: boolean | 'only';
   args?: ArgI[] | false;
   channels?: Snowflake[] | false;
+  roles?: Snowflake[] | false;
   guild?: Snowflake[] | Snowflake | false;
   aliases?: string[] | false;
   cooldown?: number | false;
-  permissions?: PermissionResolvable | false;
+  permissions?: PermissionResolvable | false; 
 }
 
 export interface BoatOptions {

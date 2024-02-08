@@ -14,6 +14,7 @@ class BaseCommand {
   dev: boolean | 'only';
   args: ArgI[] | false;
   channels: Snowflake[] | false;
+  roles: Snowflake[] | false;
   guild?: Snowflake | Snowflake[] | false;
   aliases: string[] | false;
   cooldown: number | false;
@@ -21,7 +22,7 @@ class BaseCommand {
   boat: BoatI;
   raft: RaftI;
   name: string;
-
+  
   constructor(raft: RaftI, options: CommandOptions) {
     /**
      * The boat that handles this commands raft
@@ -106,6 +107,12 @@ class BaseCommand {
      * @type {Snowflake[]}
      */
     this.channels = options.channels ?? false;
+
+    /**
+     * Which roles can use this command
+     * @type {Snowflake[]}
+     */
+    this.roles = options.roles ?? false;
 
     /**
      * The guild(s), if any, that this command is specific too
