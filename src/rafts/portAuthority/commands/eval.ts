@@ -9,10 +9,10 @@ import { loop } from '../../../util/Constants.js';
 import BaseCommand from '../../BaseCommand.js';
 import * as Constants from '../../../util/Constants.js';
 import AnimeAPI from '../../Anime/apis/anime.js';
-const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const delay = s => new Promise(res => setTimeout(res, s*1000));
+const delay = s => new Promise(res => setTimeout(res, s * 1000));
 
 class EvalCommand extends BaseCommand {
   constructor(boat) {
@@ -51,15 +51,40 @@ class EvalCommand extends BaseCommand {
           default: false,
         },
         {
+          name: 'imports',
+          type: 'flag',
+          index: Infinity,
+          flags: ['--import', '-i'],
+          validation: ({ arg }) => {
+            console.log(arg)
+            try {
+              let t = JSON.parse(arg.replaceAll("'", '"'));
+              if (!Array.isArray(t)) throw SyntaxError;
+              t.forEach(x => {
+                if (!Array.isArray(x)) throw SyntaxError;
+                if (x.length !== 2) throw SyntaxError;
+                if (typeof x[0] !== 'string') throw SyntaxError;
+                if (typeof x[1] !== 'string') throw SyntaxError;
+              })
+            }
+            catch {
+              return null
+            }
+            return true
+          },
+          error: 'Invalid JSON for imports',
+          default: false
+        },
+        {
           name: 'msg',
           type: 'msg'
-        }
-      ],      
+        },
+      ],
     };
     super(boat, options);
   }
 
-  async run(message: Discord.Message, { depth, nf, nr, canary, msg }, ogargs) {
+  async run(message: Discord.Message, { depth, nf, nr, canary, msg, imports }, ogargs) {
     const client = this.boat.client;
     const rest = new REST({ version: '10' }).setToken(client.token);
     if (canary) client.options.rest.api = 'https://canary.discord.com/api';
@@ -68,8 +93,23 @@ class EvalCommand extends BaseCommand {
 
     let args = msg.join(' ');
     if (args.slice(-1) !== ';') args = args.concat(';');
+
+    const obj: any = {};
+    try {
+      if (imports) {
+        imports = imports.replaceAll("'", '"');
+        const imparr: [string, string][] = JSON.parse(imports);
+        for (let i = 0; i < imparr.length; i++) {
+          const pkg = imparr[i][0].trim();
+          const vname = imparr[i][1].trim();
+          obj[vname] = await import(pkg);
+        }
+      }
+    } catch(e) {
+      return message.channel.send('Error during module import!')
+    }
     
-    const scope = {
+    let scope = {
       message,
       client,
       boat: this.boat,
@@ -93,7 +133,11 @@ class EvalCommand extends BaseCommand {
       rest,
       ...Discord,
     };
-  
+
+    if (imports) {
+      scope = { ...scope, ...obj };
+    }
+
     if (!args.toLowerCase().includes('return')) {
       if (args.split(';').length > 2) {
         const last = args.split(';').filter(Boolean).pop();
@@ -152,22 +196,22 @@ class EvalCommand extends BaseCommand {
       .setColor(e === true ? '#FF0000' : '#32CD32')
       .addFields([
         {
-          name: '📥 Input', 
+          name: '📥 Input',
           value: `\`\`\`js\n${(args.replace('(async () => {return ', '').replace('})()', '')).slice(0, 1000)}\`\`\``
         }
       ]);
 
     if (cleaned.split(/\r\n|\r|\n/).length > 4 || cleaned.length > 1023) {
       if (nf === true) {
-        embed.addFields([{name: '📤 Output', value: `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\``}]);
+        embed.addFields([{ name: '📤 Output', value: `\`\`\`js\n${cleaned.slice(0, 1000)}\n\`\`\`` }]);
         return nr && !e ? null : message.channel.send({ embeds: [embed] });
       }
-      embed.addFields([{name: '📤 Output', value: '```Eval output too long, see the attached file```'}]);
-      const attachment = new AttachmentBuilder(Buffer.from(cleaned, 'utf-8'), {name: 'eval.js'});
+      embed.addFields([{ name: '📤 Output', value: '```Eval output too long, see the attached file```' }]);
+      const attachment = new AttachmentBuilder(Buffer.from(cleaned, 'utf-8'), { name: 'eval.js' });
       nr && !e ? null : await message.channel.send({ embeds: [embed] })
       return nr && !e ? null : message.channel.send({ files: [attachment] });
     }
-    embed.addFields({name: '📤 Output', value: `\`\`\`js\n${cleaned}\`\`\``})
+    embed.addFields({ name: '📤 Output', value: `\`\`\`js\n${cleaned}\`\`\`` })
     return nr && !e ? null : message.channel.send({ embeds: [embed] });
   }
 
@@ -176,7 +220,7 @@ class EvalCommand extends BaseCommand {
       /* client.maldata.fetchEverything().forEach(element => {
         text = text.replace(element.AToken, 'Redacted')
         .replace(element.RToken, 'Redacted')
-      }); */ 
+      }); */
       return text
         .replace(/` /g, `\`${String.fromCharCode(8203)}`)
         .replace(/@/g, `@${String.fromCharCode(8203)}`)
@@ -204,7 +248,7 @@ function readFile(path, text = false, newname = undefined) {
   const file = fs.readFileSync(filepath, { encoding: 'utf8' });
 
   if (text) return file;
-  else return new AttachmentBuilder(Buffer.from(file), {name: newname ?? basename(filepath)});
+  else return new AttachmentBuilder(Buffer.from(file), { name: newname ?? basename(filepath) });
 }
 
 export default EvalCommand;

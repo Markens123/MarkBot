@@ -63,9 +63,8 @@ class SearchInteraction extends BaseInteraction {
     const out = await raft.apis.oauth.refreshToken(rtoken).catch(() => undefined);
 
     if (!out?.access_token) {
-      return interaction.reply({
+      return interaction.editReply({
         content: "An error has occured please relink your account, if there's still an issue please contact the bot dev!",
-        ephemeral: true
       });
     }
 
