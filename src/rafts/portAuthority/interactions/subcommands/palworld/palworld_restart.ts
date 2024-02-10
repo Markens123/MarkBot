@@ -3,6 +3,7 @@ import BaseInteraction from '../../../../BaseInteraction.js';
 import { exec } from 'child_process';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import * as util from 'util';
+import { clean, promiseExec } from '../../../../../util/Constants.js';
 
 class PalworldRestartInteraction extends BaseInteraction {
   constructor(boat) {
@@ -34,25 +35,6 @@ class PalworldRestartInteraction extends BaseInteraction {
 function error(interaction: ChatInputCommandInteraction, boat: BoatI, err: any) {
   interaction.editReply({ content: "An error has occurred, please contact the bot owner if the issue persists." })
   boat.log.warn(module, `Error occurred during palworld restart: ${util.formatWithOptions({}, err)}`);
-}
-
-function promiseExec(action): Promise<any> {
-  return new Promise((resolve, reject) =>
-    exec(action, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ stdout, stderr });
-      }
-    }),
-  );
-}
-
-function clean(text: string): string {
-  if (typeof text === 'string') {
-    return text.replace(/` /g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
-  }
-  return text;
 }
 
 export default PalworldRestartInteraction;

@@ -223,3 +223,10 @@ export const promiseExec = (action): Promise<any> => {
     }),
   );
 }
+
+export const clean = (text: string): string => {
+  if (typeof text === 'string') {
+    return text.replace(/` /g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`).trim();
+  }
+  return text;
+}

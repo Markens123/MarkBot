@@ -3,6 +3,7 @@ import { EmbedBuilder, Message } from 'discord.js';
 import { fileURLToPath } from 'url';
 import { CommandOptions } from '../../../../lib/interfaces/Main.js';
 import BaseCommand from '../../BaseCommand.js';
+import { clean, promiseExec } from '../../../util/Constants.js';
 var module = fileURLToPath(import.meta.url);
 
 class UpdateCommand extends BaseCommand {
@@ -98,25 +99,6 @@ class UpdateCommand extends BaseCommand {
     }
 
   }
-}
-
-function promiseExec(action): Promise<any> {
-  return new Promise((resolve, reject) =>
-    exec(action, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ stdout, stderr });
-      }
-    }),
-  );
-}
-
-function clean(text: string): string {
-  if (typeof text === 'string') {
-    return text.replace(/` /g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
-  }
-  return text;
 }
 
 export default UpdateCommand;
