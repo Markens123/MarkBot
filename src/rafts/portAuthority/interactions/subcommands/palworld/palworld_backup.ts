@@ -2,6 +2,8 @@ import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import * as util from 'util';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import BaseInteraction from '../../../../BaseInteraction.js';
+import { fileURLToPath } from 'url';
+var module = fileURLToPath(import.meta.url);
 
 class PalworldRestartInteraction extends BaseInteraction {
   constructor(boat) {
