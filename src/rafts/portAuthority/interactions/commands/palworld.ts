@@ -31,6 +31,16 @@ function getDefinition() {
         .setName('restart')
         .setDescription('Restarts the server')  
     )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('start')
+        .setDescription('Starts the server')
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('stop')
+        .setDescription('Stops the server')
+    )
     .toJSON();
 }
 

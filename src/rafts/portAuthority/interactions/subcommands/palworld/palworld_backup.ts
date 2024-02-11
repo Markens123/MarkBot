@@ -1,15 +1,14 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
-import BaseInteraction from '../../../../BaseInteraction.js';
-import { exec } from 'child_process';
-import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import * as util from 'util';
-import { clean, promiseExec } from '../../../../../util/Constants.js';
+import { BoatI } from '../../../../../../lib/interfaces/Main.js';
+import BaseInteraction from '../../../../BaseInteraction.js';
 
 class PalworldRestartInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
       name: 'backup',
-      enabled: true, 
+      enabled: true,
+      dev: false,
       roles: ['1204264340488982548', '816424700573646877'],
       guild: ['816098833054302208', '906198620813008896']
     };
@@ -18,16 +17,13 @@ class PalworldRestartInteraction extends BaseInteraction {
 
   async run(interaction: ChatInputCommandInteraction) {
     
-    let { stdout, stderr } = await promiseExec('sudo docker exec palworld-server backup').catch((err): any => null);
-    if (!stdout && !stderr) return;
-    stdout = clean(stdout);
-    stderr = clean(stderr);
+    let backup = await this.boat.client.palworldApi.backup().catch((err) => {return err});
 
-    if (stderr) return error(interaction, this.boat, stderr);
+    if (backup !== true) return error(interaction, this.boat, backup);
 
     const embed = new EmbedBuilder()
     .setColor('#32CD32')
-    .addFields([{name: '📤 Output', value: `\`\`\`bash\n${stdout.slice(0, 1000)}\`\`\``}]);
+    .addFields([{name: 'Result', value: `\`\`\`bash\nBackup Created!\`\`\``}]);
 
     interaction.reply({ embeds: [embed] })
     this.boat.log.warn('palworld-backup', `${interaction.user.toString()} made a backup`)

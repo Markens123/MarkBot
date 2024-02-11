@@ -2,8 +2,7 @@ import { ActionRow, ApplicationCommandType, ChannelType, ComponentType, Interact
 import { fileURLToPath } from 'url';
 import * as util from 'util';
 import { BoatI } from '../../lib/interfaces/Main.js';
-import { ComponentFunctions, ModalFunctions, clean, promiseExec } from '../util/Constants.js';
-import { exec } from 'child_process';
+import { ComponentFunctions, ModalFunctions } from '../util/Constants.js';
 const module = fileURLToPath(import.meta.url);
 
 export default async (boat: BoatI, interaction: Interaction) => {
@@ -17,13 +16,8 @@ export default async (boat: BoatI, interaction: Interaction) => {
     handler = boat.interactions.commands.get(interaction.commandName)
     if (handler?.subcommands) {
       let scname = interaction.options.getSubcommand(false);
-      if (handler.name === 'palworld') {
-        let { stdout, stderr } = await promiseExec("sudo docker container inspect -f '{{.State.Running}}' palworld-server").catch((err): any => null);
-        if (!stdout && !stderr) return interaction.reply({ content: "The server isn't on!", ephemeral: true });
-        stdout = clean(stdout);
-        stderr = clean(stderr);
-        
-        if (stderr || stdout !== 'true') return interaction.reply({ content: "The server isn't on!", ephemeral: true })
+      if (handler.name === 'palworld' && scname !== 'start') {
+        if (await boat.client.palworldApi.running() == false) return interaction.reply({ content: "The server isn't on!", ephemeral: true })
       }
 
       if (scname) {

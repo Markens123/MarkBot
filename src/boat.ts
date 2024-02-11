@@ -15,6 +15,7 @@ import { util } from './util/index.js';
 import express, { Express } from 'express';
 import router from './webhooks/router.js';
 import bodyParser from 'body-parser';
+import PalworldAPI from './rafts/portAuthority/apis/palworld.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -179,6 +180,10 @@ class Boat implements BoatI {
     this.client.halerts.ensure('latest', []);
     this.client.animealerts.ensure('latest', {});
     this.client.dalerts.ensure('latest', {});
+
+    // Load palworld api
+    this.log.debug(module, 'Loading palworld api');
+    this.client.palworldApi = new PalworldAPI();
 
     // Start express
     this.log.debug(module, 'Starting express server');

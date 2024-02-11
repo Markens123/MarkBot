@@ -3,13 +3,13 @@ import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import * as util from 'util';
 
-class PalworldRestartInteraction extends BaseInteraction {
+class PalworldStopInteraction extends BaseInteraction {
   constructor(boat) {
     const info = {
-      name: 'restart',
+      name: 'stop',
       enabled: true,
       dev: false,
-      roles: ['1204264340488982548', '816424700573646877'],
+      owner: true,
       guild: ['816098833054302208', '906198620813008896']
     };
     super(boat, info);
@@ -18,18 +18,18 @@ class PalworldRestartInteraction extends BaseInteraction {
   async run(interaction: ChatInputCommandInteraction) {
     interaction.deferReply({ ephemeral: true })
     
-    let restart = await this.boat.client.palworldApi.restart().catch((err) => err);
+    let stop = await this.boat.client.palworldApi.stop().catch((err) => err);
 
-    if (restart !== true) return error(interaction, this.boat, restart)
+    if (stop !== true) return error(interaction, this.boat, stop)
 
-    interaction.editReply({ content: "The server is rebooting!" })
-    this.boat.log.warn('palworld-restart', `${interaction.user.toString()} restarted the server`)
+    interaction.editReply({ content: "The server is stopping!" })
+    this.boat.log.warn('palworld-stop', `${interaction.user.toString()} stopped the server`)
   }
 }
 
 function error(interaction: ChatInputCommandInteraction, boat: BoatI, err: any) {
   interaction.editReply({ content: "An error has occurred, please contact the bot owner if the issue persists." })
-  boat.log.warn(module, `Error occurred during palworld restart: ${util.formatWithOptions({}, err)}`);
+  boat.log.warn(module, `Error occurred during palworld stop: ${util.formatWithOptions({}, err)}`);
 }
 
-export default PalworldRestartInteraction;
+export default PalworldStopInteraction;
