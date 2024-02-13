@@ -188,21 +188,21 @@ export const discVer = (channel: 'ptb' | 'stable' | 'canary' = 'stable'): Promis
 
     const { body: mbody, headers: mheaders } = await got.get(mainurl);
     let buildHash = mheaders["x-build-id"] as string;
-  
+
     const jsurl = mbody.match(/([a-zA-z0-9]+)\.js" /g).map(x => x.replace('" ', '')).pop();
-  
+
     if (!jsurl) {
       return reject('Js file not found');
     }
-  
+
     const sourceurl = channel === 'stable' ? `https://discord.com/assets/${jsurl}` : `https://${channel}.discord.com/assets/${jsurl}`;
-  
+
     const { body: sbody } = await got.get(sourceurl);
-  
+
     let buildstrings: any = sbody.match(/Build Number: (?:\"\).concat\(\")?(\d+)/);
-  
+
     if (buildstrings && buildstrings[1] && parseInt(buildstrings[1])) buildstrings = parseInt(buildstrings[1])
-    else reject('Build number invalid') 
+    else reject('Build number invalid')
 
     resove({
       buildNum: buildstrings.toString(),
@@ -229,4 +229,18 @@ export const clean = (text: string): string => {
     return text.replace(/` /g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`).trim();
   }
   return text;
+}
+
+export const awaitTimelimit = async <T, J>(timeLimit: number, task: Promise<T>, failureValue: J): Promise<T | J> => {
+  let timeout;
+  const timeoutPromise = new Promise((resolve: (value: J) => void) => {
+    timeout = setTimeout(() => {
+      resolve(failureValue);
+    }, timeLimit);
+  });
+  const response = await Promise.race([task, timeoutPromise]);
+  if (timeout) {
+    clearTimeout(timeout);
+  }
+  return response;
 }

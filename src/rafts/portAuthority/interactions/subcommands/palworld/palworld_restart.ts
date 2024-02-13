@@ -3,7 +3,9 @@ import BaseInteraction from '../../../../BaseInteraction.js';
 import { BoatI } from '../../../../../../lib/interfaces/Main.js';
 import * as util from 'util';
 import { fileURLToPath } from 'url';
+import { DateTime } from 'luxon';
 var module = fileURLToPath(import.meta.url);
+const delay = s => new Promise(res => setTimeout(res, s * 1000));
 
 class PalworldRestartInteraction extends BaseInteraction {
   constructor(boat) {
@@ -19,10 +21,17 @@ class PalworldRestartInteraction extends BaseInteraction {
 
   async run(interaction: ChatInputCommandInteraction) {
     interaction.deferReply({ ephemeral: true })
+    const instant = interaction.options.getBoolean('instantly') ?? false;
+    
+    if (!instant) {
+      const date = DateTime.now().plus({ minutes: 1 }).toSeconds().toFixed()
+      interaction.editReply({ content: `The server will restart in <t:${date}:R>` })
+      await delay(60)
+    }
     
     let restart = await this.boat.client.palworldApi.restart().catch((err) => err);
 
-    if (restart !== true) return error(interaction, this.boat, restart)
+    if (restart !== true) return error(interaction, this.boat, restart);
 
     interaction.editReply({ content: "The server is rebooting!" })
     this.boat.log.warn('palworld-restart', `${interaction.user.toString()} restarted the server`)

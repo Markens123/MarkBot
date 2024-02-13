@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, ColorResolvable, EmbedBuilder } from 'discord.js';
-import { fileURLToPath } from 'url';
 import BaseInteraction from '../../../../BaseInteraction.js';
+import { awaitTimelimit } from '../../../../../util/Constants.js';
 
 class PalworldStatusInteraction extends BaseInteraction {
   constructor(boat) {
@@ -16,8 +16,9 @@ class PalworldStatusInteraction extends BaseInteraction {
   async run(interaction: ChatInputCommandInteraction) {
     interaction.deferReply({ ephemeral: true })
 
-    const [status, color] = await this.boat.client.palworldApi.running().catch((_) => false) ? ['Running', '#32CD32'] : ['Off', '#FF0000'];
-    const uptime = await this.boat.client.palworldApi.uptime();
+    const [status, color] = await awaitTimelimit(4000, this.boat.client.palworldApi.running().catch((_) => false), false) ? ['Running', '#32CD32'] : ['Off', '#FF0000'];
+
+    const uptime = await awaitTimelimit(4000, this.boat.client.palworldApi.uptime(), 'None');
 
     const embed = new EmbedBuilder()
       .addFields(

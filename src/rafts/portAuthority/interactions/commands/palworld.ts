@@ -29,7 +29,13 @@ function getDefinition() {
     .addSubcommand(subcommand =>
       subcommand
         .setName('restart')
-        .setDescription('Restarts the server')  
+        .setDescription('Restarts the server after a 1 minute delay')
+        .addBooleanOption(option =>
+          option
+            .setName('instantly')
+            .setDescription('Should the server restart instantly?')
+            .setRequired(false)
+        )
     )
     .addSubcommand(subcommand =>
       subcommand
