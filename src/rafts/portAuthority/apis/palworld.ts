@@ -1,12 +1,17 @@
+import { TextBasedChannel, TextChannel } from 'discord.js';
 import { promiseExec, clean } from '../../../util/Constants.js';
 import { DateTime } from 'luxon'; 
 
 class PalworldAPI {
-  async running(): Promise<Boolean> {
+  async running(channel?: TextBasedChannel): Promise<Boolean> {
     let { stdout, stderr } = await promiseExec("sudo docker container inspect -f '{{.State.Running}}' palworld-server").catch(() => {return {stdout: null, stderr: null }});
     if (!stdout && !stderr) return Promise.resolve(false);;
     stdout = clean(stdout);
     stderr = clean(stderr);
+
+    if (channel) channel.send({ content: stdout })
+
+    if (channel) channel.send({ content: stderr })
 
     if (stderr) return Promise.resolve(false);
 
