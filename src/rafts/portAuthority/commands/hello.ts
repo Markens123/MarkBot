@@ -12,19 +12,14 @@ class HelloCommand extends BaseCommand {
     super(boat, options);
   }
 
-  async run(message: Message) {
+  run(message: Message) {
     let embed = new EmbedBuilder()
       .setTitle('Hello there')
       .setColor('#FF0000')
       .setDescription('Beep beep')
       .setAuthor({name: message.author.tag, iconURL: message.author.displayAvatarURL()})
       .setImage('https://i.imgur.com/SQUhP5T.gif');
-    
-      const res = await this.boat.client.palworldApi.running(message.channel)
-      if (res !== undefined) {
-        message.channel.send({ content: res.toString() })
-      }
-      
+          
     message.channel.send({embeds: [embed]});
   }
 }

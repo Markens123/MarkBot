@@ -41,6 +41,11 @@ function getDefinition() {
         .setName('stop')
         .setDescription('Stops the server')
     )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('status')
+        .setDescription('Gets the status of the server')
+    )
     .toJSON();
 }
 
