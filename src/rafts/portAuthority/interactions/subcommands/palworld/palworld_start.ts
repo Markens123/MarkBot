@@ -18,7 +18,7 @@ class PalworldStartInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
-    interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply({ ephemeral: true })
 
     if (!this.boat.owners.includes(interaction.user.id)) return interaction.editReply({ content: "You don't have permission to use this command. Try restart instead." })
     

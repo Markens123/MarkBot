@@ -18,7 +18,7 @@ class PalworldStopInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
-    interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply({ ephemeral: true })
     
     let stop = await this.boat.client.palworldApi.stop().catch((err) => err);
 

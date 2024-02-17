@@ -20,7 +20,7 @@ class PalworldRestartInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
-    interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply({ ephemeral: true })
     const instant = interaction.options.getBoolean('instantly') ?? false;
     
     if (!instant) {
