@@ -14,7 +14,7 @@ class PalworldStatusInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
-    interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply({ ephemeral: true })
 
     const [status, color] = await awaitTimelimit(4000, this.boat.client.palworldApi.running().catch((_) => false), false) ? ['Running', '#32CD32'] : ['Off', '#FF0000'];
 
