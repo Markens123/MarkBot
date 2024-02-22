@@ -6,13 +6,13 @@ jobs:
     name: tsc
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@4.1.1
     - name: install node v21
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4.0.2
       with:
         node-version: 21
     - name: npm install
-      run: npm install
+      run: npm install --build-from-source
     - name: install ts
       run: npm install typescript
     - name: tsc compile
