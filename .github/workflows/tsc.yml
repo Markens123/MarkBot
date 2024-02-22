@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: install node v16
+    - name: install node v21
       uses: actions/setup-node@v1
       with:
-        node-version: 16
+        node-version: 21
     - name: npm install
       run: npm install
     - name: install ts
