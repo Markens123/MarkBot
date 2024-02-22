@@ -6,9 +6,9 @@ jobs:
     name: tsc
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@4.1.1
+    - uses: actions/checkout@4
     - name: install node v21
-      uses: actions/setup-node@v4.0.2
+      uses: actions/setup-node@v4
       with:
         node-version: 21
     - name: npm install
