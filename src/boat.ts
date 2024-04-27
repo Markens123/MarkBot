@@ -16,6 +16,7 @@ import express, { Express } from 'express';
 import router from './webhooks/router.js';
 import bodyParser from 'body-parser';
 import PalworldAPI from './rafts/portAuthority/apis/palworld.js';
+import MinecraftAPI from './rafts/portAuthority/apis/minecraft.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -184,6 +185,7 @@ class Boat implements BoatI {
     // Load palworld api
     this.log.debug(module, 'Loading palworld api');
     this.client.palworldApi = new PalworldAPI();
+    this.client.minecraftApi = new MinecraftAPI();
 
     // Start express
     this.log.debug(module, 'Starting express server');
