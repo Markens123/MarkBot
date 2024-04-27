@@ -17,6 +17,7 @@ import shrug from './shrug.js';
 import test from './test.js';
 import timestamp from './timestamp.js';
 import palworld from './palworld.js';
+import minecraft from './minecraft.js'
 
 export default {
   '8ball': eball,
@@ -37,5 +38,6 @@ export default {
   shrug,
   test,
   timestamp,
-  palworld
+  palworld,
+  minecraft
 }

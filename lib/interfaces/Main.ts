@@ -5,6 +5,7 @@ import BaseLoop from '../../src/loops/BaseLoop';
 import BaseInteraction from '../../src/rafts/BaseInteraction';
 import { Express, Request, Response } from 'express';
 import PalworldAPI from '../../src/rafts/portAuthority/apis/palworld.js';
+import MinecraftAPI from '../../src/rafts/portAuthority/apis/minecraft.js';
 
 export interface ClientI extends Client {
   cooldowns?: Collection<string, Collection<Snowflake, number>>;
@@ -16,6 +17,7 @@ export interface ClientI extends Client {
   tasksdata?: TaskDB;
   loops?: Collection<string, LoopI>;
   palworldApi?: PalworldAPI;
+  minecraftApi?: MinecraftAPI
 }
 
 export interface RequestI extends Request {
