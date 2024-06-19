@@ -11,6 +11,8 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 21
+    - name: python install
+      run: python3 -m pip install setuptools
     - name: npm install
       run: npm install --build-from-source
     - name: install ts
