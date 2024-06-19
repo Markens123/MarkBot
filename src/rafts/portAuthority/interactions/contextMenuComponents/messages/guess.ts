@@ -13,7 +13,8 @@ class GuessInteraction extends BaseInteraction {
   }
 
   async run(interaction: ContextMenuCommandInteraction) {
-    const message = interaction.options.getMessage('message') as Message;
+    if (!interaction.isMessageContextMenuCommand()) return;
+    const message = interaction.targetMessage;
     let url = '';
     let a = [];
 

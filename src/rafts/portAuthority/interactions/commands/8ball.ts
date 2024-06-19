@@ -1,7 +1,6 @@
-import ball from '8ball.js';
 import { ChatInputCommandInteraction } from 'discord.js';
-
 import BaseInteraction from '../../../BaseInteraction.js';
+import { eightball } from '../../../../util/Constants.js';
 
 const definition = {
   name: '8ball',
@@ -28,7 +27,7 @@ class EBallInteraction extends BaseInteraction {
   }
 
   async run(interaction: ChatInputCommandInteraction) {
-    interaction.reply(ball());
+    interaction.reply(eightball.getAnswer());
   }
 }
 
