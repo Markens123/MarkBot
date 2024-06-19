@@ -48,7 +48,7 @@ class RemindCommand extends BaseCommand {
     }
 
     const timeout = setTimeout(sendResp, time);
-    const id = timeout[Symbol.toPrimitive]();
+    const id = timeout
 
     setTimeout(() => {
       const arr = client.reminders.fetch(message.author.id)

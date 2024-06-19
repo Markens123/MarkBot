@@ -3,6 +3,7 @@ import { EmbedBuilder } from 'discord.js';
 import got from 'got';
 import { AnimeI, SimpleAnime } from '../../../../lib/interfaces/Main';
 import { shorten } from '../../../util/Constants.js';
+import { URLSearchParams } from 'url';
 
 class AnimeAPI {
   private url: string = 'https://gogoanime.news/recent-release-anime';
@@ -77,7 +78,6 @@ class AnimeAPI {
     ]);
 
     const { body } = await got(this.api_url, {
-      //@ts-expect-error typescript is being dumb :P
       searchParams,
       headers: {
         "X-MAL-CLIENT-ID": process.env.MAL_CLIENT_ID
@@ -105,7 +105,6 @@ class AnimeAPI {
     ]);
 
     const { body } = await got(this.api_url, {
-      //@ts-expect-error typescript is being dumb :P
       searchParams,
       headers: {
         "X-MAL-CLIENT-ID": process.env.MAL_CLIENT_ID
@@ -131,7 +130,6 @@ class AnimeAPI {
     ]);
 
     const { body } = await got(`${this.api_url}/${id}`, {
-      //@ts-expect-error typescript is being dumb :P
       searchParams,
       headers: {
         "X-MAL-CLIENT-ID": process.env.MAL_CLIENT_ID

@@ -56,7 +56,7 @@ export enum TaskOptions {
 export interface Reminder {
   content: string;
   timestamp: number | string;
-  id: number;
+  id: NodeJS.Timeout;
 }
 
 export interface Task {
