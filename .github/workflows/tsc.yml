@@ -7,14 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: install node v21
+    - name: install node v22
       uses: actions/setup-node@v4
       with:
-        node-version: 21
+        node-version: 22
     - name: python install
       run: python3 -m pip install setuptools
+    - name: node-gyp install
+      run: npm install -g node-gyp
     - name: npm install
-      run: npm install --build-from-source
+      run: npm ci
     - name: install ts
       run: npm install typescript
     - name: tsc compile
