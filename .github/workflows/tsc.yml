@@ -14,7 +14,7 @@ jobs:
     - name: python install
       run: python3 -m pip install setuptools
     - name: npm install
-      run: npm install --build-from-source
+      run: npm ci
     - name: install ts
       run: npm install typescript
     - name: tsc compile
