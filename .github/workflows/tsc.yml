@@ -13,6 +13,8 @@ jobs:
         node-version: 21
     - name: python install
       run: python3 -m pip install setuptools
+    - name: node-gyp install
+      run: npm install -g node-gyp
     - name: npm install
       run: npm ci
     - name: install ts
