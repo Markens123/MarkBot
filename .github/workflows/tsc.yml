@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: install node v22
+    - name: install node v21
       uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: 21
     - name: python install
       run: python3 -m pip install setuptools
     - name: node-gyp install
